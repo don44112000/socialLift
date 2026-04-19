@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard — SocialLift</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-main">
+      <h1>Dashboard</h1>
+      <p class="page-sub">Overview of your connected accounts and activity.</p>
+
+      <div class="tiles" id="tiles"></div>
+
+      <h2 class="section-title">Quick actions</h2>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="/compose.html">New post</a>
+        <a class="btn btn-ghost" href="/inbox.html">Open inbox</a>
+        <a class="btn btn-ghost" href="/accounts.html">Manage accounts</a>
+      </div>
+
+      <h2 class="section-title">Connected accounts</h2>
+      <div class="grid-2" id="mini-pages"></div>
+    </main>
+
+    <script src="./config.js"></script>
+    <script src="./shell.js"></script>
+    <script src="./api.js"></script>
+    <script>
+      (async () => {
+        const session = await SL.requireAuth("/dashboard.html");
+        if (!session) return;
+
+        const pages = session.pages || [];
+        const igCount = pages.filter((p) => p.instagram_business_account).length;
+        const canPost = pages.filter(
+          (p) => (p.tasks || []).includes("CREATE_CONTENT")
+        ).length;
+
+        const tiles = [
+          { label: "Facebook Pages", value: pages.length, sub: canPost + " can post" },
+          { label: "Instagram accounts", value: igCount, sub: "Business accounts linked" },
+          {
+            label: "Granted scopes",
+            value: (session.grantedScopes || []).length,
+            sub: "Permissions approved",
+          },
+          {
+            label: "Connected",
+            value: new Date(session.grantedAt).toLocaleDateString(),
+            sub: "Last login",
+          },
+        ];
+        const t = document.getElementById("tiles");
+        tiles.forEach((x) => {
+          const d = document.createElement("div");
+          d.className = "tile";
+          d.innerHTML =
+            '<div class="t-label"></div>' +
+            '<div class="t-value"></div>' +
+            '<div class="t-sub"></div>';
+          d.querySelector(".t-label").textContent = x.label;
+          d.querySelector(".t-value").textContent = x.value;
+          d.querySelector(".t-sub").textContent = x.sub;
+          t.appendChild(d);
+        });
+
+        const list = document.getElementById("mini-pages");
+        if (!pages.length) {
+          list.innerHTML = '<div class="muted">No Pages connected.</div>';
+          return;
+        }
+        pages.slice(0, 6).forEach((p) => {
+          const card = document.createElement("div");
+          card.className = "page-card";
+          card.innerHTML =
+            '<div class="page-name"></div>' +
+            '<div class="page-meta"></div>' +
+            '<div class="badges"></div>';
+          card.querySelector(".page-name").textContent = p.name;
+          card.querySelector(".page-meta").textContent =
+            p.category || "Page " + p.id;
+          const badges = card.querySelector(".badges");
+          if ((p.tasks || []).includes("CREATE_CONTENT")) {
+            const b = document.createElement("span");
+            b.className = "badge ok";
+            b.textContent = "Can post";
+            badges.appendChild(b);
+          }
+          if (p.instagram_business_account) {
+            const b = document.createElement("span");
+            b.className = "badge ig";
+            b.textContent =
+              "IG: @" +
+              (p.instagram_business_account.username || p.instagram_business_account.id);
+            badges.appendChild(b);
+          }
+          list.appendChild(card);
+        });
+      })();
+    </script>
+  </body>
+</html>

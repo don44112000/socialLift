@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accounts — SocialLift</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-main">
+      <h1>Connected accounts</h1>
+      <p class="page-sub">
+        Facebook Pages and linked Instagram business accounts granted to SocialLift.
+      </p>
+
+      <div class="btn-row" style="margin-bottom: 20px">
+        <button class="btn btn-ghost" id="refresh-btn">Refresh from Facebook</button>
+        <a class="btn btn-primary" href="/compose.html">New post</a>
+      </div>
+
+      <div class="grid-2" id="accounts-list"></div>
+    </main>
+
+    <script src="./config.js"></script>
+    <script src="./shell.js"></script>
+    <script src="./api.js"></script>
+    <script>
+      (async () => {
+        const session = await SL.requireAuth("/accounts.html");
+        if (!session) return;
+
+        function render(pages) {
+          const list = document.getElementById("accounts-list");
+          list.innerHTML = "";
+          if (!pages.length) {
+            list.innerHTML =
+              '<div class="muted">No Pages. Re-run login with pages_show_list granted.</div>';
+            return;
+          }
+          pages.forEach((p) => {
+            const card = document.createElement("div");
+            card.className = "page-card";
+            card.innerHTML =
+              '<div class="page-name"></div>' +
+              '<div class="page-meta"></div>' +
+              '<div class="badges"></div>';
+            card.querySelector(".page-name").textContent = p.name;
+            card.querySelector(".page-meta").textContent =
+              "Page ID: " + p.id + (p.category ? " • " + p.category : "");
+            const badges = card.querySelector(".badges");
+            (p.tasks || []).forEach((tk) => {
+              const b = document.createElement("span");
+              b.className = "badge";
+              b.textContent = tk;
+              badges.appendChild(b);
+            });
+            if (p.instagram_business_account) {
+              const b = document.createElement("span");
+              b.className = "badge ig";
+              b.textContent =
+                "IG: @" +
+                (p.instagram_business_account.username ||
+                  p.instagram_business_account.id);
+              badges.appendChild(b);
+            }
+            list.appendChild(card);
+          });
+        }
+
+        render(session.pages || []);
+
+        document.getElementById("refresh-btn").addEventListener("click", async () => {
+          try {
+            const res = await SLApi.call(
+              "GET",
+              "/me/accounts",
+              {
+                fields:
+                  "id,name,category,tasks,access_token,instagram_business_account{id,username,profile_picture_url}",
+                limit: 100,
+              },
+              session.userAccessToken
+            );
+            session.pages = res.data || [];
+            SL.setSession(session);
+            render(session.pages);
+            SL.toast("Accounts refreshed.", "success");
+          } catch (err) {
+            SL.toast(err.message, "error");
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

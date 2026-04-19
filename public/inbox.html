@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inbox — SocialLift</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-main">
+      <h1>Inbox</h1>
+      <p class="page-sub">Messenger and Instagram Direct conversations.</p>
+
+      <div class="tabs">
+        <button class="tab active" data-platform="messenger">Messenger</button>
+        <button class="tab" data-platform="instagram">Instagram DMs</button>
+      </div>
+
+      <label for="page-select">Page</label>
+      <select id="page-select"></select>
+
+      <div id="convo-list" class="card" style="margin-top: 20px; padding: 0"></div>
+    </main>
+
+    <script src="./config.js"></script>
+    <script src="./shell.js"></script>
+    <script src="./api.js"></script>
+    <script>
+      (async () => {
+        const session = await SL.requireAuth("/inbox.html");
+        if (!session) return;
+        const pages = session.pages || [];
+        const sel = document.getElementById("page-select");
+        const list = document.getElementById("convo-list");
+        let platform = "messenger";
+
+        if (!pages.length) {
+          list.innerHTML = '<div class="muted" style="padding:20px">No Pages connected.</div>';
+          return;
+        }
+        pages.forEach((p) => {
+          const opt = document.createElement("option");
+          opt.value = p.id;
+          opt.textContent = p.name;
+          opt.dataset.token = p.access_token;
+          sel.appendChild(opt);
+        });
+
+        async function load() {
+          const opt = sel.options[sel.selectedIndex];
+          list.innerHTML = '<div class="muted" style="padding:20px">Loading…</div>';
+          try {
+            const res = await SLApi.pageConversations(opt.value, opt.dataset.token, platform);
+            list.innerHTML = "";
+            const convos = res.data || [];
+            if (!convos.length) {
+              list.innerHTML =
+                '<div class="muted" style="padding:20px">No conversations.</div>';
+              return;
+            }
+            convos.forEach((c) => {
+              const row = document.createElement("div");
+              row.className = "convo-item";
+              const participant =
+                (c.participants &&
+                  c.participants.data &&
+                  c.participants.data
+                    .map((x) => x.name || x.username || x.id)
+                    .join(", ")) ||
+                "Unknown";
+              row.innerHTML =
+                '<div>' +
+                '<div class="c-name"></div>' +
+                '<div class="c-snippet"></div>' +
+                "</div>";
+              row.querySelector(".c-name").textContent = participant;
+              row.querySelector(".c-snippet").textContent =
+                c.snippet || "(no recent message)";
+              if (c.unread_count) {
+                const u = document.createElement("span");
+                u.className = "c-unread";
+                u.textContent = c.unread_count;
+                row.appendChild(u);
+              }
+              list.appendChild(row);
+            });
+          } catch (err) {
+            list.innerHTML =
+              '<div class="error-banner" style="margin:20px">' + err.message + "</div>";
+          }
+        }
+
+        document.querySelectorAll(".tab").forEach((t) => {
+          t.addEventListener("click", () => {
+            document.querySelectorAll(".tab").forEach((x) => x.classList.remove("active"));
+            t.classList.add("active");
+            platform = t.dataset.platform;
+            load();
+          });
+        });
+        sel.addEventListener("change", load);
+        load();
+      })();
+    </script>
+  </body>
+</html>

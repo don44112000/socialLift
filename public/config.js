@@ -1,0 +1,20 @@
+window.SOCIALLIFT_CONFIG = {
+  FB_APP_ID: "1836977160350092",
+  GRAPH_API_VERSION: "v25.0",
+  SCOPES: [
+    "public_profile",
+    "email",
+    "pages_show_list",
+    "pages_read_engagement",
+    "pages_manage_posts",
+    "pages_manage_metadata",
+    "pages_messaging",
+    "business_management",
+    "instagram_basic",
+    "instagram_content_publish",
+    "instagram_manage_comments",
+    "instagram_manage_messages",
+    "instagram_manage_insights",
+  ],
+  BACKEND_TOKEN_ENDPOINT: "/.netlify/functions/store-tokens",
+};

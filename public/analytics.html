@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analytics — SocialLift</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-main">
+      <h1>Analytics</h1>
+      <p class="page-sub">Page and Instagram insights for the last 7 days.</p>
+
+      <label for="page-select">Page</label>
+      <select id="page-select"></select>
+
+      <h2 class="section-title">Facebook Page</h2>
+      <div class="tiles" id="fb-tiles"></div>
+
+      <h2 class="section-title">Instagram</h2>
+      <div class="tiles" id="ig-tiles"></div>
+    </main>
+
+    <script src="./config.js"></script>
+    <script src="./shell.js"></script>
+    <script src="./api.js"></script>
+    <script>
+      (async () => {
+        const session = await SL.requireAuth("/analytics.html");
+        if (!session) return;
+        const pages = session.pages || [];
+        const sel = document.getElementById("page-select");
+        const fbTiles = document.getElementById("fb-tiles");
+        const igTiles = document.getElementById("ig-tiles");
+
+        if (!pages.length) {
+          fbTiles.innerHTML = '<div class="muted">No Pages connected.</div>';
+          return;
+        }
+        pages.forEach((p) => {
+          const opt = document.createElement("option");
+          opt.value = p.id;
+          opt.textContent = p.name;
+          opt.dataset.token = p.access_token;
+          opt.dataset.igId = p.instagram_business_account
+            ? p.instagram_business_account.id
+            : "";
+          sel.appendChild(opt);
+        });
+
+        function tile(parent, label, value, sub) {
+          const d = document.createElement("div");
+          d.className = "tile";
+          d.innerHTML =
+            '<div class="t-label"></div>' +
+            '<div class="t-value"></div>' +
+            '<div class="t-sub"></div>';
+          d.querySelector(".t-label").textContent = label;
+          d.querySelector(".t-value").textContent = value;
+          d.querySelector(".t-sub").textContent = sub || "";
+          parent.appendChild(d);
+        }
+
+        function sumLastDays(metricRow) {
+          if (!metricRow || !metricRow.values) return 0;
+          return metricRow.values.reduce(
+            (s, v) => s + (typeof v.value === "number" ? v.value : 0),
+            0
+          );
+        }
+
+        async function load() {
+          const opt = sel.options[sel.selectedIndex];
+          fbTiles.innerHTML = '<div class="muted">Loading…</div>';
+          igTiles.innerHTML = '<div class="muted">Loading…</div>';
+          try {
+            const res = await SLApi.pageInsights(opt.value, opt.dataset.token);
+            const byName = {};
+            (res.data || []).forEach((m) => (byName[m.name] = m));
+            fbTiles.innerHTML = "";
+            tile(fbTiles, "Impressions (7d)", sumLastDays(byName.page_impressions));
+            tile(fbTiles, "Post engagements (7d)", sumLastDays(byName.page_post_engagements));
+            tile(fbTiles, "Page views (7d)", sumLastDays(byName.page_views_total));
+            const fans = byName.page_fans;
+            const fansVal =
+              fans && fans.values && fans.values.length
+                ? fans.values[fans.values.length - 1].value
+                : 0;
+            tile(fbTiles, "Fans", fansVal);
+          } catch (err) {
+            fbTiles.innerHTML =
+              '<div class="error-banner">' + err.message + "</div>";
+          }
+
+          if (!opt.dataset.igId) {
+            igTiles.innerHTML = '<div class="muted">No Instagram linked to this Page.</div>';
+            return;
+          }
+          try {
+            const res = await SLApi.igInsights(opt.dataset.igId, opt.dataset.token);
+            const byName = {};
+            (res.data || []).forEach((m) => (byName[m.name] = m));
+            igTiles.innerHTML = "";
+            tile(igTiles, "Impressions", sumLastDays(byName.impressions));
+            tile(igTiles, "Reach", sumLastDays(byName.reach));
+            tile(igTiles, "Profile views", sumLastDays(byName.profile_views));
+            const fc = byName.follower_count;
+            const fcVal =
+              fc && fc.values && fc.values.length
+                ? fc.values[fc.values.length - 1].value
+                : 0;
+            tile(igTiles, "New followers", fcVal);
+          } catch (err) {
+            igTiles.innerHTML =
+              '<div class="error-banner">' + err.message + "</div>";
+          }
+        }
+
+        sel.addEventListener("change", load);
+        load();
+      })();
+    </script>
+  </body>
+</html>

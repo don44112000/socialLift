@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Posts — SocialLift</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-main">
+      <h1>Posts</h1>
+      <p class="page-sub">Recent content from your Pages and Instagram accounts.</p>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="fb">Facebook</button>
+        <button class="tab" data-tab="ig">Instagram</button>
+      </div>
+
+      <div id="tab-fb"></div>
+      <div id="tab-ig" hidden></div>
+    </main>
+
+    <script src="./config.js"></script>
+    <script src="./shell.js"></script>
+    <script src="./api.js"></script>
+    <script>
+      (async () => {
+        const session = await SL.requireAuth("/posts.html");
+        if (!session) return;
+        const pages = session.pages || [];
+        const tabFb = document.getElementById("tab-fb");
+        const tabIg = document.getElementById("tab-ig");
+
+        document.querySelectorAll(".tab").forEach((t) => {
+          t.addEventListener("click", () => {
+            document.querySelectorAll(".tab").forEach((x) =>
+              x.classList.remove("active")
+            );
+            t.classList.add("active");
+            tabFb.hidden = t.dataset.tab !== "fb";
+            tabIg.hidden = t.dataset.tab !== "ig";
+          });
+        });
+
+        function renderPost(parent, label, item, isIg) {
+          const el = document.createElement("div");
+          el.className = "post-item";
+          const img = isIg
+            ? item.thumbnail_url || item.media_url || ""
+            : item.full_picture || "";
+          const ts = new Date(
+            isIg ? item.timestamp : item.created_time
+          ).toLocaleString();
+          const link = isIg ? item.permalink : item.permalink_url;
+          const body = isIg ? item.caption || "" : item.message || "";
+          const stats = isIg
+            ? "❤ " + (item.like_count || 0) + " · 💬 " + (item.comments_count || 0)
+            : "❤ " +
+              ((item.likes && item.likes.summary && item.likes.summary.total_count) || 0) +
+              " · 💬 " +
+              ((item.comments && item.comments.summary && item.comments.summary.total_count) || 0);
+          el.innerHTML =
+            (img ? '<img alt="">' : '<div></div>') +
+            '<div>' +
+            '<div class="post-head"></div>' +
+            '<div class="post-body"></div>' +
+            '<div class="post-stats"></div>' +
+            "</div>";
+          if (img) el.querySelector("img").src = img;
+          el.querySelector(".post-head").innerHTML =
+            '<strong>' + label + '</strong> · ' + ts +
+            (link ? ' · <a href="' + link + '" target="_blank" rel="noopener">Open</a>' : "");
+          el.querySelector(".post-body").textContent = body;
+          el.querySelector(".post-stats").textContent = stats;
+          parent.appendChild(el);
+        }
+
+        if (!pages.length) {
+          tabFb.innerHTML = '<div class="muted">No Pages connected.</div>';
+          tabIg.innerHTML = '<div class="muted">No Instagram accounts connected.</div>';
+          return;
+        }
+
+        tabFb.innerHTML = '<div class="muted">Loading…</div>';
+        const fbPosts = [];
+        for (const p of pages) {
+          try {
+            const res = await SLApi.pageFeed(p.id, p.access_token, 5);
+            (res.data || []).forEach((x) => fbPosts.push({ label: p.name, item: x }));
+          } catch (err) {
+            /* skip */
+          }
+        }
+        tabFb.innerHTML = "";
+        if (!fbPosts.length) {
+          tabFb.innerHTML = '<div class="muted">No posts found.</div>';
+        } else {
+          fbPosts
+            .sort((a, b) => new Date(b.item.created_time) - new Date(a.item.created_time))
+            .forEach((x) => renderPost(tabFb, x.label, x.item, false));
+        }
+
+        tabIg.innerHTML = '<div class="muted">Loading…</div>';
+        const igPosts = [];
+        for (const p of pages) {
+          if (!p.instagram_business_account) continue;
+          try {
+            const res = await SLApi.igMedia(
+              p.instagram_business_account.id,
+              p.access_token,
+              5
+            );
+            (res.data || []).forEach((x) =>
+              igPosts.push({
+                label: "@" + p.instagram_business_account.username,
+                item: x,
+              })
+            );
+          } catch (err) {
+            /* skip */
+          }
+        }
+        tabIg.innerHTML = "";
+        if (!igPosts.length) {
+          tabIg.innerHTML = '<div class="muted">No Instagram media found.</div>';
+        } else {
+          igPosts
+            .sort((a, b) => new Date(b.item.timestamp) - new Date(a.item.timestamp))
+            .forEach((x) => renderPost(tabIg, x.label, x.item, true));
+        }
+      })();
+    </script>
+  </body>
+</html>

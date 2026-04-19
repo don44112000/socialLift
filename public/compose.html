@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Compose — SocialLift</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-main">
+      <h1>Compose a post</h1>
+      <p class="page-sub">Publish to one or more Pages and Instagram accounts.</p>
+
+      <div class="card" style="max-width: 760px">
+        <label for="message">Message</label>
+        <textarea id="message" placeholder="What would you like to share?"></textarea>
+
+        <label for="image-url">Image URL (required for Instagram)</label>
+        <input
+          type="url"
+          id="image-url"
+          placeholder="https://example.com/image.jpg"
+        />
+
+        <label for="link-url">Link (Facebook only, optional)</label>
+        <input type="url" id="link-url" placeholder="https://example.com" />
+
+        <label>Targets</label>
+        <div id="targets"></div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" id="publish-btn">Publish now</button>
+          <a class="btn btn-ghost" href="/posts.html">View posts</a>
+        </div>
+
+        <div id="results" style="margin-top: 20px"></div>
+      </div>
+    </main>
+
+    <script src="./config.js"></script>
+    <script src="./shell.js"></script>
+    <script src="./api.js"></script>
+    <script>
+      (async () => {
+        const session = await SL.requireAuth("/compose.html");
+        if (!session) return;
+
+        const targetsEl = document.getElementById("targets");
+        const pages = session.pages || [];
+        if (!pages.length) {
+          targetsEl.innerHTML =
+            '<div class="muted">No Pages connected. <a href="/accounts.html">Manage accounts</a></div>';
+        }
+
+        pages.forEach((p) => {
+          const fb = document.createElement("label");
+          fb.className = "checkbox-row";
+          fb.innerHTML =
+            '<input type="checkbox" data-kind="fb" />' +
+            '<div>' +
+            '<div class="target-name"></div>' +
+            '<div class="target-sub">Facebook Page</div>' +
+            "</div>";
+          fb.querySelector(".target-name").textContent = p.name;
+          const fbCb = fb.querySelector("input");
+          fbCb.dataset.pageId = p.id;
+          fbCb.dataset.pageToken = p.access_token;
+          targetsEl.appendChild(fb);
+
+          if (p.instagram_business_account) {
+            const ig = document.createElement("label");
+            ig.className = "checkbox-row";
+            ig.innerHTML =
+              '<input type="checkbox" data-kind="ig" />' +
+              '<div>' +
+              '<div class="target-name"></div>' +
+              '<div class="target-sub">Instagram — requires image URL</div>' +
+              "</div>";
+            ig.querySelector(".target-name").textContent =
+              "@" + (p.instagram_business_account.username || p.instagram_business_account.id);
+            const igCb = ig.querySelector("input");
+            igCb.dataset.igId = p.instagram_business_account.id;
+            igCb.dataset.pageToken = p.access_token;
+            targetsEl.appendChild(ig);
+          }
+        });
+
+        document.getElementById("publish-btn").addEventListener("click", async () => {
+          const message = document.getElementById("message").value.trim();
+          const imageUrl = document.getElementById("image-url").value.trim();
+          const linkUrl = document.getElementById("link-url").value.trim();
+          const results = document.getElementById("results");
+          results.innerHTML = "";
+
+          if (!message && !imageUrl) {
+            SL.toast("Add a message or image first.", "error");
+            return;
+          }
+          const selected = Array.from(
+            document.querySelectorAll('#targets input[type="checkbox"]:checked')
+          );
+          if (!selected.length) {
+            SL.toast("Pick at least one target.", "error");
+            return;
+          }
+
+          const btn = document.getElementById("publish-btn");
+          btn.disabled = true;
+          btn.textContent = "Publishing…";
+
+          for (const cb of selected) {
+            const row = document.createElement("div");
+            row.className = "info-banner";
+            results.appendChild(row);
+            try {
+              if (cb.dataset.kind === "fb") {
+                const res = await SLApi.postFeed(
+                  cb.dataset.pageId,
+                  cb.dataset.pageToken,
+                  message,
+                  linkUrl || null
+                );
+                row.textContent =
+                  "✓ Posted to " +
+                  cb.closest(".checkbox-row").querySelector(".target-name").textContent +
+                  " — post id " + res.id;
+              } else {
+                if (!imageUrl) throw new Error("Image URL required for Instagram");
+                const res = await SLApi.publishIgImage(
+                  cb.dataset.igId,
+                  cb.dataset.pageToken,
+                  imageUrl,
+                  message
+                );
+                row.textContent =
+                  "✓ Published to " +
+                  cb.closest(".checkbox-row").querySelector(".target-name").textContent +
+                  " — media id " + res.id;
+              }
+            } catch (err) {
+              row.className = "error-banner";
+              row.textContent =
+                "✗ " +
+                cb.closest(".checkbox-row").querySelector(".target-name").textContent +
+                ": " + err.message;
+            }
+          }
+
+          btn.disabled = false;
+          btn.textContent = "Publish now";
+        });
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings — SocialLift</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-main">
+      <h1>Settings</h1>
+      <p class="page-sub">Your SocialLift session and connection details.</p>
+
+      <div class="card" style="max-width: 640px">
+        <h2 class="section-title" style="margin-top: 0">Account</h2>
+        <div id="user-block"></div>
+
+        <h2 class="section-title">Meta app</h2>
+        <div class="page-meta" id="app-meta"></div>
+
+        <h2 class="section-title">Granted scopes</h2>
+        <div class="badges" id="scopes-list"></div>
+
+        <h2 class="section-title">Session</h2>
+        <div class="btn-row">
+          <button class="btn btn-ghost" id="logout-btn">Log out</button>
+          <button class="btn btn-danger" id="revoke-btn">
+            Revoke access + log out
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <script src="./config.js"></script>
+    <script src="./shell.js"></script>
+    <script src="./api.js"></script>
+    <script>
+      (async () => {
+        const session = await SL.requireAuth("/settings.html");
+        if (!session) return;
+
+        const u = session.user;
+        document.getElementById("user-block").innerHTML =
+          '<div style="display:flex;align-items:center;gap:14px">' +
+          (u.picture && u.picture.data
+            ? '<img src="' +
+              u.picture.data.url +
+              '" style="width:44px;height:44px;border-radius:50%">'
+            : "") +
+          "<div>" +
+          '<div style="font-weight:600"></div>' +
+          '<div class="muted" style="font-size:12px;font-family:ui-monospace,Menlo,monospace"></div>' +
+          "</div></div>";
+        document.querySelector("#user-block [style*='font-weight']").textContent = u.name;
+        document.querySelector("#user-block .muted").textContent = "FB User ID: " + u.id;
+
+        document.getElementById("app-meta").textContent =
+          "App ID: " +
+          (SL.cfg.FB_APP_ID || "(unset)") +
+          " · Graph " +
+          (SL.cfg.GRAPH_API_VERSION || "v25.0");
+
+        const scopesEl = document.getElementById("scopes-list");
+        (session.grantedScopes || []).forEach((s) => {
+          const b = document.createElement("span");
+          b.className = "badge ok";
+          b.textContent = s;
+          scopesEl.appendChild(b);
+        });
+
+        document.getElementById("logout-btn").addEventListener("click", () => {
+          FB.logout(() => {
+            SL.clearSession();
+            window.location.href = "/";
+          });
+        });
+
+        document.getElementById("revoke-btn").addEventListener("click", async () => {
+          if (!confirm("Revoke all permissions granted to this app?")) return;
+          try {
+            await SLApi.call(
+              "DELETE",
+              "/" + session.user.id + "/permissions",
+              {},
+              session.userAccessToken
+            );
+            SL.toast("Permissions revoked.", "success");
+          } catch (err) {
+            SL.toast(err.message, "error");
+          }
+          FB.logout(() => {
+            SL.clearSession();
+            window.location.href = "/";
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

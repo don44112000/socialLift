@@ -4,3 +4,7 @@ node_modules/
 .env.*
 !.env.example
 .DS_Store
+
+# Browser recordings and intermediate scraper artifacts
+*.har
+*-docs.json

@@ -2,23 +2,26 @@
 """
 Recursively fetches TikTok Business API docs and saves them as markdown files
 mirroring the website's sidebar hierarchy.
+
+Usage:
+    python3 build_tiktok_docs.py --output ./docs --key <identify_key>
+
+Arguments:
+    --output   Directory to save docs into (default: ./tiktok-docs)
+    --key      identify_key from the TikTok API (required)
+    --last     doc_id to process last, e.g. Marketing API (optional)
+    --language Language code (default: ENGLISH)
 """
 
 import os
 import re
 import json
 import time
+import argparse
 import urllib.request
 import urllib.error
-import shutil
 
-IDENTIFY_KEY = "c0138ffadd90a955c1f0670a56fe348d1d40680b3c89461e09f78ed26785164b"
-BASE_DIR = "/Users/NI013/Documents/Om Docs/depos/socialLift/docs/tiktok/business-apis docs"
-TREE_URL = f"https://business-api.tiktok.com/gateway/api/doc/client/platform/tree/get/?language=ENGLISH&identify_key={IDENTIFY_KEY}&is_need_content=false"
-NODE_URL = f"https://business-api.tiktok.com/gateway/api/doc/client/node/get/?language=ENGLISH&identify_key={IDENTIFY_KEY}&doc_id="
-
-# Process Marketing API (index 7) last
-MARKETING_API_ID = 1781891416235009
+BASE_API = "https://business-api.tiktok.com/gateway/api/doc/client"
 
 
 def fetch_json(url, retries=3):
@@ -35,21 +38,21 @@ def fetch_json(url, retries=3):
                 return None
 
 
-def fetch_content(doc_id):
-    data = fetch_json(f"{NODE_URL}{doc_id}")
+def fetch_content(doc_id, key, language):
+    url = f"{BASE_API}/node/get/?language={language}&identify_key={key}&doc_id={doc_id}"
+    data = fetch_json(url)
     if data and data.get("code") == 0:
         return data.get("data", {})
     return {}
 
 
 def sanitize_name(name):
-    # Remove chars not allowed in file/folder names
     name = re.sub(r'[<>:"/\\|?*\x00-\x1f]', '', name)
     name = name.strip('. ')
-    return name[:120]  # cap length
+    return name[:120]
 
 
-def process_node(node, parent_dir, index, depth=0):
+def process_node(node, parent_dir, index, key, language, depth=0):
     doc_id = node["doc_id"]
     title = sanitize_name(node["title"])
     children = node.get("child_docs") or []
@@ -61,8 +64,7 @@ def process_node(node, parent_dir, index, depth=0):
         dir_path = os.path.join(parent_dir, dir_name)
         os.makedirs(dir_path, exist_ok=True)
 
-        # Fetch and save this node's content as the index file
-        page = fetch_content(doc_id)
+        page = fetch_content(doc_id, key, language)
         content = page.get("content", "No content available.")
         page_title = page.get("title", title)
         index_path = os.path.join(dir_path, f"00. {sanitize_name(page_title)}.md")
@@ -72,11 +74,10 @@ def process_node(node, parent_dir, index, depth=0):
         time.sleep(0.15)
 
         for i, child in enumerate(children, 1):
-            process_node(child, dir_path, i, depth + 1)
+            process_node(child, dir_path, i, key, language, depth + 1)
 
     else:
-        # Leaf node
-        page = fetch_content(doc_id)
+        page = fetch_content(doc_id, key, language)
         content = page.get("content", "No content available.")
         page_title = page.get("title", title)
         file_path = os.path.join(parent_dir, f"{padded}. {sanitize_name(page_title)}.md")
@@ -87,8 +88,18 @@ def process_node(node, parent_dir, index, depth=0):
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Build TikTok Business API docs locally.")
+    parser.add_argument("--output", default="./tiktok-docs", help="Output directory")
+    parser.add_argument("--key", required=True, help="TikTok API identify_key")
+    parser.add_argument("--last", type=int, default=None, help="doc_id to process last")
+    parser.add_argument("--language", default="ENGLISH", help="Language (default: ENGLISH)")
+    args = parser.parse_args()
+
+    os.makedirs(args.output, exist_ok=True)
+
+    tree_url = f"{BASE_API}/platform/tree/get/?language={args.language}&identify_key={args.key}&is_need_content=false"
     print("Fetching doc tree...")
-    tree_data = fetch_json(TREE_URL)
+    tree_data = fetch_json(tree_url)
     if not tree_data or tree_data.get("code") != 0:
         print("Failed to fetch tree. Aborting.")
         return
@@ -96,22 +107,20 @@ def main():
     all_nodes = tree_data["data"]["primary_doc_list"]
     print(f"Found {len(all_nodes)} top-level sections.\n")
 
-    # Split: non-marketing first (in order), marketing last
-    non_marketing = [n for n in all_nodes if n["doc_id"] != MARKETING_API_ID]
-    marketing = [n for n in all_nodes if n["doc_id"] == MARKETING_API_ID]
-    ordered = non_marketing + marketing
+    if args.last:
+        normal = [n for n in all_nodes if n["doc_id"] != args.last]
+        last = [n for n in all_nodes if n["doc_id"] == args.last]
+        ordered = normal + last
+    else:
+        ordered = all_nodes
 
-    # Remove existing top-level .md files for sections that have children
-    # (they will be replaced by folders)
+    # Remove existing top-level .md files that will be replaced by folders
     for node in ordered:
         title = sanitize_name(node["title"])
-        # Find any existing .md with this title and remove it
-        for f in os.listdir(BASE_DIR):
+        for f in os.listdir(args.output):
             if f.endswith(".md") and title in f:
-                os.remove(os.path.join(BASE_DIR, f))
+                os.remove(os.path.join(args.output, f))
 
-    # Process each top-level section in order
-    # Assign display index based on original position in all_nodes
     original_indices = {n["doc_id"]: i + 1 for i, n in enumerate(all_nodes)}
 
     for node in ordered:
@@ -120,8 +129,8 @@ def main():
         children = node.get("child_docs") or []
         print(f"\n{'='*60}")
         print(f"Processing [{idx:02d}] {title} ({len(children)} children)")
-        print('='*60)
-        process_node(node, BASE_DIR, idx, depth=0)
+        print("=" * 60)
+        process_node(node, args.output, idx, args.key, args.language)
 
     print("\n\nDone! Full doc tree built.")
 

@@ -11,13 +11,12 @@ Before either, finish the Meta setup in [META_SETUP.md](./META_SETUP.md). You ne
 | Tool | Version | Install |
 |---|---|---|
 | Node.js | 18+ | https://nodejs.org |
-| Netlify CLI | latest | `npm install -g netlify-cli` |
 | A Meta app | — | See [META_SETUP.md](./META_SETUP.md) |
 
 Verify:
 ```bash
 node --version     # v18.x or higher
-netlify --version  # 17.x or higher
+npm --version      # v9.x or higher
 ```
 
 ---
@@ -31,7 +30,7 @@ cd socialLift
 ```
 
 ### 2. Set the Facebook App ID in the frontend
-Edit [public/config.js](../public/config.js):
+Edit [frontend/config.js](../frontend/config.js):
 ```js
 window.SOCIALLIFT_CONFIG = {
   FB_APP_ID: "1234567890123456",  // <-- your App ID
@@ -39,26 +38,28 @@ window.SOCIALLIFT_CONFIG = {
 };
 ```
 
-### 3. Create a local `.env` for the Netlify Function
+### 3. Create a local `.env` for the Monolith Backend
 Copy the template:
 ```bash
 cp .env.example .env
 ```
 Fill in `.env`:
 ```
+PORT=8888
 FB_APP_ID=1234567890123456
 FB_APP_SECRET=abcd1234...
 ALLOWED_ORIGIN=http://localhost:8888
 ```
 `.env` is gitignored — never commit it.
 
-### 4. Start the dev server
+### 4. Install dependencies and start the dev server
 ```bash
-netlify dev
+npm install
+npm run dev
 ```
 You should see:
 ```
-◈ Server now ready on http://localhost:8888
+◈ Monolith server running at http://localhost:8888
 ```
 
 Open http://localhost:8888 in your browser.
@@ -76,7 +77,7 @@ Open http://localhost:8888 in your browser.
 | Symptom | Likely cause |
 |---|---|
 | Button stays "Loading Facebook SDK…" | Ad blocker or network blocking `connect.facebook.net` |
-| "FB_APP_ID not set" badge | You didn't edit `public/config.js` |
+| "FB_APP_ID not set" badge | You didn't edit `frontend/config.js` |
 | Popup says "App Not Setup" | App ID wrong, or localhost not in Allowed Domains (§5 of META_SETUP) |
 | "Backend returned 502: token exchange failed" | `FB_APP_SECRET` missing or wrong in `.env` |
 | Zero Pages returned | Logged-in user doesn't admin any Pages, or didn't grant `pages_show_list` |
@@ -86,40 +87,21 @@ Function logs stream in the `netlify dev` terminal.
 
 ---
 
-## Deploying to Netlify
+## Deploying the Monolith
 
-### Option A: Connect a Git repo (recommended)
+The project is built as a standard monolithic Node.js Express application. You can deploy it to any cloud provider that supports Node.js (e.g., Railway, Render, Heroku, AWS, DigitalOcean).
 
-1. Push the repo to GitHub/GitLab/Bitbucket.
-2. https://app.netlify.com → **Add new site → Import an existing project** → pick the repo.
-3. Build settings are auto-detected from [netlify.toml](../netlify.toml):
-   - Publish directory: `public`
-   - Functions directory: `netlify/functions`
-   - Build command: (none)
-4. **Site settings → Environment variables → Add**:
-   - `FB_APP_ID` = `1234567890123456`
-   - `FB_APP_SECRET` = `abcd1234...`
-   - `ALLOWED_ORIGIN` = `https://your-site.netlify.app` (use your actual URL after first deploy)
-5. Trigger a deploy (push a commit, or **Deploys → Trigger deploy**).
-6. Copy the deployed URL (e.g. `https://sociallift-abc123.netlify.app`).
-7. Go back to the Meta app dashboard → **Facebook Login → Settings** → add that URL to **Valid OAuth Redirect URIs** and **Allowed Domains for the JS SDK**.
-8. Update `ALLOWED_ORIGIN` in Netlify env to match, then redeploy.
-
-### Option B: Manual deploy from CLI
-
-```bash
-netlify login
-netlify init           # link to an existing site or create a new one
-netlify deploy         # preview deploy
-netlify deploy --prod  # production
-```
-
-Set env vars via CLI instead of the UI:
-```bash
-netlify env:set FB_APP_ID 1234567890123456
-netlify env:set FB_APP_SECRET abcd1234...
-netlify env:set ALLOWED_ORIGIN https://your-site.netlify.app
-```
+### Steps:
+1. Set the environment variables in your hosting provider's dashboard:
+   - `PORT` (optional, defaults to 8888)
+   - `FB_APP_ID` = `your-app-id`
+   - `FB_APP_SECRET` = `your-app-secret`
+   - `ALLOWED_ORIGIN` = `https://your-deployed-domain.com`
+2. Configure the start command:
+   ```bash
+   npm start
+   ```
+3. Update the OAuth redirect URIs and Allowed Domains for the JS SDK in your Meta App Dashboard to match your deployed URL.
 
 ---
 
@@ -137,19 +119,22 @@ netlify env:set ALLOWED_ORIGIN https://your-site.netlify.app
 
 ```
 socialLift/
-├── public/                    # Netlify serves this folder
+├── frontend/                  # Static frontend files (serviced by Express statically)
 │   ├── index.html             # Landing page
 │   ├── styles.css             # Styling
 │   ├── app.js                 # FB SDK login + page fetching
 │   └── config.js              # App ID + scopes (browser-safe)
-├── netlify/
-│   └── functions/
-│       └── store-tokens.js    # Backend: exchanges + persists tokens
+├── backend/                   # Monolithic Express backend
+│   ├── src/
+│   │   ├── server.js          # Monolithic server entry point
+│   │   └── routes/
+│   │       └── api.js         # Token store and OAuth APIs
+│   ├── .env.example           # Template for backend .env
+│   └── package.json           # Backend node dependencies
 ├── docs/
 │   ├── META_SETUP.md          # Meta developer platform setup
 │   └── HOW_TO_RUN.md          # This file
-├── netlify.toml               # Netlify config
-├── .env.example               # Template for local .env
+├── package.json               # Root Node dependencies and workspace scripts
 ├── .gitignore
 └── README.md
 ```

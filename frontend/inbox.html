@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inbox — SocialLift</title>
+    <meta name="description" content="Unified inbox for direct messages across all your connected platforms." />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-main">
+      <h1>Inbox</h1>
+      <p class="page-sub">Direct messages across all connected platforms.</p>
+
+      <div class="tabs" id="inbox-tabs">
+        <button class="tab active" data-platform="tiktok">TikTok DMs</button>
+        <button class="tab" data-platform="messenger">Messenger (Coming Soon)</button>
+        <button class="tab" data-platform="instagram">Instagram DMs (Coming Soon)</button>
+      </div>
+
+      <!-- TikTok DM layout -->
+      <div id="tiktok-dm-panel" style="display:grid;grid-template-columns:340px 1fr;gap:16px;min-height:480px">
+        <div class="convo-list" id="tt-convo-list"></div>
+        <div id="tt-thread-panel">
+          <div class="empty-state" style="padding:48px">
+            <div class="empty-icon">💬</div>
+            <div class="empty-title">Select a conversation</div>
+            <div class="empty-sub">Choose a conversation from the list to view messages.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Facebook DM layout -->
+      <div id="fb-dm-panel" hidden>
+        <label for="page-select">Page</label>
+        <select id="page-select"></select>
+        <div class="convo-list" id="fb-convo-list" style="margin-top:16px"></div>
+      </div>
+    </main>
+
+    <script src="./config.js"></script>
+    <script src="./shell.js"></script>
+    <script src="./api.js"></script>
+    <script>
+      (async () => {
+        const session = await SL.requireAuth("/inbox.html");
+        if (!session) return;
+
+        const ttPanel = document.getElementById("tiktok-dm-panel");
+        const fbPanel = document.getElementById("fb-dm-panel");
+        let currentPlatform = "tiktok";
+
+        /* ========== TikTok DMs ========== */
+        async function loadTiktokDms() {
+          const listEl = document.getElementById("tt-convo-list");
+          const threadEl = document.getElementById("tt-thread-panel");
+
+          if (!session.tiktok) {
+            listEl.innerHTML = '<div class="empty-state" style="padding:24px"><div class="empty-icon">📱</div><div class="empty-title">TikTok not connected</div><div class="empty-sub"><a href="/">Connect TikTok</a></div></div>';
+            return;
+          }
+
+          const convos = await SLApi.tiktokConversations();
+          listEl.innerHTML = "";
+
+          convos.forEach(c => {
+            const item = document.createElement("div");
+            item.className = "convo-item";
+            item.innerHTML =
+              '<img class="c-avatar" src="' + c.user.avatar + '" alt="">' +
+              '<div class="c-info"><div class="c-name"></div><div class="c-snippet"></div></div>' +
+              '<div style="text-align:right"><div class="c-time">' + SLApi.relativeTime(c.updated_at) + '</div>' +
+              (c.unread_count ? '<span class="c-unread">' + c.unread_count + '</span>' : '') +
+              '</div>';
+            item.querySelector(".c-name").textContent = "@" + c.user.username + (c.user.is_follower ? " ✓" : "");
+            item.querySelector(".c-snippet").textContent = c.last_message;
+
+            item.addEventListener("click", () => {
+              /* Highlight active */
+              listEl.querySelectorAll(".convo-item").forEach(ci => ci.style.background = "");
+              item.style.background = "var(--panel-hover)";
+
+              /* Render thread */
+              threadEl.innerHTML = '';
+
+              /* Thread header */
+              const header = document.createElement("div");
+              header.style.cssText = "display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)";
+              header.innerHTML =
+                '<img style="width:32px;height:32px;border-radius:50%" src="' + c.user.avatar + '" alt="">' +
+                '<div><div style="font-weight:600;font-size:0.88rem">@' + c.user.username + '</div>' +
+                '<div style="font-size:0.72rem;color:var(--text-3)">' + (c.user.is_follower ? "Follows you" : "Not following") + '</div></div>';
+              threadEl.appendChild(header);
+
+              /* Messages */
+              const thread = document.createElement("div");
+              thread.className = "message-thread";
+              c.messages.forEach(msg => {
+                const bubble = document.createElement("div");
+                bubble.className = "msg-bubble " + (msg.from === "yourbrand" ? "outgoing" : "incoming");
+                bubble.innerHTML = '<div></div><div class="msg-time">' + SLApi.relativeTime(msg.time) + '</div>';
+                bubble.querySelector("div").textContent = msg.text;
+                thread.appendChild(bubble);
+              });
+              threadEl.appendChild(thread);
+              thread.scrollTop = thread.scrollHeight;
+
+              /* Reply bar */
+              const bar = document.createElement("div");
+              bar.className = "dm-reply-bar";
+              bar.innerHTML = '<input type="text" placeholder="Type a message…" /><button class="btn btn-primary btn-sm">Send</button>';
+              bar.querySelector("button").addEventListener("click", async () => {
+                const input = bar.querySelector("input");
+                const text = input.value.trim();
+                if (!text) return;
+                await SLApi.tiktokSendMessage(c.conversation_id, text);
+                const bubble = document.createElement("div");
+                bubble.className = "msg-bubble outgoing";
+                bubble.innerHTML = '<div></div><div class="msg-time">just now</div>';
+                bubble.querySelector("div").textContent = text;
+                thread.appendChild(bubble);
+                thread.scrollTop = thread.scrollHeight;
+                input.value = "";
+                SL.toast("Message sent!", "success");
+              });
+              bar.querySelector("input").addEventListener("keydown", (e) => {
+                if (e.key === "Enter") bar.querySelector("button").click();
+              });
+              threadEl.appendChild(bar);
+            });
+
+            listEl.appendChild(item);
+          });
+        }
+
+        /* ========== Facebook DMs ========== */
+        function loadFbDms() {
+          const pages = session.pages || [];
+          const sel = document.getElementById("page-select");
+          const list = document.getElementById("fb-convo-list");
+
+          if (!pages.length) {
+            list.innerHTML = '<div class="empty-state" style="padding:24px"><div class="empty-icon">📘</div><div class="empty-title">Facebook not connected</div><div class="empty-sub"><a href="/">Connect Facebook</a></div></div>';
+            return;
+          }
+
+          sel.innerHTML = "";
+          pages.forEach(p => {
+            const opt = document.createElement("option");
+            opt.value = p.id; opt.textContent = p.name;
+            opt.dataset.token = p.access_token;
+            sel.appendChild(opt);
+          });
+
+          async function load() {
+            const opt = sel.options[sel.selectedIndex];
+            list.innerHTML = '<div style="padding:20px;color:var(--text-3)">Loading…</div>';
+            try {
+              const platform = currentPlatform === "instagram" ? "instagram" : "messenger";
+              const res = await SLApi.pageConversations(opt.value, opt.dataset.token, platform);
+              list.innerHTML = "";
+              const convos = res.data || [];
+              if (!convos.length) {
+                list.innerHTML = '<div style="padding:20px;color:var(--text-3)">No conversations.</div>';
+                return;
+              }
+              convos.forEach(c => {
+                const row = document.createElement("div");
+                row.className = "convo-item";
+                const participant = (c.participants && c.participants.data && c.participants.data.map(x => x.name || x.username || x.id).join(", ")) || "Unknown";
+                row.innerHTML =
+                  '<div class="c-info"><div class="c-name"></div><div class="c-snippet"></div></div>' +
+                  (c.unread_count ? '<span class="c-unread">' + c.unread_count + '</span>' : '');
+                row.querySelector(".c-name").textContent = participant;
+                row.querySelector(".c-snippet").textContent = c.snippet || "(no recent message)";
+                list.appendChild(row);
+              });
+            } catch (err) {
+              list.innerHTML = '<div class="error-banner" style="margin:16px">' + err.message + '</div>';
+            }
+          }
+          sel.addEventListener("change", load);
+          load();
+        }
+
+        /* ========== Tab switching ========== */
+        function showPanel(platform) {
+          currentPlatform = platform;
+          if (platform === "tiktok") {
+            ttPanel.hidden = false; fbPanel.hidden = true;
+          } else {
+            ttPanel.hidden = true; fbPanel.hidden = false;
+            loadFbDms();
+          }
+        }
+
+        document.querySelectorAll("#inbox-tabs .tab").forEach(tab => {
+          tab.addEventListener("click", () => {
+            const platform = tab.dataset.platform;
+            if (platform === "messenger" || platform === "instagram") {
+              const name = platform === "messenger" ? "Messenger" : "Instagram";
+              SL.toast(name + " integration is coming soon!", "info");
+              return;
+            }
+            document.querySelectorAll("#inbox-tabs .tab").forEach(t => t.classList.remove("active"));
+            tab.classList.add("active");
+            showPanel(platform);
+          });
+        });
+
+        loadTiktokDms();
+      })();
+    </script>
+  </body>
+</html>

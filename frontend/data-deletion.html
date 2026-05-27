@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Deletion — SocialLift</title>
+    <meta name="description" content="How to request deletion of your data from SocialLift — platform revocation, email requests, and in-app options." />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="legal-page">
+      <a href="/" class="legal-back">← Back to SocialLift</a>
+      <h1>Data Deletion Instructions</h1>
+      <p class="legal-date">Last updated: 2026-05-28</p>
+
+      <p>
+        You have the right to request deletion of all data associated with
+        your SocialLift account at any time. Below are all available methods.
+        Regardless of which method you choose, deletion is completed within
+        <strong>30 days</strong> and you will receive confirmation.
+      </p>
+
+      <!-- ============================================================ -->
+      <h2>Option 1 — Revoke from TikTok</h2>
+      <ol>
+        <li>Open TikTok → <strong>Settings and privacy</strong>.</li>
+        <li>Go to <strong>Manage account → Third-party apps</strong>.</li>
+        <li>Find <strong>SocialLift</strong> and tap <strong>Remove</strong>.</li>
+      </ol>
+      <p>
+        TikTok will notify us via a deauthorization callback
+        (<code>authorization.removed</code> webhook). Upon receiving this
+        notification, we will automatically delete your stored tokens,
+        cached account data, video metadata, comment data, mention data,
+        and DM conversation history within 30 days.
+      </p>
+
+      <!-- ============================================================ -->
+      <h2>Option 2 — Revoke from Facebook</h2>
+      <ol>
+        <li>Open Facebook → <strong>Settings &amp; privacy → Settings</strong>.</li>
+        <li>Go to <strong>Apps and Websites</strong> (or <strong>Business Integrations</strong>).</li>
+        <li>Find <strong>SocialLift</strong> under Active.</li>
+        <li>Click <strong>Remove</strong> and check the box to delete any data SocialLift has about you.</li>
+      </ol>
+      <p>
+        Facebook will notify us via a deauthorize callback. Upon receiving
+        this notification, we will automatically delete your stored tokens,
+        cached Page data, Instagram metadata, and all related records within
+        30 days.
+      </p>
+
+      <!-- ============================================================ -->
+      <h2>Option 3 — Email Request</h2>
+      <p>
+        Send an email to
+        <a href="mailto:privacy@company.com">privacy@company.com</a>
+        from an email address you can verify is associated with your
+        account. Include:
+      </p>
+      <ul>
+        <li>Subject line: <em>"Delete my data"</em></li>
+        <li>Your TikTok username and/or Facebook user ID (if known)</li>
+        <li>Any additional information that helps us identify your account</li>
+      </ul>
+      <p>
+        We will acknowledge your request within <strong>5 business days</strong>
+        and complete deletion within <strong>30 days</strong>. You will
+        receive an email confirmation once deletion is complete.
+      </p>
+
+      <!-- ============================================================ -->
+      <h2>Option 4 — From the Dashboard</h2>
+      <p>
+        Log in to SocialLift, go to
+        <a href="/settings.html">Settings</a>, and click
+        <strong>"Disconnect all &amp; delete my data"</strong>. This will:
+      </p>
+      <ol>
+        <li>Immediately revoke all active platform tokens</li>
+        <li>Prevent any further API calls on your behalf</li>
+        <li>Schedule complete data deletion (completed within 30 days)</li>
+        <li>Log you out of the Service</li>
+      </ol>
+      <p>
+        A confirmation notification will appear in your dashboard before
+        logging out. If you provided an email, you will also receive
+        email confirmation once deletion is fully processed.
+      </p>
+
+      <!-- ============================================================ -->
+      <h2>What We Delete</h2>
+      <p>
+        Upon receiving a valid deletion request, we delete <strong>all</strong>
+        of the following data associated with your account:
+      </p>
+      <ul>
+        <li>Access tokens and refresh tokens for all connected platforms</li>
+        <li>Cached account profiles and business metadata</li>
+        <li>Cached Page, Instagram account, and TikTok business profile data</li>
+        <li>Video metadata, thumbnails, and engagement metrics</li>
+        <li>Comment data (text, commenter information, reply history)</li>
+        <li>Brand mention and tag records</li>
+        <li>Direct message conversation data stored by SocialLift</li>
+        <li>Creator analytics and audience demographic data</li>
+        <li>Scheduled posts and content drafts you created</li>
+        <li>Server request logs linked to your account</li>
+      </ul>
+
+      <!-- ============================================================ -->
+      <h2>What We Retain</h2>
+      <ul>
+        <li>
+          <strong>Aggregated, de-identified statistics</strong> — usage
+          metrics that cannot be used to re-identify you (e.g., total API
+          calls per day) may be retained for Service improvement.
+        </li>
+        <li>
+          <strong>Content on social platforms</strong> — content you
+          published to TikTok, Facebook, or Instagram through the Service
+          remains on those platforms and is managed by the respective
+          platform provider. SocialLift does not have the ability to delete
+          content from your social media accounts.
+        </li>
+        <li>
+          <strong>Legal obligations</strong> — if we are required by law
+          to retain certain records (e.g., for tax, fraud prevention, or
+          regulatory compliance), we will retain only the minimum data
+          necessary and only for the legally required period.
+        </li>
+      </ul>
+
+      <!-- ============================================================ -->
+      <h2>Verification</h2>
+      <p>
+        To protect your privacy, we may need to verify your identity before
+        processing a deletion request submitted via email. Verification
+        methods include:
+      </p>
+      <ul>
+        <li>Confirming account details that match our records</li>
+        <li>Verifying ownership of the email address associated with your account</li>
+        <li>In rare cases, requesting additional documentation</li>
+      </ul>
+
+      <!-- ============================================================ -->
+      <h2>Timeline Summary</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Token Revocation</th>
+            <th>Data Deletion</th>
+            <th>Confirmation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>TikTok revocation</td>
+            <td>Immediate</td>
+            <td>Within 30 days</td>
+            <td>Via platform notification</td>
+          </tr>
+          <tr>
+            <td>Facebook revocation</td>
+            <td>Immediate</td>
+            <td>Within 30 days</td>
+            <td>Via platform notification</td>
+          </tr>
+          <tr>
+            <td>Email request</td>
+            <td>Within 5 business days</td>
+            <td>Within 30 days</td>
+            <td>Email confirmation</td>
+          </tr>
+          <tr>
+            <td>Dashboard disconnect</td>
+            <td>Immediate</td>
+            <td>Within 30 days</td>
+            <td>Dashboard + email</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- ============================================================ -->
+      <h2>Questions</h2>
+      <p>
+        If you have questions about data deletion or need assistance:
+      </p>
+      <ul>
+        <li>Email: <a href="mailto:privacy@company.com">privacy@company.com</a></li>
+        <li>Subject line: <em>"Data deletion inquiry"</em></li>
+      </ul>
+      <p>
+        See also: <a href="/privacy.html">Privacy Policy</a> |
+        <a href="/terms.html">Terms of Service</a>
+      </p>
+    </main>
+  </body>
+</html>

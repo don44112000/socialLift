@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analytics — SocialLift</title>
+    <meta name="description" content="Performance insights and analytics across your connected social platforms." />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-main">
+      <h1>Analytics</h1>
+      <p class="page-sub">Performance insights across your connected accounts.</p>
+
+      <!-- TikTok Analytics -->
+      <h2 class="section-title" style="margin-top:0">TikTok Creator Insights</h2>
+      <div class="tiles" id="tt-stats"></div>
+
+      <div class="grid-2" id="tt-details" style="margin-bottom: 28px"></div>
+
+      <!-- Facebook Analytics -->
+      <h2 class="section-title">Facebook Page Insights</h2>
+      <div id="fb-section">
+        <label for="page-select">Page</label>
+        <select id="page-select"></select>
+        <div class="tiles" id="fb-tiles" style="margin-top: 14px"></div>
+      </div>
+
+      <!-- Instagram Analytics -->
+      <h2 class="section-title">Instagram Insights</h2>
+      <div class="tiles" id="ig-tiles"></div>
+    </main>
+
+    <script src="./config.js"></script>
+    <script src="./shell.js"></script>
+    <script src="./api.js"></script>
+    <script>
+      (async () => {
+        const session = await SL.requireAuth("/analytics.html");
+        if (!session) return;
+
+        function tile(parent, label, value, sub) {
+          const d = document.createElement("div");
+          d.className = "tile";
+          d.innerHTML = '<div class="t-label"></div><div class="t-value"></div><div class="t-sub"></div>';
+          d.querySelector(".t-label").textContent = label;
+          d.querySelector(".t-value").textContent = value;
+          d.querySelector(".t-sub").textContent = sub || "";
+          parent.appendChild(d);
+        }
+
+        /* ========== TikTok ========== */
+        const ttStats = document.getElementById("tt-stats");
+        const ttDetails = document.getElementById("tt-details");
+
+        if (session.tiktok) {
+          const tk = session.tiktok;
+          const insights = await SLApi.tiktokCreatorInsights();
+
+          tile(ttStats, "Followers", SLApi.formatCount(tk.followers_count), "Total");
+          tile(ttStats, "Following", SLApi.formatCount(tk.following_count), "Total");
+          tile(ttStats, "Total Likes", SLApi.formatCount(tk.likes_count), "All videos");
+          tile(ttStats, "Videos", tk.video_count, "Published");
+          tile(ttStats, "Video Views (7d)", SLApi.formatCount(insights.video_views_7d), "Last 7 days");
+          tile(ttStats, "Profile Views (7d)", SLApi.formatCount(insights.profile_views_7d), "Last 7 days");
+          tile(ttStats, "New Followers (7d)", "+" + SLApi.formatCount(insights.followers_gained_7d), "Last 7 days");
+          tile(ttStats, "Engagement Rate", insights.avg_engagement_rate + "%", "Average");
+
+          /* Audience breakdown */
+          const ageCard = document.createElement("div");
+          ageCard.className = "card";
+          ageCard.innerHTML = '<h3 style="font-size:0.88rem;font-weight:600;margin-bottom:14px">Audience Age</h3><div id="age-bars"></div>';
+          const ageBars = ageCard.querySelector("#age-bars");
+          Object.entries(insights.audience).forEach(([range, pct]) => {
+            const row = document.createElement("div");
+            row.style.cssText = "display:flex;align-items:center;gap:10px;margin-bottom:8px";
+            row.innerHTML =
+              '<span style="width:50px;font-size:0.78rem;color:var(--text-2)">' + range + '</span>' +
+              '<div style="flex:1;height:8px;background:var(--panel-3);border-radius:4px;overflow:hidden">' +
+              '<div style="height:100%;width:' + pct + '%;background:linear-gradient(90deg,var(--accent),var(--accent-hover));border-radius:4px;transition:width 0.5s"></div></div>' +
+              '<span style="width:36px;text-align:right;font-size:0.78rem;color:var(--text-3)">' + pct + '%</span>';
+            ageBars.appendChild(row);
+          });
+          ttDetails.appendChild(ageCard);
+
+          /* Top countries */
+          const geoCard = document.createElement("div");
+          geoCard.className = "card";
+          geoCard.innerHTML = '<h3 style="font-size:0.88rem;font-weight:600;margin-bottom:14px">Top Countries</h3><div id="geo-list"></div>';
+          const geoList = geoCard.querySelector("#geo-list");
+          insights.top_countries.forEach((c, i) => {
+            const row = document.createElement("div");
+            row.style.cssText = "display:flex;align-items:center;gap:10px;margin-bottom:10px";
+            row.innerHTML =
+              '<span style="width:20px;font-size:0.78rem;color:var(--text-3);font-weight:600">' + (i + 1) + '</span>' +
+              '<span style="flex:1;font-size:0.88rem">' + c.country + '</span>' +
+              '<span style="font-size:0.82rem;color:var(--text-2);font-weight:600">' + c.pct + '%</span>';
+            geoList.appendChild(row);
+          });
+          ttDetails.appendChild(geoCard);
+        } else {
+          ttStats.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">📊</div><div class="empty-title">TikTok not connected</div><div class="empty-sub"><a href="/">Connect TikTok</a> to see creator insights.</div></div>';
+        }
+
+        /* ========== Facebook ========== */
+        const pages = session.pages || [];
+        const fbSection = document.getElementById("fb-section");
+        const fbTiles = document.getElementById("fb-tiles");
+        const sel = document.getElementById("page-select");
+
+        if (!pages.length) {
+          fbSection.innerHTML = '<div class="empty-state"><div class="empty-icon">📘</div><div class="empty-title">Facebook not connected</div><div class="empty-sub"><a href="/">Connect Facebook</a></div></div>';
+          document.getElementById("ig-tiles").innerHTML = '<div class="empty-state"><div class="empty-icon">📸</div><div class="empty-title">Instagram not connected</div></div>';
+          return;
+        }
+
+        pages.forEach(p => {
+          const opt = document.createElement("option");
+          opt.value = p.id; opt.textContent = p.name;
+          opt.dataset.token = p.access_token;
+          opt.dataset.igId = p.instagram_business_account ? p.instagram_business_account.id : "";
+          sel.appendChild(opt);
+        });
+
+        function sumLastDays(metricRow) {
+          if (!metricRow || !metricRow.values) return 0;
+          return metricRow.values.reduce((s, v) => s + (typeof v.value === "number" ? v.value : 0), 0);
+        }
+
+        async function loadFb() {
+          const opt = sel.options[sel.selectedIndex];
+          fbTiles.innerHTML = '<div class="muted">Loading…</div>';
+          const igTiles = document.getElementById("ig-tiles");
+          igTiles.innerHTML = '<div class="muted">Loading…</div>';
+
+          try {
+            const res = await SLApi.pageInsights(opt.value, opt.dataset.token);
+            const byName = {};
+            (res.data || []).forEach(m => byName[m.name] = m);
+            fbTiles.innerHTML = "";
+            tile(fbTiles, "Impressions (7d)", SLApi.formatCount(sumLastDays(byName.page_impressions)));
+            tile(fbTiles, "Engagements (7d)", SLApi.formatCount(sumLastDays(byName.page_post_engagements)));
+            tile(fbTiles, "Page Views (7d)", SLApi.formatCount(sumLastDays(byName.page_views_total)));
+            const fans = byName.page_fans;
+            const fansVal = fans && fans.values && fans.values.length ? fans.values[fans.values.length - 1].value : 0;
+            tile(fbTiles, "Total Fans", SLApi.formatCount(fansVal));
+          } catch (err) {
+            fbTiles.innerHTML = '<div class="error-banner">' + err.message + '</div>';
+          }
+
+          if (!opt.dataset.igId) {
+            igTiles.innerHTML = '<div class="muted">No Instagram linked to this Page.</div>';
+            return;
+          }
+          try {
+            const res = await SLApi.igInsights(opt.dataset.igId, opt.dataset.token);
+            const byName = {};
+            (res.data || []).forEach(m => byName[m.name] = m);
+            igTiles.innerHTML = "";
+            tile(igTiles, "Impressions", SLApi.formatCount(sumLastDays(byName.impressions)));
+            tile(igTiles, "Reach", SLApi.formatCount(sumLastDays(byName.reach)));
+            tile(igTiles, "Profile Views", SLApi.formatCount(sumLastDays(byName.profile_views)));
+            const fc = byName.follower_count;
+            const fcVal = fc && fc.values && fc.values.length ? fc.values[fc.values.length - 1].value : 0;
+            tile(igTiles, "New Followers", SLApi.formatCount(fcVal));
+          } catch (err) {
+            igTiles.innerHTML = '<div class="error-banner">' + err.message + '</div>';
+          }
+        }
+
+        sel.addEventListener("change", loadFb);
+        loadFb();
+      })();
+    </script>
+  </body>
+</html>

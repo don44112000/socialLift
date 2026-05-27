@@ -6,25 +6,28 @@ Meta Graph API.
 
 ## What it does
 
-1. Business user clicks **Continue with Facebook** on [public/index.html](public/index.html).
-2. Facebook JS SDK requests the scopes listed in [public/config.js](public/config.js) (Pages, Pages messaging, Instagram content publish, Instagram DMs, business management).
+1. Business user clicks **Continue with Facebook** on [frontend/index.html](frontend/index.html).
+2. Facebook JS SDK requests the scopes listed in [frontend/config.js](frontend/config.js) (Pages, Pages messaging, Instagram content publish, Instagram DMs, business management).
 3. Frontend calls `/me/accounts` to enumerate Pages + linked Instagram business accounts (with per-Page access tokens).
-4. User clicks **Send tokens to SocialLift backend** → payload posted to the Netlify Function [netlify/functions/store-tokens.js](netlify/functions/store-tokens.js).
-5. The function exchanges the short-lived user token for a long-lived one using the app secret (never exposed to the browser) and acknowledges. Persistence is a TODO stub — wire in your DB there.
+4. User clicks **Send tokens to SocialLift backend** → payload posted to the backend API endpoint `/api/store-tokens`.
+5. The backend server exchanges the short-lived user token for a long-lived one using the app secret (never exposed to the browser) and acknowledges. Persistence is a TODO stub — wire in your DB there.
 
 ## Project structure
 
 ```
-public/               # Static site Netlify serves
+frontend/             # Static frontend client served by Express
   index.html
   styles.css
   app.js
   config.js           # Public config (app id, scopes, graph version)
-netlify/
-  functions/
-    store-tokens.js   # Backend: receives tokens, exchanges for long-lived
-netlify.toml          # Build + dev + headers config
-.env.example          # Server-only env vars (NOT committed)
+backend/              # Monolithic Express backend
+  src/
+    server.js         # Main Express server serving APIs and public assets
+    routes/
+      api.js          # Facebook OAuth and storage API routes
+  .env.example        # Backend environment variable template
+  package.json        # Backend dependencies and run scripts
+package.json          # Root orchestration package.json (npm workspaces)
 ```
 
 ## Setup
@@ -37,35 +40,31 @@ netlify.toml          # Build + dev + headers config
 - Note the **App ID** and **App Secret**
 
 ### 2. Configure the frontend
-Edit [public/config.js](public/config.js):
+Edit [frontend/config.js](frontend/config.js):
 ```js
 FB_APP_ID: "1234567890123456"
 ```
 
-### 3. Configure the Netlify site
-In the Netlify dashboard → Site settings → Environment variables:
+### 3. Configure the environment
+Create a `.env` file based on `.env.example`:
 - `FB_APP_ID` — same as above
 - `FB_APP_SECRET` — from the Meta app dashboard (Settings → Basic)
-- `ALLOWED_ORIGIN` — your deployed URL, e.g. `https://sociallift.netlify.app`
+- `ALLOWED_ORIGIN` — your local/production URL, e.g. `http://localhost:8888`
 
 ### 4. Local development
 ```bash
-npm install -g netlify-cli
-netlify dev
+npm install
+npm run dev
 ```
-Serves the site on `http://localhost:8888` with the function mounted at
-`/.netlify/functions/store-tokens`.
+Serves the site and APIs on `http://localhost:8888`.
 
-### 5. Deploy
+## Deploy
+Run the start script on any Node.js compatible platform:
 ```bash
-netlify deploy --prod
+npm start
 ```
-Or connect this repo to Netlify and it will build on push using
-[netlify.toml](netlify.toml).
 
-## App Review
-
-The scopes in `public/config.js` require Meta **App Review** before non-role
+The scopes in `frontend/config.js` require Meta **App Review** before non-role
 users can log in. Until then, add test users under **Roles → Testers** in the
 Meta dashboard. See [claudeFbResearch.md](claudeFbResearch.md) §7 for the full
 review checklist.

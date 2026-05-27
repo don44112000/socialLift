@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Comments — SocialLift</title>
+    <meta name="description" content="View and manage comments on your content across social platforms." />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-main">
+      <h1>Comments</h1>
+      <p class="page-sub">View and manage comments on your content across platforms.</p>
+
+      <label for="video-select">Select content</label>
+      <select id="video-select"></select>
+
+      <div class="tabs" style="margin-top: 20px">
+        <button class="tab active" data-filter="all">All Comments</button>
+        <button class="tab" data-filter="unreplied">Needs Reply</button>
+        <button class="tab" data-filter="replied">Replied</button>
+      </div>
+
+      <div class="card" id="comments-container" style="padding: 0 20px"></div>
+    </main>
+
+    <script src="./config.js"></script>
+    <script src="./shell.js"></script>
+    <script src="./api.js"></script>
+    <script>
+      (async () => {
+        const session = await SL.requireAuth("/comments.html");
+        if (!session) return;
+
+        const container = document.getElementById("comments-container");
+        const select = document.getElementById("video-select");
+
+        if (!session.tiktok) {
+          container.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div><div class="empty-title">Connect a platform to see comments</div><div class="empty-sub"><a href="/">Connect your TikTok account</a> to manage comments on your content.</div></div>';
+          select.style.display = "none";
+          return;
+        }
+
+        /* --- Load videos into dropdown --- */
+        const videos = await SLApi.tiktokVideos();
+        videos.forEach(v => {
+          const opt = document.createElement("option");
+          opt.value = v.id;
+          opt.textContent = v.caption.slice(0, 60) + (v.caption.length > 60 ? "…" : "") + " (" + SLApi.formatCount(v.comment_count) + " comments)";
+          select.appendChild(opt);
+        });
+
+        let currentFilter = "all";
+
+        /* --- Render comments --- */
+        async function renderComments() {
+          const videoId = select.value;
+          const allComments = await SLApi.tiktokComments(videoId);
+          container.innerHTML = "";
+
+          let filtered = allComments;
+          if (currentFilter === "unreplied") filtered = allComments.filter(c => !c.replied);
+          if (currentFilter === "replied") filtered = allComments.filter(c => c.replied);
+
+          if (!filtered.length) {
+            container.innerHTML = '<div class="empty-state" style="padding:32px"><div class="empty-icon">✓</div><div class="empty-title">' +
+              (currentFilter === "unreplied" ? "All caught up!" : "No comments yet") + '</div><div class="empty-sub">' +
+              (currentFilter === "unreplied" ? "You've replied to all comments on this content." : "No comments matching this filter.") + '</div></div>';
+            return;
+          }
+
+          filtered.forEach(c => {
+            const item = document.createElement("div");
+            item.className = "comment-item";
+
+            let html =
+              '<img class="comment-avatar" src="' + c.user.avatar + '" alt="">' +
+              '<div class="comment-content">' +
+              '<div><span class="comment-user">@' + c.user.username + '</span>' +
+              '<span class="comment-time">' + SLApi.relativeTime(c.create_time) + '</span></div>' +
+              '<div class="comment-text"></div>' +
+              '<div class="comment-actions">' +
+              '<span style="font-size:0.75rem;color:var(--text-3)">❤ ' + c.like_count + '</span>' +
+              '<button class="comment-action reply-btn">Reply</button>' +
+              '<button class="comment-action hide-btn">Hide</button>' +
+              '<button class="comment-action delete-btn" style="color:var(--danger)">Delete</button>' +
+              '</div>';
+
+            if (c.replied && c.reply) {
+              html += '<div class="comment-replied">' +
+                '<div style="font-size:0.75rem;color:var(--accent);font-weight:600;margin-bottom:4px">Your reply · ' + SLApi.relativeTime(c.reply.time) + '</div>' +
+                '<div style="font-size:0.85rem;color:var(--text-2)"></div></div>';
+            }
+
+            html += '</div>';
+            item.innerHTML = html;
+            item.querySelector(".comment-text").textContent = c.text;
+            if (c.replied && c.reply) {
+              item.querySelector(".comment-replied [style*='text-2']").textContent = c.reply.text;
+            }
+
+            /* Reply handler */
+            item.querySelector(".reply-btn").addEventListener("click", () => {
+              const existing = item.querySelector(".reply-input-row");
+              if (existing) { existing.remove(); return; }
+              const row = document.createElement("div");
+              row.className = "reply-input-row";
+              row.innerHTML = '<input type="text" placeholder="Write a reply…" /><button class="btn btn-sm btn-primary">Send</button>';
+              row.querySelector("button").addEventListener("click", async () => {
+                const text = row.querySelector("input").value.trim();
+                if (!text) return;
+                await SLApi.tiktokReplyComment(c.id, text);
+                row.innerHTML = '<div style="color:var(--success);font-size:0.82rem">✓ Reply sent</div>';
+                SL.toast("Reply sent!", "success");
+              });
+              item.querySelector(".comment-content").appendChild(row);
+              row.querySelector("input").focus();
+            });
+
+            /* Hide handler */
+            item.querySelector(".hide-btn").addEventListener("click", () => {
+              item.style.opacity = "0.4";
+              SL.toast("Comment hidden", "success");
+            });
+
+            /* Delete handler */
+            item.querySelector(".delete-btn").addEventListener("click", () => {
+              if (!confirm("Delete this comment?")) return;
+              item.remove();
+              SL.toast("Comment deleted", "success");
+            });
+
+            container.appendChild(item);
+          });
+        }
+
+        renderComments();
+
+        /* --- Tab switching --- */
+        document.querySelectorAll(".tab").forEach(tab => {
+          tab.addEventListener("click", () => {
+            document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+            tab.classList.add("active");
+            currentFilter = tab.dataset.filter;
+            renderComments();
+          });
+        });
+
+        select.addEventListener("change", renderComments);
+      })();
+    </script>
+  </body>
+</html>

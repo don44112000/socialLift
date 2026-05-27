@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings — SocialLift</title>
+    <meta name="description" content="Manage your SocialLift account, connected platforms, and session." />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-main">
+      <h1>Settings</h1>
+      <p class="page-sub">Account, connected platforms, and session management.</p>
+
+      <div style="max-width: 680px">
+        <!-- TikTok profile -->
+        <div class="card" id="tiktok-profile" style="margin-bottom: 16px"></div>
+
+        <!-- Facebook profile -->
+        <div class="card" id="facebook-profile" style="margin-bottom: 16px"></div>
+
+        <!-- Granted scopes -->
+        <div class="card" style="margin-bottom: 16px">
+          <h2 class="section-title" style="margin-top: 0">Granted permissions</h2>
+
+          <div id="tiktok-scopes" style="margin-bottom: 16px"></div>
+          <div id="fb-scopes"></div>
+        </div>
+
+        <!-- Session -->
+        <div class="card">
+          <h2 class="section-title" style="margin-top: 0">Session</h2>
+          <div class="btn-row" style="margin-top: 12px">
+            <button class="btn btn-ghost" id="logout-btn">Log out</button>
+            <button class="btn btn-danger" id="disconnect-btn">Disconnect all & log out</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="./config.js"></script>
+    <script src="./shell.js"></script>
+    <script src="./api.js"></script>
+    <script>
+      (async () => {
+        const session = await SL.requireAuth("/settings.html");
+        if (!session) return;
+
+        /* ========== TikTok profile ========== */
+        const ttEl = document.getElementById("tiktok-profile");
+        if (session.tiktok) {
+          const tk = session.tiktok;
+          ttEl.innerHTML =
+            '<h2 class="section-title" style="margin-top:0">TikTok Business Account</h2>' +
+            '<div style="display:flex;align-items:center;gap:16px;margin-bottom:14px">' +
+            '<img src="' + tk.avatar_url + '" style="width:52px;height:52px;border-radius:50%;border:2px solid var(--border-light)" alt="">' +
+            '<div><div style="font-weight:700;font-size:1rem"></div>' +
+            '<div style="font-size:0.82rem;color:var(--text-3)">@' + tk.username + '</div></div>' +
+            (tk.is_verified ? '<span class="badge ok">Verified</span>' : '') +
+            '</div>' +
+            '<div style="font-size:0.88rem;color:var(--text-2);margin-bottom:14px"></div>' +
+            '<div style="display:flex;gap:24px;font-size:0.82rem;color:var(--text-3)">' +
+            '<span><strong style="color:var(--text)">' + SLApi.formatCount(tk.followers_count) + '</strong> followers</span>' +
+            '<span><strong style="color:var(--text)">' + SLApi.formatCount(tk.following_count) + '</strong> following</span>' +
+            '<span><strong style="color:var(--text)">' + SLApi.formatCount(tk.likes_count) + '</strong> likes</span>' +
+            '</div>';
+          ttEl.querySelector("[style*='font-weight:700']").textContent = tk.display_name;
+          ttEl.querySelectorAll("[style*='color:var(--text-2)']")[0].textContent = tk.bio;
+        } else {
+          ttEl.innerHTML =
+            '<h2 class="section-title" style="margin-top:0">TikTok</h2>' +
+            '<div style="color:var(--text-3);font-size:0.88rem">Not connected. <a href="/">Connect TikTok →</a></div>';
+        }
+
+        /* ========== Facebook profile ========== */
+        const fbEl = document.getElementById("facebook-profile");
+        if (session.user) {
+          const u = session.user;
+          const pic = u.picture && u.picture.data ? u.picture.data.url : "";
+          fbEl.innerHTML =
+            '<h2 class="section-title" style="margin-top:0">Facebook Account</h2>' +
+            '<div style="display:flex;align-items:center;gap:16px">' +
+            (pic ? '<img src="' + pic + '" style="width:52px;height:52px;border-radius:50%;border:2px solid var(--border-light)" alt="">' : '') +
+            '<div><div style="font-weight:700;font-size:1rem"></div>' +
+            '<div style="font-size:0.78rem;color:var(--text-3);font-family:ui-monospace,Menlo,monospace">ID: ' + u.id + '</div></div>' +
+            '</div>';
+          fbEl.querySelector("[style*='font-weight:700']").textContent = u.name;
+        } else {
+          fbEl.innerHTML =
+            '<h2 class="section-title" style="margin-top:0">Facebook</h2>' +
+            '<div style="color:var(--text-3);font-size:0.88rem">Not connected. <a href="/">Connect Facebook →</a></div>';
+        }
+
+        /* ========== Scopes ========== */
+        const ttScopesEl = document.getElementById("tiktok-scopes");
+        if (session.tiktokScopes && session.tiktokScopes.length) {
+          ttScopesEl.innerHTML = '<div style="font-size:0.78rem;color:var(--text-3);margin-bottom:8px;font-weight:600">TIKTOK SCOPES</div><div class="badges-wrap" style="display:flex;gap:6px;flex-wrap:wrap"></div>';
+          const wrap = ttScopesEl.querySelector(".badges-wrap");
+          session.tiktokScopes.forEach(s => {
+            const b = document.createElement("span");
+            b.className = "badge tiktok";
+            b.textContent = s;
+            wrap.appendChild(b);
+          });
+        }
+
+        const fbScopesEl = document.getElementById("fb-scopes");
+        if (session.grantedScopes && session.grantedScopes.length) {
+          fbScopesEl.innerHTML = '<div style="font-size:0.78rem;color:var(--text-3);margin-bottom:8px;font-weight:600">FACEBOOK SCOPES</div><div class="badges-wrap" style="display:flex;gap:6px;flex-wrap:wrap"></div>';
+          const wrap = fbScopesEl.querySelector(".badges-wrap");
+          session.grantedScopes.forEach(s => {
+            const b = document.createElement("span");
+            b.className = "badge facebook";
+            b.textContent = s;
+            wrap.appendChild(b);
+          });
+        }
+
+        /* ========== Session actions ========== */
+        document.getElementById("logout-btn").addEventListener("click", () => {
+          SL.clearSession();
+          window.location.href = "/";
+        });
+
+        document.getElementById("disconnect-btn").addEventListener("click", async () => {
+          if (!confirm("Disconnect all platforms and log out?")) return;
+          /* Revoke Facebook if connected */
+          if (session.user && window.FB) {
+            try {
+              await SLApi.fbCall("DELETE", "/" + session.user.id + "/permissions", {}, session.userAccessToken);
+              SL.toast("Facebook permissions revoked.", "success");
+            } catch (_) {}
+            try { FB.logout(() => {}); } catch (_) {}
+          }
+          SL.clearSession();
+          window.location.href = "/";
+        });
+      })();
+    </script>
+  </body>
+</html>

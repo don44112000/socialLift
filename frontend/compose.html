@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Compose — SocialLift</title>
+    <meta name="description" content="Create and publish content to your connected social accounts." />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-main">
+      <h1>Compose</h1>
+      <p class="page-sub">Publish content to your connected accounts.</p>
+
+      <div class="card" style="max-width: 760px">
+        <label for="message">Caption / message</label>
+        <textarea id="message" placeholder="What would you like to share?"></textarea>
+
+        <label for="media-url">Media URL (video or image)</label>
+        <input type="url" id="media-url" placeholder="https://example.com/video.mp4 or image.jpg" />
+
+        <label>Publish to</label>
+        <div id="targets"></div>
+
+        <!-- TikTok-specific options -->
+        <div id="tiktok-options" hidden>
+          <h2 class="section-title" style="margin-top: 20px">TikTok options</h2>
+          <label for="tt-privacy">Privacy</label>
+          <select id="tt-privacy">
+            <option value="PUBLIC_TO_EVERYONE">Public</option>
+            <option value="MUTUAL_FOLLOW_FRIENDS">Friends only</option>
+            <option value="SELF_ONLY">Private</option>
+          </select>
+
+          <div style="margin-top: 16px">
+            <div class="toggle-row">
+              <div><div class="toggle-label">Allow comments</div><div class="toggle-sub">Let viewers comment on this post</div></div>
+              <label class="toggle-switch"><input type="checkbox" id="tt-comments" checked /><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div><div class="toggle-label">Allow duets</div><div class="toggle-sub">Let others create duets with this video</div></div>
+              <label class="toggle-switch"><input type="checkbox" id="tt-duets" checked /><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div><div class="toggle-label">Allow stitches</div><div class="toggle-sub">Let others stitch clips from this video</div></div>
+              <label class="toggle-switch"><input type="checkbox" id="tt-stitch" checked /><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" id="publish-btn">Publish now</button>
+          <a class="btn btn-ghost" href="/posts.html">View content</a>
+        </div>
+
+        <div id="results" style="margin-top: 20px"></div>
+      </div>
+    </main>
+
+    <script src="./config.js"></script>
+    <script src="./shell.js"></script>
+    <script src="./api.js"></script>
+    <script>
+      (async () => {
+        const session = await SL.requireAuth("/compose.html");
+        if (!session) return;
+
+        const targetsEl = document.getElementById("targets");
+        const ttOptions = document.getElementById("tiktok-options");
+
+        /* --- TikTok target --- */
+        if (session.tiktok) {
+          const tt = document.createElement("label");
+          tt.className = "checkbox-row";
+          tt.innerHTML =
+            '<input type="checkbox" data-kind="tiktok" />' +
+            '<div><div class="target-name"></div>' +
+            '<div class="target-sub">TikTok Business Account</div></div>';
+          tt.querySelector(".target-name").textContent = session.tiktok.display_name + " (@" + session.tiktok.username + ")";
+          const ttCb = tt.querySelector("input");
+          ttCb.addEventListener("change", () => { ttOptions.hidden = !ttCb.checked; });
+          targetsEl.appendChild(tt);
+        }
+
+        /* --- Facebook targets --- */
+        const pages = session.pages || [];
+        pages.forEach(p => {
+          const fb = document.createElement("label");
+          fb.className = "checkbox-row";
+          fb.innerHTML =
+            '<input type="checkbox" data-kind="fb" />' +
+            '<div><div class="target-name"></div>' +
+            '<div class="target-sub">Facebook Page</div></div>';
+          fb.querySelector(".target-name").textContent = p.name;
+          const fbCb = fb.querySelector("input");
+          fbCb.dataset.pageId = p.id;
+          fbCb.dataset.pageToken = p.access_token;
+          targetsEl.appendChild(fb);
+
+          if (p.instagram_business_account) {
+            const ig = document.createElement("label");
+            ig.className = "checkbox-row";
+            ig.innerHTML =
+              '<input type="checkbox" data-kind="ig" />' +
+              '<div><div class="target-name"></div>' +
+              '<div class="target-sub">Instagram — requires image URL</div></div>';
+            ig.querySelector(".target-name").textContent = "@" + (p.instagram_business_account.username || p.instagram_business_account.id);
+            const igCb = ig.querySelector("input");
+            igCb.dataset.igId = p.instagram_business_account.id;
+            igCb.dataset.pageToken = p.access_token;
+            targetsEl.appendChild(ig);
+          }
+        });
+
+        /* Show disabled placeholders for coming soon targets if not connected */
+        if (!pages.length) {
+          const fbTarget = document.createElement("label");
+          fbTarget.className = "checkbox-row disabled";
+          fbTarget.style.opacity = "0.5";
+          fbTarget.style.cursor = "not-allowed";
+          fbTarget.innerHTML =
+            '<input type="checkbox" disabled />' +
+            '<div><div class="target-name">Facebook (Coming Soon)</div>' +
+            '<div class="target-sub">Publish posts to Facebook Pages</div></div>';
+          targetsEl.appendChild(fbTarget);
+
+          const igTarget = document.createElement("label");
+          igTarget.className = "checkbox-row disabled";
+          igTarget.style.opacity = "0.5";
+          igTarget.style.cursor = "not-allowed";
+          igTarget.innerHTML =
+            '<input type="checkbox" disabled />' +
+            '<div><div class="target-name">Instagram (Coming Soon)</div>' +
+            '<div class="target-sub">Publish media to Instagram Business Accounts</div></div>';
+          targetsEl.appendChild(igTarget);
+        }
+
+        if (!session.tiktok && !pages.length) {
+          targetsEl.innerHTML = '<div class="empty-state" style="padding:16px"><div class="empty-title">No accounts connected</div><div class="empty-sub"><a href="/">Connect a platform</a> to publish content.</div></div>';
+        }
+
+        /* --- Publish --- */
+        document.getElementById("publish-btn").addEventListener("click", async () => {
+          const message = document.getElementById("message").value.trim();
+          const mediaUrl = document.getElementById("media-url").value.trim();
+          const results = document.getElementById("results");
+          results.innerHTML = "";
+
+          if (!message && !mediaUrl) { SL.toast("Add a caption or media first.", "error"); return; }
+
+          const selected = Array.from(document.querySelectorAll('#targets input[type="checkbox"]:checked'));
+          if (!selected.length) { SL.toast("Pick at least one target.", "error"); return; }
+
+          const btn = document.getElementById("publish-btn");
+          btn.disabled = true; btn.textContent = "Publishing…";
+
+          for (const cb of selected) {
+            const row = document.createElement("div");
+            row.className = "info-banner";
+            results.appendChild(row);
+
+            try {
+              if (cb.dataset.kind === "tiktok") {
+                await SLApi.tiktokPublish({
+                  caption: message,
+                  media_url: mediaUrl,
+                  privacy: document.getElementById("tt-privacy").value,
+                  allow_comments: document.getElementById("tt-comments").checked,
+                  allow_duets: document.getElementById("tt-duets").checked,
+                  allow_stitch: document.getElementById("tt-stitch").checked,
+                });
+                row.textContent = "✓ Published to TikTok (@" + session.tiktok.username + ")";
+              } else if (cb.dataset.kind === "fb") {
+                const res = await SLApi.postFeed(cb.dataset.pageId, cb.dataset.pageToken, message, null);
+                row.textContent = "✓ Posted to " + cb.closest(".checkbox-row").querySelector(".target-name").textContent + " — id " + res.id;
+              } else {
+                if (!mediaUrl) throw new Error("Image URL required for Instagram");
+                const res = await SLApi.publishIgImage(cb.dataset.igId, cb.dataset.pageToken, mediaUrl, message);
+                row.textContent = "✓ Published to " + cb.closest(".checkbox-row").querySelector(".target-name").textContent + " — id " + res.id;
+              }
+            } catch (err) {
+              row.className = "error-banner";
+              row.textContent = "✗ " + cb.closest(".checkbox-row").querySelector(".target-name").textContent + ": " + err.message;
+            }
+          }
+          btn.disabled = false; btn.textContent = "Publish now";
+        });
+      })();
+    </script>
+  </body>
+</html>

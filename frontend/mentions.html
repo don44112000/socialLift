@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mentions & Tags — SocialLift</title>
+    <meta name="description" content="Monitor where your brand has been mentioned or tagged across social platforms." />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-main">
+      <h1>Mentions & Tags</h1>
+      <p class="page-sub">Monitor where your brand has been mentioned or tagged across platforms.</p>
+
+      <div class="tiles" id="mention-tiles"></div>
+
+      <div class="tabs" id="mention-tabs">
+        <button class="tab active" data-filter="all">All</button>
+        <button class="tab" data-filter="VIDEO_MENTION">Tagged in video</button>
+        <button class="tab" data-filter="COMMENT">Tagged in comment</button>
+      </div>
+
+      <div id="mention-list"></div>
+    </main>
+
+    <script src="./config.js"></script>
+    <script src="./shell.js"></script>
+    <script src="./api.js"></script>
+    <script>
+      (async () => {
+        const session = await SL.requireAuth("/mentions.html");
+        if (!session) return;
+
+        if (!session.tiktok) {
+          document.getElementById("mention-list").innerHTML =
+            '<div class="empty-state"><div class="empty-icon">@</div><div class="empty-title">Connect a platform to see mentions</div><div class="empty-sub"><a href="/">Connect your TikTok account</a> to start monitoring brand mentions.</div></div>';
+          return;
+        }
+
+        const mentions = await SLApi.tiktokMentions();
+
+        /* --- Summary tiles --- */
+        const tilesEl = document.getElementById("mention-tiles");
+        const totalMentions = mentions.length;
+        const videoMentions = mentions.filter(m => m.mention_type === "VIDEO_MENTION").length;
+        const commentMentions = mentions.filter(m => m.mention_type === "COMMENT").length;
+        const totalViews = mentions.reduce((s, m) => s + m.view_count, 0);
+
+        const tileData = [
+          { label: "Total Mentions", value: totalMentions, sub: "Last 7 days" },
+          { label: "Video Tags", value: videoMentions, sub: "Tagged in posts" },
+          { label: "Comment Tags", value: commentMentions, sub: "Tagged in comments" },
+          { label: "Total Reach", value: SLApi.formatCount(totalViews), sub: "Combined views" },
+        ];
+        tileData.forEach(t => {
+          const d = document.createElement("div");
+          d.className = "tile";
+          d.innerHTML = '<div class="t-label"></div><div class="t-value"></div><div class="t-sub"></div>';
+          d.querySelector(".t-label").textContent = t.label;
+          d.querySelector(".t-value").textContent = t.value;
+          d.querySelector(".t-sub").textContent = t.sub;
+          tilesEl.appendChild(d);
+        });
+
+        /* --- Render mentions --- */
+        const listEl = document.getElementById("mention-list");
+
+        function renderMentions(filter) {
+          listEl.innerHTML = "";
+          const filtered = filter === "all" ? mentions : mentions.filter(m => m.mention_type === filter);
+
+          if (!filtered.length) {
+            listEl.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">No mentions found</div><div class="empty-sub">No mentions matching this filter.</div></div>';
+            return;
+          }
+
+          filtered.forEach(m => {
+            const card = document.createElement("div");
+            card.className = "mention-card";
+            card.style.marginBottom = "12px";
+
+            const typeLabel = m.mention_type === "VIDEO_MENTION" ? "Tagged in video" : "Tagged in comment";
+            const typeClass = m.mention_type === "VIDEO_MENTION" ? "tiktok" : "";
+
+            card.innerHTML =
+              '<div class="mention-header">' +
+              '<img class="mention-avatar" alt="">' +
+              '<div style="flex:1"><span class="mention-user"></span> <span class="badge ' + typeClass + '" style="font-size:0.65rem">' + typeLabel + '</span><div class="mention-time"></div></div>' +
+              '<span class="badge tiktok" style="font-size:0.6rem">TikTok</span>' +
+              '</div>' +
+              '<div class="mention-body"></div>' +
+              (m.video_caption && m.text ? '<div style="font-size:0.82rem;color:var(--text-3);margin-bottom:10px;font-style:italic">on: "' + m.video_caption + '"</div>' : '') +
+              '<div class="mention-metrics"></div>' +
+              '<div class="mention-actions">' +
+              '<a class="btn btn-sm btn-ghost" href="' + m.share_url + '" target="_blank" rel="noopener">View post ↗</a>' +
+              (m.mention_type === "COMMENT" ? '<button class="btn btn-sm btn-primary reply-mention-btn">Reply</button>' : '') +
+              '</div>';
+
+            card.querySelector(".mention-avatar").src = m.user.avatar;
+            card.querySelector(".mention-user").textContent = "@" + m.user.username;
+            card.querySelector(".mention-time").textContent = SLApi.relativeTime(m.time);
+            card.querySelector(".mention-body").textContent = m.text || m.video_caption;
+            card.querySelector(".mention-metrics").textContent =
+              "👁 " + SLApi.formatCount(m.view_count) + " · ❤ " + SLApi.formatCount(m.like_count) + " · 💬 " + m.comment_count;
+
+            /* Reply button handler */
+            const replyBtn = card.querySelector(".reply-mention-btn");
+            if (replyBtn) {
+              replyBtn.addEventListener("click", () => {
+                const existing = card.querySelector(".reply-input-row");
+                if (existing) { existing.remove(); return; }
+                const row = document.createElement("div");
+                row.className = "reply-input-row";
+                row.style.marginTop = "12px";
+                row.innerHTML = '<input type="text" placeholder="Write a reply…" /><button class="btn btn-sm btn-primary">Send</button>';
+                row.querySelector("button").addEventListener("click", async () => {
+                  const text = row.querySelector("input").value.trim();
+                  if (!text) return;
+                  await SLApi.tiktokReplyComment(m.id, text);
+                  row.innerHTML = '<div style="color:var(--success);font-size:0.82rem">✓ Reply sent</div>';
+                  SL.toast("Reply sent!", "success");
+                });
+                card.appendChild(row);
+                row.querySelector("input").focus();
+              });
+            }
+
+            listEl.appendChild(card);
+          });
+        }
+
+        renderMentions("all");
+
+        /* --- Tab switching --- */
+        document.querySelectorAll("#mention-tabs .tab").forEach(tab => {
+          tab.addEventListener("click", () => {
+            document.querySelectorAll("#mention-tabs .tab").forEach(t => t.classList.remove("active"));
+            tab.classList.add("active");
+            renderMentions(tab.dataset.filter);
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

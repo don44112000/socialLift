@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SocialLift — Connect Your Social Accounts</title>
+    <meta name="description" content="Connect your business social accounts to automate engagement, manage messages, monitor mentions, and publish content from one dashboard." />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="page-login">
+    <header class="site-header">
+      <div class="brand">
+        <span class="brand-mark">SL</span>
+        <span class="brand-name">SocialLift</span>
+      </div>
+      <span class="env-badge" id="env-badge">Initializing</span>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h1>Connect your social accounts</h1>
+        <p class="lead">
+          Automate customer engagement, manage messages, monitor brand mentions,
+          and publish content — all from one dashboard.
+        </p>
+
+        <div class="login-card">
+          <div class="scopes">
+            <h3>What you'll get access to</h3>
+            <ul>
+              <li>View your business profile and account metrics</li>
+              <li>Monitor brand mentions and tags in real time</li>
+              <li>View and reply to comments on your content</li>
+              <li>Send and receive direct messages</li>
+              <li>Publish and schedule content</li>
+              <li>View engagement analytics and creator insights</li>
+            </ul>
+          </div>
+
+          <div class="legal-checks">
+            <label class="legal-check-item">
+              <input type="checkbox" id="accept-terms" />
+              <span>I agree to the <a href="/terms.html" target="_blank">Terms of Service</a></span>
+            </label>
+            <label class="legal-check-item">
+              <input type="checkbox" id="accept-privacy" />
+              <span>I agree to the <a href="/privacy.html" target="_blank">Privacy Policy</a></span>
+            </label>
+          </div>
+
+          <div class="login-buttons">
+            <button id="tt-login-btn" class="btn-platform btn-tiktok" disabled>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.87a8.16 8.16 0 0 0 4.76 1.52v-3.4a4.85 4.85 0 0 1-1-.3z"/>
+              </svg>
+              <span id="tt-login-label">Loading…</span>
+            </button>
+
+            <div class="login-divider">or</div>
+
+            <button id="fb-login-btn" class="btn-platform btn-facebook" disabled>
+              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                <path fill="currentColor" d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.7c0-.9.3-1.6 1.6-1.6h1.7V4.2c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.4-4 4.1v2.3H7.6V14h2.8v8h3.1z"/>
+              </svg>
+              <span id="fb-login-label">Loading…</span>
+            </button>
+          </div>
+
+          <p class="fineprint">
+            You can revoke access anytime from your platform settings.
+            By continuing you accept our
+            <a href="/terms.html">Terms</a> and
+            <a href="/privacy.html">Privacy Policy</a>.
+          </p>
+        </div>
+      </section>
+
+      <div id="error-banner" class="error-banner" hidden></div>
+    </main>
+
+    <footer class="site-footer">
+      SocialLift is a business automation platform. ·
+      <a href="/privacy.html">Privacy</a> ·
+      <a href="/terms.html">Terms</a> ·
+      <a href="/data-deletion.html">Data Deletion</a>
+    </footer>
+
+    <script src="./config.js"></script>
+    <script src="./shell.js"></script>
+    <script src="./api.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

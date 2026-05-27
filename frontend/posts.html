@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Content — SocialLift</title>
+    <meta name="description" content="View your published content across all connected social platforms." />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-main">
+      <h1>Content</h1>
+      <p class="page-sub">Published content from your connected accounts.</p>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="tiktok">TikTok</button>
+        <button class="tab" data-tab="facebook">Facebook (Coming Soon)</button>
+        <button class="tab" data-tab="instagram">Instagram (Coming Soon)</button>
+      </div>
+
+      <div id="tab-tiktok"></div>
+      <div id="tab-facebook" hidden></div>
+      <div id="tab-instagram" hidden></div>
+    </main>
+
+    <script src="./config.js"></script>
+    <script src="./shell.js"></script>
+    <script src="./api.js"></script>
+    <script>
+      (async () => {
+        const session = await SL.requireAuth("/posts.html");
+        if (!session) return;
+
+        const tabTiktok = document.getElementById("tab-tiktok");
+        const tabFb     = document.getElementById("tab-facebook");
+        const tabIg     = document.getElementById("tab-instagram");
+
+        /* --- Tab switching --- */
+        document.querySelectorAll(".tab").forEach(t => {
+          t.addEventListener("click", () => {
+            const platform = t.dataset.tab;
+            if (platform === "facebook" || platform === "instagram") {
+              const name = platform === "facebook" ? "Facebook" : "Instagram";
+              SL.toast(name + " integration is coming soon!", "info");
+              return;
+            }
+            document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+            t.classList.add("active");
+            tabTiktok.hidden   = t.dataset.tab !== "tiktok";
+            tabFb.hidden       = t.dataset.tab !== "facebook";
+            tabIg.hidden       = t.dataset.tab !== "instagram";
+          });
+        });
+
+        /* --- TikTok videos --- */
+        if (session.tiktok) {
+          const videos = await SLApi.tiktokVideos();
+          videos.forEach(v => {
+            const el = document.createElement("div");
+            el.className = "post-item";
+            const ts = new Date(v.create_time * 1000).toLocaleString();
+            el.innerHTML =
+              '<img alt="">' +
+              '<div>' +
+              '<div class="post-head"><span class="platform-dot tiktok"></span> <strong>TikTok</strong> · ' + ts + ' · <a href="' + v.share_url + '" target="_blank" rel="noopener">Open ↗</a></div>' +
+              '<div class="post-body"></div>' +
+              '<div class="post-stats"></div>' +
+              '</div>';
+            el.querySelector("img").src = v.cover_url;
+            el.querySelector(".post-body").textContent = v.caption;
+            el.querySelector(".post-stats").textContent =
+              "👁 " + SLApi.formatCount(v.view_count) + " · ❤ " + SLApi.formatCount(v.like_count) + " · 💬 " + v.comment_count + " · ↗ " + SLApi.formatCount(v.share_count);
+            tabTiktok.appendChild(el);
+          });
+        } else {
+          tabTiktok.innerHTML = '<div class="empty-state"><div class="empty-icon">📱</div><div class="empty-title">TikTok not connected</div><div class="empty-sub"><a href="/">Connect TikTok</a> to see your videos here.</div></div>';
+        }
+
+        /* --- Facebook posts --- */
+        const pages = session.pages || [];
+        if (!pages.length) {
+          tabFb.innerHTML = '<div class="empty-state"><div class="empty-icon">📘</div><div class="empty-title">Facebook not connected</div><div class="empty-sub"><a href="/">Connect Facebook</a></div></div>';
+          tabIg.innerHTML = '<div class="empty-state"><div class="empty-icon">📸</div><div class="empty-title">Instagram not connected</div><div class="empty-sub"><a href="/">Connect Facebook</a> with linked IG accounts.</div></div>';
+          return;
+        }
+
+        tabFb.innerHTML = '<div style="color:var(--text-3)">Loading…</div>';
+        const fbPosts = [];
+        for (const p of pages) {
+          try {
+            const res = await SLApi.pageFeed(p.id, p.access_token, 5);
+            (res.data || []).forEach(x => fbPosts.push({ label: p.name, item: x }));
+          } catch (_) {}
+        }
+        tabFb.innerHTML = "";
+        if (!fbPosts.length) {
+          tabFb.innerHTML = '<div class="empty-state"><div class="empty-icon">📄</div><div class="empty-title">No posts found</div></div>';
+        } else {
+          fbPosts.sort((a, b) => new Date(b.item.created_time) - new Date(a.item.created_time)).forEach(x => {
+            const el = document.createElement("div");
+            el.className = "post-item";
+            const ts = new Date(x.item.created_time).toLocaleString();
+            const img = x.item.full_picture || "";
+            el.innerHTML =
+              (img ? '<img alt="">' : '<div class="post-thumb"></div>') +
+              '<div><div class="post-head"><span class="platform-dot facebook"></span> <strong>' + x.label + '</strong> · ' + ts +
+              (x.item.permalink_url ? ' · <a href="' + x.item.permalink_url + '" target="_blank" rel="noopener">Open ↗</a>' : '') + '</div>' +
+              '<div class="post-body"></div>' +
+              '<div class="post-stats"></div></div>';
+            if (img) el.querySelector("img").src = img;
+            el.querySelector(".post-body").textContent = x.item.message || "";
+            const likes = (x.item.likes && x.item.likes.summary && x.item.likes.summary.total_count) || 0;
+            const comments = (x.item.comments && x.item.comments.summary && x.item.comments.summary.total_count) || 0;
+            el.querySelector(".post-stats").textContent = "❤ " + likes + " · 💬 " + comments;
+            tabFb.appendChild(el);
+          });
+        }
+
+        /* --- Instagram --- */
+        tabIg.innerHTML = '<div style="color:var(--text-3)">Loading…</div>';
+        const igPosts = [];
+        for (const p of pages) {
+          if (!p.instagram_business_account) continue;
+          try {
+            const res = await SLApi.igMedia(p.instagram_business_account.id, p.access_token, 5);
+            (res.data || []).forEach(x => igPosts.push({ label: "@" + p.instagram_business_account.username, item: x }));
+          } catch (_) {}
+        }
+        tabIg.innerHTML = "";
+        if (!igPosts.length) {
+          tabIg.innerHTML = '<div class="empty-state"><div class="empty-icon">📸</div><div class="empty-title">No Instagram media found</div></div>';
+        } else {
+          igPosts.sort((a, b) => new Date(b.item.timestamp) - new Date(a.item.timestamp)).forEach(x => {
+            const el = document.createElement("div");
+            el.className = "post-item";
+            const ts = new Date(x.item.timestamp).toLocaleString();
+            const img = x.item.thumbnail_url || x.item.media_url || "";
+            el.innerHTML =
+              (img ? '<img alt="">' : '<div class="post-thumb"></div>') +
+              '<div><div class="post-head"><span class="platform-dot ig"></span> <strong>' + x.label + '</strong> · ' + ts +
+              (x.item.permalink ? ' · <a href="' + x.item.permalink + '" target="_blank" rel="noopener">Open ↗</a>' : '') + '</div>' +
+              '<div class="post-body"></div>' +
+              '<div class="post-stats"></div></div>';
+            if (img) el.querySelector("img").src = img;
+            el.querySelector(".post-body").textContent = x.item.caption || "";
+            el.querySelector(".post-stats").textContent = "❤ " + (x.item.like_count || 0) + " · 💬 " + (x.item.comments_count || 0);
+            tabIg.appendChild(el);
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>

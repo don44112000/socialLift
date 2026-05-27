@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard — SocialLift</title>
+    <meta name="description" content="Overview of your connected social accounts and recent activity." />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-main">
+      <h1>Dashboard</h1>
+      <p class="page-sub">Overview of your connected accounts and activity.</p>
+
+      <div class="tiles" id="tiles"></div>
+
+      <h2 class="section-title">Quick actions</h2>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="/compose.html">New post</a>
+        <a class="btn btn-ghost" href="/inbox.html">Open inbox</a>
+        <a class="btn btn-ghost" href="/mentions.html">View mentions</a>
+        <a class="btn btn-ghost" href="/comments.html">Manage comments</a>
+      </div>
+
+      <h2 class="section-title">Connected platforms</h2>
+      <div class="grid-2" id="platforms"></div>
+
+      <h2 class="section-title">Recent mentions</h2>
+      <div id="recent-mentions"></div>
+    </main>
+
+    <script src="./config.js"></script>
+    <script src="./shell.js"></script>
+    <script src="./api.js"></script>
+    <script>
+      (async () => {
+        const session = await SL.requireAuth("/dashboard.html");
+        if (!session) return;
+
+        const hasTiktok  = session.tiktok;
+        const hasFacebook = session.user && session.pages;
+        const pages = session.pages || [];
+
+        /* --- Tiles --- */
+        const tilesEl = document.getElementById("tiles");
+        const tiles = [];
+
+        if (hasTiktok) {
+          const tk = session.tiktok;
+          tiles.push(
+            { label: "Followers", value: SLApi.formatCount(tk.followers_count), sub: "TikTok" },
+            { label: "Total Likes", value: SLApi.formatCount(tk.likes_count), sub: "TikTok" },
+            { label: "Videos", value: tk.video_count, sub: "TikTok" },
+          );
+        }
+        if (hasFacebook) {
+          const igCount = pages.filter(p => p.instagram_business_account).length;
+          tiles.push(
+            { label: "Facebook Pages", value: pages.length, sub: "Connected" },
+            { label: "Instagram", value: igCount, sub: "Business accounts" },
+          );
+        }
+        tiles.push({
+          label: "Platforms",
+          value: (session.platforms || []).length,
+          sub: (session.platforms || []).join(", ") || "None",
+        });
+
+        tiles.forEach(t => {
+          const d = document.createElement("div");
+          d.className = "tile";
+          d.innerHTML = '<div class="t-label"></div><div class="t-value"></div><div class="t-sub"></div>';
+          d.querySelector(".t-label").textContent = t.label;
+          d.querySelector(".t-value").textContent = t.value;
+          d.querySelector(".t-sub").textContent = t.sub;
+          tilesEl.appendChild(d);
+        });
+
+        /* --- Connected platforms --- */
+        const plat = document.getElementById("platforms");
+
+        if (hasTiktok) {
+          const card = document.createElement("div");
+          card.className = "account-card";
+          card.innerHTML =
+            '<img class="acct-avatar" alt="">' +
+            '<div><div class="acct-name"></div><div class="acct-handle"></div>' +
+            '<div class="acct-badges"><span class="badge tiktok">TikTok</span>' +
+            '<span class="badge ok">Connected</span></div></div>';
+          card.querySelector(".acct-avatar").src = session.tiktok.avatar_url;
+          card.querySelector(".acct-name").textContent = session.tiktok.display_name;
+          card.querySelector(".acct-handle").textContent = "@" + session.tiktok.username;
+          plat.appendChild(card);
+        }
+
+        if (hasFacebook) {
+          pages.slice(0, 4).forEach(p => {
+            const card = document.createElement("div");
+            card.className = "account-card";
+            card.innerHTML =
+              '<div style="width:44px;height:44px;border-radius:50%;background:var(--facebook-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--facebook);font-weight:700;font-size:1.1rem"></div>' +
+              '<div><div class="acct-name"></div><div class="acct-handle"></div>' +
+              '<div class="acct-badges"><span class="badge facebook">Facebook</span>' +
+              (p.instagram_business_account ? '<span class="badge ig">IG: @' + (p.instagram_business_account.username || p.instagram_business_account.id) + '</span>' : '') +
+              '</div></div>';
+            card.querySelector("[style]").textContent = p.name.charAt(0).toUpperCase();
+            card.querySelector(".acct-name").textContent = p.name;
+            card.querySelector(".acct-handle").textContent = p.category || "Page";
+            plat.appendChild(card);
+          });
+        }
+
+        if (!hasTiktok && !hasFacebook) {
+          plat.innerHTML = '<div class="empty-state"><div class="empty-icon">🔗</div><div class="empty-title">No platforms connected</div><div class="empty-sub">Connect your TikTok or Facebook account to get started.</div></div>';
+        }
+
+        /* --- Recent mentions (TikTok demo) --- */
+        const mentionsEl = document.getElementById("recent-mentions");
+        if (hasTiktok) {
+          const mentions = await SLApi.tiktokMentions();
+          mentions.slice(0, 3).forEach(m => {
+            const card = document.createElement("div");
+            card.className = "mention-card";
+            card.style.marginBottom = "10px";
+            card.innerHTML =
+              '<div class="mention-header">' +
+              '<img class="mention-avatar" alt="">' +
+              '<div><span class="mention-user"></span> <span class="badge ' + (m.mention_type === "VIDEO_MENTION" ? "tiktok" : "") + '" style="font-size:0.65rem">' + (m.mention_type === "VIDEO_MENTION" ? "Tagged in video" : "Tagged in comment") + '</span><div class="mention-time"></div></div>' +
+              '</div>' +
+              '<div class="mention-body"></div>' +
+              '<div class="mention-metrics"></div>';
+            card.querySelector(".mention-avatar").src = m.user.avatar;
+            card.querySelector(".mention-user").textContent = "@" + m.user.username;
+            card.querySelector(".mention-time").textContent = SLApi.relativeTime(m.time);
+            card.querySelector(".mention-body").textContent = m.text || m.video_caption;
+            card.querySelector(".mention-metrics").textContent =
+              "👁 " + SLApi.formatCount(m.view_count) + " · ❤ " + SLApi.formatCount(m.like_count) + " · 💬 " + m.comment_count;
+            mentionsEl.appendChild(card);
+          });
+        } else {
+          mentionsEl.innerHTML = '<div class="muted" style="font-size:0.88rem">Connect TikTok to see brand mentions.</div>';
+        }
+      })();
+    </script>
+  </body>
+</html>

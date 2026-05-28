@@ -5,28 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SocialLift — Connect Your Social Accounts</title>
     <meta name="description" content="Connect your business social accounts to automate engagement, manage messages, monitor mentions, and publish content from one dashboard." />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%238b5cf6'/%3E%3Cstop offset='100%25' stop-color='%236d28d9'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Ctext x='16' y='22' font-family='Inter,system-ui,sans-serif' font-size='14' font-weight='800' fill='white' text-anchor='middle'%3ESL%3C/text%3E%3C/svg%3E" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body class="page-login">
+    <!-- Animated gradient orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
     <header class="site-header">
       <div class="brand">
         <span class="brand-mark">SL</span>
         <span class="brand-name">SocialLift</span>
       </div>
-      <span class="env-badge" id="env-badge">Initializing</span>
+      <div class="header-right">
+        <nav class="header-nav">
+          <a href="./about.html">About Us</a>
+          <a href="./privacy.html">Privacy</a>
+          <a href="./terms.html">T&C</a>
+        </nav>
+        <span class="env-badge" id="env-badge">Initializing</span>
+      </div>
     </header>
 
     <main>
       <section class="hero">
-        <h1>Connect your social accounts</h1>
+        <p class="tagline">✦ Multi-platform business automation</p>
+        <h1>Connect your social<br>accounts in seconds</h1>
         <p class="lead">
           Automate customer engagement, manage messages, monitor brand mentions,
-          and publish content — all from one dashboard.
+          and publish content — all from one beautiful dashboard.
         </p>
 
         <div class="login-card">
           <div class="scopes">
-            <h3>What you'll get access to</h3>
+            <h3>Permissions we request</h3>
             <ul>
               <li>View your business profile and account metrics</li>
               <li>Monitor brand mentions and tags in real time</li>
@@ -73,16 +87,32 @@
             <a href="/privacy.html">Privacy Policy</a>.
           </p>
         </div>
+
+        <!-- Feature grid -->
+        <div class="feature-grid">
+          <div class="feature-item">
+            <span class="feature-icon">📊</span>
+            <div class="feature-label">Analytics</div>
+            <div class="feature-desc">Track engagement, reach & audience insights</div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">💬</span>
+            <div class="feature-label">Unified Inbox</div>
+            <div class="feature-desc">DMs & comments in one place</div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">🚀</span>
+            <div class="feature-label">Multi-platform</div>
+            <div class="feature-desc">TikTok, Facebook & Instagram</div>
+          </div>
+        </div>
       </section>
 
       <div id="error-banner" class="error-banner" hidden></div>
     </main>
 
-    <footer class="site-footer">
-      SocialLift is a business automation platform. ·
-      <a href="/privacy.html">Privacy</a> ·
-      <a href="/terms.html">Terms</a> ·
-      <a href="/data-deletion.html">Data Deletion</a>
+    <footer class="site-header">
+      SocialLift is a business automation platform.
     </footer>
 
     <script src="./config.js"></script>

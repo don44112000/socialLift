@@ -128,9 +128,10 @@
 
   /* ---------- Toast ---------- */
   function toast(msg, kind) {
+    const icons = { success: "✓", error: "✗", info: "ℹ", warn: "⚠" };
     const t = document.createElement("div");
     t.className = "toast " + (kind || "info");
-    t.textContent = msg;
+    t.textContent = (icons[kind] || "ℹ") + "  " + msg;
     document.body.appendChild(t);
     requestAnimationFrame(() => {
       requestAnimationFrame(() => t.classList.add("show"));

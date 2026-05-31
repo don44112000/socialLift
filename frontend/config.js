@@ -1,7 +1,7 @@
 window.SOCIALLIFT_CONFIG = {
   /* ---------- Company ---------- */
   COMPANY_NAME: "SocialLift",
-  CONTACT_EMAIL: "privacy@company.com",
+  CONTACT_EMAIL: "support@wouchh.com",
 
   /* ---------- Facebook / Meta ---------- */
   FB_APP_ID: "REPLACE_WITH_YOUR_APP_ID",

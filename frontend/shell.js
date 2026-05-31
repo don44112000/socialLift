@@ -1,6 +1,6 @@
 (function () {
   "use strict";
-  const cfg = window.SOCIALLIFT_CONFIG || {};
+  const cfg = window.WOUCHH_CONFIG || {};
   const SESSION_KEY = "sl_session";
 
   /* ---------- Session helpers ---------- */
@@ -43,7 +43,7 @@
   /* ---------- Sidebar injection ---------- */
   function injectShell(activePath) {
     const session = getSession();
-    const appName = cfg.COMPANY_NAME || "SocialLift";
+    const appName = cfg.COMPANY_NAME || "Wouchh";
 
     const links = [
       ["/dashboard.html", "Dashboard",  icons.dashboard],
@@ -63,7 +63,7 @@
     /* Brand */
     const brandDiv = document.createElement("div");
     brandDiv.className = "sidebar-brand";
-    brandDiv.innerHTML = '<span class="brand-mark">SL</span><span class="brand-name"></span>';
+    brandDiv.innerHTML = '<span class="brand-mark">W</span><span class="brand-name"></span>';
     brandDiv.querySelector(".brand-name").textContent = appName;
     nav.appendChild(brandDiv);
 

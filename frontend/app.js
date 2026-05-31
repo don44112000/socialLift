@@ -1,6 +1,6 @@
 (function () {
   "use strict";
-  const cfg = window.SOCIALLIFT_CONFIG || {};
+  const cfg = window.WOUCHH_CONFIG || {};
 
   const el = {
     envBadge:    document.getElementById("env-badge"),

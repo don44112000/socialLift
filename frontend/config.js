@@ -1,4 +1,4 @@
-window.SOCIALLIFT_CONFIG = {
+window.WOUCHH_CONFIG = {
   /* ---------- Company ---------- */
   COMPANY_NAME: "Wouchh",
   CONTACT_EMAIL: "support@wouchh.com",
@@ -24,7 +24,7 @@ window.SOCIALLIFT_CONFIG = {
 
   /* ---------- TikTok ---------- */
   TIKTOK_CLIENT_KEY: "REPLACE_WITH_YOUR_CLIENT_KEY",
-  TIKTOK_REDIRECT_URI: "https://app.sociallift.com/auth/tiktok/callback/",
+  TIKTOK_REDIRECT_URI: "https://app.wouchh.com/auth/tiktok/callback/",
   TIKTOK_SCOPES: [
     "user.info.basic",
     "user.info.profile",

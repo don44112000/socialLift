@@ -1,7 +1,7 @@
-# socialLift
+# wouchh
 
 Frontend onboarding flow for connecting a business's Facebook Pages and
-Instagram Business accounts to SocialLift for posting and messaging via the
+Instagram Business accounts to Wouchh for posting and messaging via the
 Meta Graph API.
 
 ## What it does
@@ -9,7 +9,7 @@ Meta Graph API.
 1. Business user clicks **Continue with Facebook** on [frontend/index.html](frontend/index.html).
 2. Facebook JS SDK requests the scopes listed in [frontend/config.js](frontend/config.js) (Pages, Pages messaging, Instagram content publish, Instagram DMs, business management).
 3. Frontend calls `/me/accounts` to enumerate Pages + linked Instagram business accounts (with per-Page access tokens).
-4. User clicks **Send tokens to SocialLift backend** → payload posted to the backend API endpoint `/api/store-tokens`.
+4. User clicks **Send tokens to Wouchh backend** → payload posted to the backend API endpoint `/api/store-tokens`.
 5. The backend server exchanges the short-lived user token for a long-lived one using the app secret (never exposed to the browser) and acknowledges. Persistence is a TODO stub — wire in your DB there.
 
 ## Project structure

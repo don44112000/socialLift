@@ -1,6 +1,6 @@
 window.SOCIALLIFT_CONFIG = {
   /* ---------- Company ---------- */
-  COMPANY_NAME: "SocialLift",
+  COMPANY_NAME: "Wouchh",
   CONTACT_EMAIL: "support@wouchh.com",
 
   /* ---------- Facebook / Meta ---------- */

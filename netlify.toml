@@ -1,0 +1,9 @@
+[build]
+  publish = "frontend"
+  functions = "netlify/functions"
+
+# Map any /api/store-tokens calls to the Netlify Serverless function
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200

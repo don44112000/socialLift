@@ -98,7 +98,7 @@
               thread.className = "message-thread";
               c.messages.forEach(msg => {
                 const bubble = document.createElement("div");
-                bubble.className = "msg-bubble " + (msg.from === "yourbrand" ? "outgoing" : "incoming");
+                bubble.className = "msg-bubble " + (msg.from === "wouchh" ? "outgoing" : "incoming");
                 bubble.innerHTML = '<div></div><div class="msg-time">' + SLApi.relativeTime(msg.time) + '</div>';
                 bubble.querySelector("div").textContent = msg.text;
                 thread.appendChild(bubble);

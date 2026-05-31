@@ -7,10 +7,10 @@
      ========================================================== */
 
   const DEMO_TIKTOK_PROFILE = {
-    display_name: "YourBrand Official",
-    username: "yourbrand",
-    avatar_url: "https://api.dicebear.com/9.x/initials/svg?seed=YB&backgroundColor=8b5cf6",
-    bio: "Official account for YourBrand. Products, tips & community 🚀",
+    display_name: "Wouchh Official",
+    username: "wouchh",
+    avatar_url: "https://api.dicebear.com/9.x/initials/svg?seed=W&backgroundColor=8b5cf6",
+    bio: "Official account for Wouchh. Products, tips & community 🚀",
     followers_count: 48200,
     following_count: 312,
     likes_count: 1340000,
@@ -24,7 +24,7 @@
       caption: "Here are 5 tips every small business needs to know 🔥 #smallbiz #tips #marketing",
       cover_url: "https://api.dicebear.com/9.x/shapes/svg?seed=tip1&backgroundColor=1a1a22",
       create_time: Date.now() / 1000 - 86400 * 2,
-      share_url: "https://www.tiktok.com/@yourbrand/video/001",
+      share_url: "https://www.tiktok.com/@wouchh/video/001",
       view_count: 124500, like_count: 8930, comment_count: 342, share_count: 1240,
     },
     {
@@ -32,7 +32,7 @@
       caption: "The making of something special 👀 Stay tuned! #bts #newproduct",
       cover_url: "https://api.dicebear.com/9.x/shapes/svg?seed=bts2&backgroundColor=1a1a22",
       create_time: Date.now() / 1000 - 86400 * 5,
-      share_url: "https://www.tiktok.com/@yourbrand/video/002",
+      share_url: "https://www.tiktok.com/@wouchh/video/002",
       view_count: 89200, like_count: 5420, comment_count: 198, share_count: 876,
     },
     {
@@ -40,7 +40,7 @@
       caption: "Love seeing your stories! Thank you @happycustomer 💜 #community #customerspot",
       cover_url: "https://api.dicebear.com/9.x/shapes/svg?seed=cust3&backgroundColor=1a1a22",
       create_time: Date.now() / 1000 - 86400 * 8,
-      share_url: "https://www.tiktok.com/@yourbrand/video/003",
+      share_url: "https://www.tiktok.com/@wouchh/video/003",
       view_count: 67800, like_count: 4100, comment_count: 156, share_count: 540,
     },
     {
@@ -48,7 +48,7 @@
       caption: "New here? Here's everything you need to know in 60 seconds ⏱️ #tutorial #howto",
       cover_url: "https://api.dicebear.com/9.x/shapes/svg?seed=tut4&backgroundColor=1a1a22",
       create_time: Date.now() / 1000 - 86400 * 12,
-      share_url: "https://www.tiktok.com/@yourbrand/video/004",
+      share_url: "https://www.tiktok.com/@wouchh/video/004",
       view_count: 210300, like_count: 15600, comment_count: 890, share_count: 3200,
     },
   ];
@@ -99,7 +99,7 @@
     {
       id: "m001", mention_type: "COMMENT",
       user: { username: "fashion_daily", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=fashion" },
-      text: "Just tried @yourbrand and the quality is insane! Highly recommend 🔥",
+      text: "Just tried @wouchh and the quality is insane! Highly recommend 🔥",
       video_caption: "My top 5 favorite brands this month",
       share_url: "https://www.tiktok.com/@fashion_daily/video/m001",
       time: Date.now() / 1000 - 3600 * 2,
@@ -109,7 +109,7 @@
       id: "m002", mention_type: "VIDEO_MENTION",
       user: { username: "unbox_king", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=unbox" },
       text: "",
-      video_caption: "Unboxing @yourbrand new collection — you won't believe what's inside!",
+      video_caption: "Unboxing @wouchh new collection — you won't believe what's inside!",
       share_url: "https://www.tiktok.com/@unbox_king/video/m002",
       time: Date.now() / 1000 - 3600 * 5,
       view_count: 89200, like_count: 6700, comment_count: 432,
@@ -117,7 +117,7 @@
     {
       id: "m003", mention_type: "COMMENT",
       user: { username: "startup_coach", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=coach" },
-      text: "@yourbrand is the best example of how to build community on TikTok 👏",
+      text: "@wouchh is the best example of how to build community on TikTok 👏",
       video_caption: "Building a brand on TikTok in 2026",
       share_url: "https://www.tiktok.com/@startup_coach/video/m003",
       time: Date.now() / 1000 - 3600 * 14,
@@ -127,7 +127,7 @@
       id: "m004", mention_type: "VIDEO_MENTION",
       user: { username: "review_queen", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=queen" },
       text: "",
-      video_caption: "Honest review of @yourbrand — is it worth the hype?",
+      video_caption: "Honest review of @wouchh — is it worth the hype?",
       share_url: "https://www.tiktok.com/@review_queen/video/m004",
       time: Date.now() / 1000 - 3600 * 48,
       view_count: 121000, like_count: 9400, comment_count: 678,
@@ -135,7 +135,7 @@
     {
       id: "m005", mention_type: "COMMENT",
       user: { username: "daily_deals", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=deals" },
-      text: "Anyone else obsessed with @yourbrand? Just me? 😅",
+      text: "Anyone else obsessed with @wouchh? Just me? 😅",
       video_caption: "Things I bought this week that I love",
       share_url: "https://www.tiktok.com/@daily_deals/video/m005",
       time: Date.now() / 1000 - 3600 * 72,
@@ -152,7 +152,7 @@
       unread_count: 2,
       messages: [
         { from: "interested_buyer", text: "Hi! I love your products 😍", time: Date.now() / 1000 - 7200 },
-        { from: "yourbrand", text: "Thank you so much! How can we help you today?", time: Date.now() / 1000 - 6800 },
+        { from: "wouchh", text: "Thank you so much! How can we help you today?", time: Date.now() / 1000 - 6800 },
         { from: "interested_buyer", text: "Do you ship internationally?", time: Date.now() / 1000 - 600 },
         { from: "interested_buyer", text: "Specifically to Canada?", time: Date.now() / 1000 - 580 },
       ],
@@ -175,7 +175,7 @@
       unread_count: 0,
       messages: [
         { from: "happy_fan", text: "Your latest video was amazing!", time: Date.now() / 1000 - 3600 * 14 },
-        { from: "yourbrand", text: "Thanks so much! Means a lot to us 💜", time: Date.now() / 1000 - 3600 * 13 },
+        { from: "wouchh", text: "Thanks so much! Means a lot to us 💜", time: Date.now() / 1000 - 3600 * 13 },
         { from: "happy_fan", text: "Thank you for the quick reply! 🙏", time: Date.now() / 1000 - 3600 * 12 },
       ],
     },
@@ -187,7 +187,7 @@
       unread_count: 0,
       messages: [
         { from: "support_question", text: "How do I track my order?", time: Date.now() / 1000 - 3600 * 26 },
-        { from: "yourbrand", text: "You can track it at track.yourbrand.com with your order number!", time: Date.now() / 1000 - 3600 * 25 },
+        { from: "wouchh", text: "You can track it at track.wouchh.com with your order number!", time: Date.now() / 1000 - 3600 * 25 },
         { from: "support_question", text: "Got it, thanks for the help!", time: Date.now() / 1000 - 3600 * 24 },
       ],
     },

@@ -63,7 +63,7 @@
     /* Brand */
     const brandDiv = document.createElement("div");
     brandDiv.className = "sidebar-brand";
-    brandDiv.innerHTML = '<span class="brand-mark">W</span><span class="brand-name"></span>';
+    brandDiv.innerHTML = '<img src="./assets/logo-square.png" alt="" class="brand-mark-img"><span class="brand-name"></span>';
     brandDiv.querySelector(".brand-name").textContent = appName;
     nav.appendChild(brandDiv);
 

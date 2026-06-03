@@ -239,6 +239,19 @@ img { display: block; max-width: 100%; }
   box-shadow: 0 2px 12px rgba(139,92,246,0.30);
 }
 .brand-name { color: var(--text); }
+.brand-logo {
+  height: 64px;
+  width: auto;
+  display: block;
+}
+.brand-mark-img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(139,92,246,0.20);
+  display: block;
+}
 .env-badge {
   font-size: 11px;
   padding: 4px 12px;
@@ -536,7 +549,7 @@ body.has-sidebar {
   padding: 20px 20px 18px;
   border-bottom: 1px solid var(--border);
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.3rem;
 }
 .sidebar-section-label {
   padding: 16px 20px 6px;

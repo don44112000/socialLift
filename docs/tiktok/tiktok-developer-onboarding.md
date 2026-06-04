@@ -3,7 +3,7 @@
 **Company:** Wouchh  
 **Domain:** https://wouchh.com/  
 **Target:** TikTok for Business Developer access (Marketing API + Business Messaging API + Organic API)  
-**Last updated:** 2026-06-04
+**Last updated:** 2026-06-05
 
 ---
 
@@ -13,12 +13,13 @@
 |---|---|---|---|
 | 1. TikTok for Business account | ✅ **DONE** | 2026-06-03 | Registered with `@wouchh.com` email |
 | 2. Developer registration | ✅ **DONE** | 2026-06-03 | Approved — registered as Technology Company |
-| 3. Developer App ("Wouchh") | ⏳ **SUBMITTED** | 2026-06-03 | Under review — expect ~2-3 business days (~June 6) |
+| 3. Developer App ("Wouchh") | ✅ **APPROVED** | 2026-06-05 | App approved — `client_key` + `client_secret` available |
 | 4a. Business Center created | ✅ **DONE** | 2026-06-03 | ID: `7647271851734958097` — Agency type, India |
-| 4b. Business Center verification | ⏳ **IN PROGRESS** | 2026-06-03 | Udyam registration submitted — expect ~2 days (~June 5-6) |
-| 5. Accounts API form | 🔜 **BLOCKED** | — | Waiting on BC verification (#4b), then submit immediately |
-| 6. Business Messaging API form | 🔜 **BLOCKED** | — | Waiting on app approval (#3), then submit immediately |
-| 7. Sandbox setup | 🔜 **BLOCKED** | — | Waiting on app approval (#3) |
+| 4b. Business Center verification | ❌ **REJECTED** | 2026-06-05 | Udyam rejected — "document does not match required type". Need GST Certificate or Shop & Establishment License. Apply at https://reg.gst.gov.in/ (free, 3-7 days). Upload as "Business license". Only 1 appeal remaining — use it with a proper document. |
+| 5. Accounts API form | 🔜 **BLOCKED** | — | Waiting on BC verification (#4b) — need GST cert first |
+| 6. Business Messaging API form | ✅ **SUBMITTED** | 2026-06-05 | All regions including US selected. DSPR DDQ email expected in ~10 working days (~June 19). USDS VAQ ~1 week after that. |
+| 7. Sandbox setup | 🟡 **READY TO CREATE** | — | App approved — create NOW |
+
 
 ---
 
@@ -214,7 +215,7 @@ Currently set to `https://wouchh.com/` as a placeholder. Once the OAuth callback
 
 ---
 
-## Step 4: Business Center Setup ✅ DONE (Verification In Progress)
+## Step 4: Business Center Setup ✅ DONE (Verification ❌ REJECTED → Support Ticket Raised)
 
 ### Why this was needed
 The Accounts API form (Step 5) requires business verification. Two options were available:
@@ -236,17 +237,40 @@ The Accounts API form (Step 5) requires business verification. Two options were 
 
 > Note: When India was selected, TikTok showed: "The country you select cannot be used to create an ad account. You can still use this Business Center account for other activities." — this is fine, we don't need ad accounts.
 
-### Business Center Verification ⏳ IN PROGRESS
+### Business Center Verification ❌ REJECTED (2026-06-05)
+
+**First attempt — Udyam Registration:**
 
 | Field | Value |
 |---|---|
 | Industry | Not applicable |
-| Document type | **Udyam Registration (MSME)** — used as "Certificate of registration" |
-| Certificate number | Udyam number (e.g., `UDYAM-MH-XX-XXXXXXX`) |
-| Additional documents | Skipped (optional) |
-| Verification ETA | **~2 days** (~June 5-6, 2026) |
+| Document type | **Udyam Registration (MSME)** — submitted as "Certificate of registration" |
+| Certificate number | Udyam number |
+| Result | ❌ **REJECTED** — "The document submitted does not match the required type for your region or business category." |
 
-> **How Udyam was obtained:** Registered at https://udyamregistration.gov.in/ — free, instant, only requires Aadhaar + PAN. Qualifies as "Certificate of registration" for TikTok's verification.
+**Root cause:** TikTok's Help Center articles listing accepted documents per country do NOT include India. The BC verification form for India accepts three types: "Certificate of registration or incorporation", "Business license", "Articles of association" — but the reviewer did not recognize Udyam Registration as a valid "Certificate of registration".
+
+> **How Udyam was obtained:** Registered at https://udyamregistration.gov.in/ — free, instant, only requires Aadhaar + PAN.
+
+### ⚠️ Appeal Rules (CRITICAL)
+- You get **only ONE appeal** per rejection decision
+- Appeal window: **180 days** from rejection notification
+- DO NOT waste the appeal on the same rejected document type
+- Get a proper accepted document (GST Certificate) first, THEN appeal
+
+### Support Ticket Raised on Developer Ticket Platform (2026-06-05)
+
+A support ticket was raised arguing:
+1. **India is not in the Help Center's accepted documents list** — gap in TikTok's documentation
+2. **Udyam Registration IS a valid "Certificate of Registration"** — issued by Ministry of MSME, Government of India, under the MSME Development Act, 2006
+3. **GST registration is NOT mandatory for early-stage businesses in India** — only required when annual turnover exceeds ₹20 lakh (~$2,400 USD) under CGST Act, 2017
+4. **Requested:** Either accept Udyam as valid, or advise which document is accepted for India-based businesses below GST threshold
+5. **Attachments:** Udyam Certificate + screenshot showing India not in Help Center list + screenshot of form showing "Certificate of registration" as accepted type
+
+### Backup Plan: GST Registration
+- Apply for **voluntary GST registration** at https://reg.gst.gov.in/ (free, 3-7 working days)
+- Once received, use the GST Certificate to appeal BC verification as "Business license"
+- This is the backup if the support ticket doesn't resolve the issue
 
 ---
 
@@ -302,41 +326,64 @@ When recording the Wouchh frontend demo, show:
 
 ---
 
-## Step 6: Apply for Business Messaging API Access 🔜 BLOCKED ON APP APPROVAL
+## Step 6: Apply for Business Messaging API Access ✅ SUBMITTED (2026-06-05)
 
 **Critical for Wouchh's core DM automation use case.**  
 **Form URL:** https://bytedance.sg.larkoffice.com/share/base/form/shrlg7vFArGhg9V20neYCEwIKrb  
-**Prerequisite:** Developer app must be approved first (Step 3)
+**Status:** ✅ Submitted on June 5, 2026. DSPR DDQ email expected ~June 19, 2026.
+
+### What was submitted
+
+| # | Question | Answer submitted |
+|---|---|---|
+| 1 | Developer Company | **Wouchh** |
+| 2 | Company Legal Entity Name | **Wouchh** (as per Udyam registration) |
+| 3 | Headquarters Location | Nashik, Maharashtra, India |
+| 4 | Website URL | `https://wouchh.com/` |
+| 5 | Contact Person's Name | [Your legal name] |
+| 6 | Contact Person's Email | `[individual]@wouchh.com` (individual, not shared) |
+| 7 | TikTok Representative | Skipped (no TikTok rep) |
+| 8 | Application type | New application |
+| 9 | Developer App ID | [Your App ID from portal] |
+| 10 | Managed Business Account Regions | **All regions including US** |
+| 11 | USDS Restricted Countries | **None** |
 
 ### Regional availability
 - ❌ **Not available** in EEA, Switzerland, UK
-- ✅ Available in US (extra US Data Security Review required)
+- ✅ Available in US (extra US Data Security Review required — we selected US)
 - ✅ Available in all other regions
 
-### Two-stage audit
+### Two-stage audit (what happens next)
 1. **DSPR** (Data Security & Privacy Review) — required for all
-2. **USDS** (US Data Security Review) — only if serving US business accounts
+   - Email subject: **"TikTok/ByteDance Third-Party Due Diligence Questionnaire"**
+   - Expected: ~10 working days after submission (~June 19)
+2. **USDS** (US Data Security Review) — because we included US
+   - Email subject: **"A questionnaire request from TikTok U.S. Data Security Inc."**
+   - Expected: ~1 week after DSPR DDQ (~June 26)
+   - ⚠️ This is the most critical one — prioritize completing it by deadline
 
-### USDS eligibility restrictions
-❌ **Ineligible if developer is located in or has Ultimate Beneficial Owners from:**
-- China (including Hong Kong), Russia, Iran, North Korea, Cuba, Syria
-- Also ineligible if >25% owned by individuals/entities from those countries.
+### What you DON'T need for the DSPR questionnaire (clarification)
+The DSPR asks **"how WILL you handle security"** — describing your architecture and policies, NOT proving a live system is secure. You can answer based on your design:
+- Your published Privacy Policy already covers: data lifecycle, minimization, encryption, subject rights, incident response
+- Your published Terms of Service covers: platform usage, TikTok/Meta ToS links
+- Your published Data Deletion page covers: 4 deletion methods, 30-day timeline
+- Describe planned encryption (AES-256 at rest, TLS 1.2+ in transit)
+- Describe planned access controls, MFA, network segmentation
 
-### Documents to prepare BEFORE applying
+### Documents to prepare for DSPR DDQ (nice-to-have, not all required)
 
-| Document | Purpose |
-|---|---|
-| **ISO 27001 certificate** | Information security management standard |
-| **SOC 2 report** | Trust services (security, availability, confidentiality) |
-| **Latest vulnerability scan report** | Recent infra security scan |
-| **Latest penetration testing report** | Recent pen test results |
-| **Privacy policy URL** | `https://wouchh.com/privacy` ✅ Already live |
-| **Terms of service URL** | `https://wouchh.com/terms` ✅ Already live |
-| **GDPR / CPRA compliance documentation** | If touching EU/CA data |
-| **Data retention policy** | How long you store data |
-| **Incident response policy** | How you handle breaches |
+| Document | Purpose | Status |
+|---|---|---|
+| **ISO 27001 certificate** | Info security standard | 🟡 Nice-to-have |
+| **SOC 2 report** | Trust services report | 🟡 Nice-to-have |
+| **Vulnerability scan report** | Recent infra scan | 🟡 Describe planned approach |
+| **Penetration test report** | Recent pen test | 🟡 Describe planned approach |
+| **Privacy policy URL** | Public policy | ✅ `https://wouchh.com/privacy` |
+| **Terms of service URL** | Public ToS | ✅ `https://wouchh.com/terms` |
+| **Data retention policy** | How long you store data | ✅ In Privacy Policy §6 |
+| **Incident response policy** | How you handle breaches | ✅ In Privacy Policy §11 |
 
-### Technical security requirements
+### Technical security requirements (for DSPR answers)
 - [ ] Encryption at rest: **AES-256 or RSA-1024+**
 - [ ] Encryption in transit: **TLS v1.2+**
 - [ ] MFA enforced for admin access
@@ -347,29 +394,16 @@ When recording the Wouchh frontend demo, show:
 - [ ] Documented incident response plan
 - [ ] Awareness training program
 
-### Privacy requirements
-- [ ] Dedicated data privacy role/owner
-- [ ] Privacy notice covering full data lifecycle
-- [ ] Data subject rights implemented (access, download, update, delete)
-- [ ] Data minimization (don't request scopes you don't need)
-- [ ] Data retention limits enforced
-
-### Process
-1. Submit application form
-2. TikTok initiates review **within 10 working days**
-3. You receive email: **"TikTok/ByteDance Third-Party Due Diligence Questionnaire" (DSPR DDQ)** — fill out
-4. If applicable, ~1 week later: **"A questionnaire request from TikTok U.S. Data Security Inc." (USDS VAQ)**
-5. Complete questionnaires + attach prepared documents
-6. Approval → messaging scopes (`message.list.read`, `message.list.manage`, `message.list.send`) added to your app
-
 ### Timeline
-- DSPR: **2–4 weeks**
-- USDS: **7–10 business days** after questionnaire submission
-- Combined realistic: **3–5 weeks total**
+- DSPR DDQ email: **~June 19** (10 working days after submission)
+- USDS VAQ email: **~June 26** (1 week after DSPR DDQ)
+- DSPR review: **2–4 weeks** after questionnaire submission
+- USDS review: **7–10 business days** after questionnaire submission
+- Combined realistic: **3–5 weeks total from questionnaire submission**
 
 ---
 
-## Step 7: Set Up Sandbox 🔜 BLOCKED ON APP APPROVAL
+## Step 7: Set Up Sandbox 🟡 READY TO CREATE (App Approved)
 
 **Prerequisite:** Developer app approved (Step 3).  
 **URL:** https://ads.tiktok.com/marketing_api/homepage → "Go to my apps"
@@ -431,14 +465,18 @@ Before go-live with real business customers:
 
 ---
 
-## Realistic Timeline From Today (June 3, 2026)
+## Realistic Timeline (updated June 5, 2026)
 
 ```
 ✅ Day 0  (Jun 3):   Account + dev registration + app submitted + BC created + BC verification submitted
-⏳ Day ~2 (Jun 5-6): BC verification complete → submit Accounts API form immediately
-⏳ Day ~3 (Jun 6):   App approved → submit Business Messaging form + create sandbox + start building
-⏳ Day ~6-30:        Build in sandbox while DSPR/USDS reviews run
-⏳ Day 30+:          Full production access with all scopes
+✅ Day 2  (Jun 5):   App approved + Business Messaging form submitted + BC verification rejected
+✅ Day 2  (Jun 5):   Support ticket raised for BC verification issue
+🟡 Now:              Create sandbox → start building
+📋 This week:        Apply for GST registration (backup for BC verification)
+⏳ ~Jun 12:          GST cert arrives → appeal BC verification → submit Accounts API form
+📩 ~Jun 19:          DSPR DDQ email arrives → fill out questionnaire
+📩 ~Jun 26:          USDS VAQ email arrives → fill out questionnaire
+🚀 ~Jul 5-10:        Full production access with all scopes
 ```
 
 ---
@@ -496,3 +534,50 @@ refresh_token expires in 1 year → user must re-authorize
 | Within 48hrs of user's first message | Up to 10 messages from business |
 | User replies — active conversation | Unlimited for 48hrs after last user reply |
 | User inactive 48+ hours | Max 3 messages until user responds again |
+
+---
+
+## Understanding TikTok's Two-Layer Permission System
+
+TikTok has a **two-layer system** for API access. This is important to understand:
+
+### Layer 1: App Permissions (what you select when creating the app)
+When you create the developer app, you select which API categories your app wants access to (TikTok Accounts, Mentions, etc.). This **configures** your app for those endpoints.
+
+### Layer 2: Compliance Forms (what actually activates the permissions)
+Certain permission groups require **separate compliance approvals** before they work:
+
+| Permission Group | App has it? | Actually usable? | What activates it? |
+|---|---|---|---|
+| Ad Account Management | ✅ Selected | ✅ **Works now** | App approval (done) |
+| TikTok Accounts (comments, videos, profile, publishing) | ✅ Selected | ❌ **Not yet** | Accounts API Form (Step 5) |
+| Mentions (brand monitoring) | ✅ Selected | ❌ **Not yet** | Accounts API Form (Step 5) |
+| Business Messaging (DMs) | ✅ Selected | ❌ **Not yet** | DSPR/USDS Review (Step 6 — submitted) |
+
+**Key insight:** Your app is correctly configured with all needed permissions. But TikTok won't let you actually CALL the Accounts/Mentions/Messaging endpoints until their compliance teams approve you through the separate forms.
+
+---
+
+## DevPortal (developers.tiktok.com) vs Business API — Why DevPortal Can't Replace Business API
+
+TikTok has TWO separate developer platforms. Here's why we use the Business API, not the DevPortal:
+
+### DevPortal APIs (developers.tiktok.com) — for Consumer Apps
+| API | What it does | Limitation for Wouchh |
+|---|---|---|
+| Login Kit | OAuth for any TikTok user | Works, but for personal accounts too |
+| Display API | Show user profile + video list (read-only) | No analytics, no management |
+| Content Posting API | Publish videos | Unaudited apps post as private only |
+| Share Kit / Embed | Embed TikTok content | Not relevant |
+
+### Business APIs (business-api.tiktok.com) — what Wouchh uses
+| Feature | DevPortal has it? |
+|---|---|
+| Profile + stats + demographics | ❌ DevPortal only gives basic profile |
+| **Comment read + reply + hide + delete** | ❌ **NOT on DevPortal** |
+| **Brand mention monitoring** | ❌ **NOT on DevPortal** |
+| Per-video deep analytics | ❌ DevPortal only gives basic metadata |
+| **Business Messaging (DMs)** | ❌ **NOT on DevPortal** |
+| Content publishing | ✅ Both have it |
+
+**Bottom line:** The three features that make Wouchh valuable — **comment management, mention monitoring, and DM automation** — only exist on the Business APIs. DevPortal docs (in `docs/tiktok/devportal-docs/`) are reference material but cannot be used as an alternative path for Wouchh's core features.

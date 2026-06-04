@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wouchh | Management Suite</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sparkline-container svg {
+            filter: drop-shadow(0 2px 4px rgba(0, 106, 99, 0.1));
+        }
+        body {
+            background-color: #f8f9ff;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#b9f6f1",
+                        "on-primary-container": "#a3faef",
+                        "surface-container-low": "#eff4ff",
+                        "inverse-primary": "#80d5cb",
+                        "inverse-surface": "#213145",
+                        "surface-container-high": "#dce9ff",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#b1eee9",
+                        "background": "#f8f9ff",
+                        "on-background": "#0b1c30",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#95d1cd",
+                        "on-secondary-fixed-variant": "#7f2b00",
+                        "primary-container": "#0f766e",
+                        "surface-variant": "#d3e4fe",
+                        "on-surface": "#0b1c30",
+                        "outline": "#6e7977",
+                        "primary-fixed": "#9cf2e8",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#37736f",
+                        "surface": "#f8f9ff",
+                        "on-primary-fixed-variant": "#00504a",
+                        "on-tertiary-fixed": "#00201e",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#571a00",
+                        "secondary": "#a73a00",
+                        "secondary-fixed": "#ffdbce",
+                        "surface-bright": "#f8f9ff",
+                        "secondary-fixed-dim": "#ffb599",
+                        "surface-container-highest": "#d3e4fe",
+                        "secondary-container": "#fd651e",
+                        "on-surface-variant": "#3e4947",
+                        "surface-container": "#e5eeff",
+                        "tertiary": "#1a5a57",
+                        "surface-tint": "#006a63",
+                        "surface-dim": "#cbdbf5",
+                        "primary-fixed-dim": "#80d5cb",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-tertiary-fixed-variant": "#094f4c",
+                        "primary": "#005c55",
+                        "outline-variant": "#bdc9c6",
+                        "on-secondary-fixed": "#370e00",
+                        "on-primary-fixed": "#00201d",
+                        "on-primary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "20px",
+                        "md": "16px",
+                        "margin": "24px",
+                        "xl": "32px",
+                        "2xl": "48px",
+                        "sm": "8px",
+                        "base": "4px",
+                        "lg": "24px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "mono-sm": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "mono-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-body-md text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full w-[260px] bg-surface shadow-sm flex flex-col py-lg z-50">
+<div class="px-lg mb-xl">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Wouchh</h1>
+<p class="text-on-surface-variant font-label-md text-label-md">Management Suite</p>
+</div>
+<nav class="flex-1 overflow-y-auto space-y-1">
+<!-- Dashboard (Active) -->
+<a class="flex items-center px-lg py-md text-primary font-bold border-l-4 border-primary bg-primary-container/10 transition-all" href="#">
+<span class="material-symbols-outlined mr-md">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center px-lg py-md text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md">public</span>
+<span>Social Mentions</span>
+</a>
+<a class="flex items-center px-lg py-md text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md">forum</span>
+<span>Comments</span>
+</a>
+<a class="flex items-center px-lg py-md text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md">mail</span>
+<span>Inboxes</span>
+</a>
+<a class="flex items-center px-lg py-md text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md">leaderboard</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center px-lg py-md text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md">reorder</span>
+<span>Activity</span>
+</a>
+<a class="flex items-center px-lg py-md text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md">group</span>
+<span>Accounts</span>
+</a>
+<a class="flex items-center px-lg py-md text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="px-lg mt-auto pt-lg border-t border-outline-variant">
+<div class="flex items-center gap-md">
+<img alt="Restaurant Logo" class="w-10 h-10 rounded-lg object-cover" data-alt="A professional, minimalist logo for a high-end Indian restaurant called Bombay Spice Kitchen. The logo features clean, elegant lines and a warm, golden sunset color palette, set against a pristine, cream-colored circular background. The visual style is modern, sophisticated, and evokes a premium hospitality atmosphere with soft, professional lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuACVnw5DZzSImd1P2i2t8Z_NZXwjOwBQtHxxrCn9tR31JsxAaX65v8slymRe60FH4NB2tiq6NQXcfzumbVz-gBp1ed1ihpdjPcX8nLpHdBVVXJ5A87RkxTz3Xe0dasrEYEleljK5g0MUAU6_Lwuqxo5QtVnSfnT0N_E3LlcqYzoDfTp2cRg6EhScp42dPS56x_X-uBJVS3732bgQmB8G2xUOFSVtAtdI4X22lJNY14S0B6p23HpUAwV8yfvSAhQeMajJZd2H56pxu3d"/>
+<div>
+<p class="font-label-md text-label-md font-bold">Bombay Spice</p>
+<p class="text-on-surface-variant text-[10px] uppercase tracking-wider">Premium Plan</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-[260px] min-h-screen">
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 right-0 w-[calc(100%-260px)] h-16 bg-surface border-b border-outline-variant flex justify-between items-center px-lg z-40">
+<div class="flex items-center flex-1">
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low rounded-xl border-none focus:ring-2 focus:ring-primary text-body-sm" placeholder="Search analytics..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<div class="flex items-center gap-md">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">help</span>
+</button>
+</div>
+<div class="h-8 w-px bg-outline-variant mx-sm"></div>
+<div class="flex items-center gap-md">
+<div class="text-right">
+<p class="font-label-md text-label-md font-bold">Rajesh Kumar</p>
+<p class="text-on-surface-variant text-[10px]">Manager</p>
+</div>
+<img alt="Manager Profile" class="w-10 h-10 rounded-full border-2 border-surface-variant" data-alt="A professional studio portrait of a friendly Indian male restaurant manager in his early 40s. He is wearing a crisp white shirt and a charcoal grey vest, looking directly at the camera with a warm, welcoming smile. The background is a blurred, high-end restaurant interior with warm ambient lighting and cream-toned architectural details." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA04oMEyuSZ8Bkkl-dV_3jod0dxSHN7_oC3wyRTkGbQOMv3SDH_qhql4pe6cALPKKbsJCLFAqZvT5Ufux89HzO-XJ9NLdNJ-mIuZGUFqgFJu9azxoGxT9zkADIG3wo1VpV-63VEnlEuSmTbRmBvThRueWs4n4YMZROPOJoAeyMG5n2IfMLmUZQ-2OgBHhaHg0-xnT9yk-h55sHmAnmC8eI6p8NxEntpd07oum7078teKTedOWcaF3EZAMT7c35rEra94ChpCWCBQfLv"/>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="pt-24 px-lg pb-lg max-w-[1440px] mx-auto">
+<!-- Welcome Header -->
+<div class="mb-xl">
+<h2 class="font-display-lg text-display-lg text-on-background">Dashboard Overview</h2>
+<p class="text-on-surface-variant font-body-lg text-body-lg">Welcome back! Here's what's happening at Bombay Spice Kitchen today.</p>
+</div>
+<!-- Top Row: Metric Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-xl">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05)] flex flex-col justify-between group hover:shadow-lg transition-all border border-transparent hover:border-primary/10">
+<div>
+<div class="flex justify-between items-start mb-base">
+<span class="text-on-surface-variant font-label-md text-label-md">Total mentions</span>
+<span class="text-primary bg-primary-container/20 px-2 py-0.5 rounded-full text-[10px] font-bold">+12%</span>
+</div>
+<p class="font-headline-lg text-headline-lg">247</p>
+</div>
+<div class="sparkline-container mt-md">
+<svg class="w-full h-12" viewbox="0 0 100 40">
+<path d="M0 35 Q 20 15, 40 25 T 80 5 T 100 20" fill="none" stroke="#006a63" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+</svg>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05)] flex flex-col justify-between group hover:shadow-lg transition-all border border-transparent hover:border-primary/10">
+<div>
+<div class="flex justify-between items-start mb-base">
+<span class="text-on-surface-variant font-label-md text-label-md">Cashback Distributed</span>
+<span class="text-secondary bg-secondary-fixed px-2 py-0.5 rounded-full text-[10px] font-bold">₹1.2k today</span>
+</div>
+<p class="font-headline-lg text-headline-lg">₹14,250</p>
+</div>
+<div class="sparkline-container mt-md">
+<svg class="w-full h-12" viewbox="0 0 100 40">
+<path d="M0 30 L 10 25 L 20 35 L 30 20 L 40 25 L 50 10 L 60 15 L 70 5 L 80 15 L 90 10 L 100 5" fill="none" stroke="#a73a00" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+</svg>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05)] flex flex-col justify-between group hover:shadow-lg transition-all border border-transparent hover:border-primary/10">
+<div>
+<div class="flex justify-between items-start mb-base">
+<span class="text-on-surface-variant font-label-md text-label-md">Active diners</span>
+<span class="text-primary bg-primary-container/20 px-2 py-0.5 rounded-full text-[10px] font-bold">Live</span>
+</div>
+<p class="font-headline-lg text-headline-lg">89</p>
+</div>
+<div class="sparkline-container mt-md">
+<svg class="w-full h-12" viewbox="0 0 100 40">
+<path d="M0 38 Q 25 38, 50 20 T 100 5" fill="none" stroke="#006a63" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+</svg>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05)] flex flex-col justify-between group hover:shadow-lg transition-all border border-transparent hover:border-primary/10">
+<div>
+<div class="flex justify-between items-start mb-base">
+<span class="text-on-surface-variant font-label-md text-label-md">Avg reach per post</span>
+<span class="text-primary bg-primary-container/20 px-2 py-0.5 rounded-full text-[10px] font-bold">+5.4%</span>
+</div>
+<p class="font-headline-lg text-headline-lg">3,420</p>
+</div>
+<div class="sparkline-container mt-md">
+<svg class="w-full h-12" viewbox="0 0 100 40">
+<path d="M0 30 Q 15 35, 30 20 T 60 15 T 100 10" fill="none" stroke="#006a63" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Middle Row: Actions & Social -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter mb-xl">
+<!-- Quick Actions -->
+<div class="lg:col-span-2 bg-surface-container-lowest p-lg rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05)]">
+<div class="flex items-center justify-between mb-lg">
+<h3 class="font-headline-md text-headline-md">Quick Actions</h3>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">more_horiz</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-md">
+<button class="flex flex-col items-center justify-center p-xl bg-surface-container rounded-xl border border-transparent hover:border-primary transition-all group">
+<span class="material-symbols-outlined text-primary text-3xl mb-sm group-hover:scale-110 transition-transform">verified</span>
+<span class="font-label-md text-label-md text-on-surface">Verify mention</span>
+</button>
+<button class="flex flex-col items-center justify-center p-xl bg-surface-container rounded-xl border border-transparent hover:border-primary transition-all group">
+<span class="material-symbols-outlined text-primary text-3xl mb-sm group-hover:scale-110 transition-transform">schedule_send</span>
+<span class="font-label-md text-label-md text-on-surface">Send reminder</span>
+</button>
+<button class="flex flex-col items-center justify-center p-xl bg-primary-container text-white rounded-xl shadow-md hover:bg-primary transition-all group">
+<span class="material-symbols-outlined text-3xl mb-sm group-hover:scale-110 transition-transform">campaign</span>
+<span class="font-label-md text-label-md">Run campaign</span>
+</button>
+</div>
+</div>
+<!-- Connected Platforms -->
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05)]">
+<h3 class="font-headline-md text-headline-md mb-lg">Connected platforms</h3>
+<div class="space-y-md">
+<div class="flex items-center justify-between p-md bg-surface-container rounded-lg">
+<div class="flex items-center gap-md">
+<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">photo_camera</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Instagram</p>
+<p class="text-[11px] text-on-surface-variant">@bombayspicekitchen</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+</div>
+<div class="flex items-center justify-between p-md bg-surface-container rounded-lg">
+<div class="flex items-center gap-md">
+<div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">face_nod</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Facebook</p>
+<p class="text-[11px] text-on-surface-variant">Bombay Spice Kitchen</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+</div>
+<button class="w-full py-sm text-primary font-label-md text-label-md hover:underline">+ Connect platform</button>
+</div>
+</div>
+</div>
+<!-- Bottom Row: Recent Activity -->
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05)] mb-xl">
+<div class="flex items-center justify-between mb-lg">
+<h3 class="font-headline-md text-headline-md">Recent Activity</h3>
+<button class="text-primary font-label-md text-label-md hover:underline">View all activity</button>
+</div>
+<div class="overflow-hidden">
+<table class="w-full">
+<thead>
+<tr class="text-left border-b border-outline-variant">
+<th class="pb-md font-label-md text-label-md text-neutral-600">Diner</th>
+<th class="pb-md font-label-md text-label-md text-neutral-600">Activity</th>
+<th class="pb-md font-label-md text-label-md text-neutral-600">Reward</th>
+<th class="pb-md font-label-md text-label-md text-neutral-600 text-right">Time</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-md">
+<div class="flex items-center gap-md">
+<img alt="Priya Sharma" class="w-8 h-8 rounded-full object-cover" data-alt="A candid, high-quality photograph of a stylish young Indian woman in her late 20s smiling brightly. She has long dark hair and is wearing a fashionable silk scarf. The image has a soft, warm light-mode aesthetic, with a blurred outdoor cafe background that creates a sense of luxury and modern lifestyle." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvJKSI13yf3GjDDYCsUcT8lT0HChaDrM6K4GKDbBsD9tKS81YpSL4NqR_LQBF_xOHwgYz2ge_M1lGZllNz5FJAv1SqodUwcckFCfCuPzSWPkN91sABHRJfnPfFpQ11Sj9Uvtepl-qZqZ73xDR1ALA6oW_7elOZiKiEY1aEwwWTXwLfyYOD_GehTUA-y7uQNPklp5sjw4AkM0p0r4p9cG9DQesnPMEeQ7KBzTohD-qn0nw0-P6Cf1DAe_s8V5_Pv4M7QFbrHzZpGwyE"/>
+<span class="font-body-md text-on-surface font-semibold">Priya Sharma</span>
+</div>
+</td>
+<td class="py-md text-on-surface-variant text-body-sm">Tagged you in a Story</td>
+<td class="py-md">
+<span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-[11px] font-bold">₹50 cashback</span>
+</td>
+<td class="py-md text-right text-on-surface-variant text-[11px]">2 mins ago</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-md">
+<div class="flex items-center gap-md">
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">AS</div>
+<span class="font-body-md text-on-surface font-semibold">Arjun Singh</span>
+</div>
+</td>
+<td class="py-md text-on-surface-variant text-body-sm">Posted a review on Google</td>
+<td class="py-md">
+<span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-[11px] font-bold">Free Dessert</span>
+</td>
+<td class="py-md text-right text-on-surface-variant text-[11px]">15 mins ago</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-md">
+<div class="flex items-center gap-md">
+<img alt="Vikram Mehta" class="w-8 h-8 rounded-full object-cover" data-alt="A sharp, professional headshot of an Indian man in his 30s with a clean-shaven look and short dark hair. He is wearing a navy blue blazer over a light grey polo shirt. The lighting is soft and natural, emphasizing a bright and clean corporate modern aesthetic with a warm neutral background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1U1UBIhbWFCb860TvPn0LzeRu-XI_WLtNM8SO4diULD4tVAi4fMKeerNcMw92jwVvCBqMPXmCWgzzIRyH3H_gm_bBUL2n0P3zCA-rzQNUrMVebYVpb0WsW0y740B3Ma6C8WHmu1UHJ8g1OoxIkze6aCQOFDu15Kh678DZFgFTRCpQxNz1eas1chudHRYxUK1DHEz9motgMZB0EptNpqlQqytp4986znmJqClH6zoWlrPncenZmO85-RqMq2XOs0UFMg5TsRNUlrg8"/>
+<span class="font-body-md text-on-surface font-semibold">Vikram Mehta</span>
+</div>
+</td>
+<td class="py-md text-on-surface-variant text-body-sm">Shared your post to Facebook</td>
+<td class="py-md">
+<span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-[11px] font-bold">₹25 cashback</span>
+</td>
+<td class="py-md text-right text-on-surface-variant text-[11px]">42 mins ago</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-md">
+<div class="flex items-center gap-md">
+<img alt="Ananya Rao" class="w-8 h-8 rounded-full object-cover" data-alt="A portrait of a young Indian woman with glasses and a warm expression, sitting in a modern restaurant environment. The image uses a shallow depth of field, with soft-focus dining tables in the background. The lighting is bright and airy, following a premium cream and teal color palette consistent with a modern hospitality brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuABWCpnus8Pf77x8-dPtgU8gZHHpb4mSUH6aVgOhRilhs6I5x32vHMTY83wGOvW7y0WzBkUFAgaYaql-XP-96QbB5-PI4dU3ammO_SjZ8ARJBIfyg6gDBQukyNH3IO4ufnbErHx_g_VjIDlvDt52vz2nQv17Nq_mdQ5yQ55cWaQoejP47F4C2SS5itpJWsTVn0-1sEU_Ers9NLFh1-f0qRVXZrg7bcyXwIRlKk-MGYTvOupvzKh_ecpuxBKp1Vk235tVlqn9PThRcwM"/>
+<span class="font-body-md text-on-surface font-semibold">Ananya Rao</span>
+</div>
+</td>
+<td class="py-md text-on-surface-variant text-body-sm">Mentioned in a Reel</td>
+<td class="py-md">
+<span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-[11px] font-bold">Awaiting Verification</span>
+</td>
+<td class="py-md text-right text-on-surface-variant text-[11px]">1 hour ago</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-md">
+<div class="flex items-center gap-md">
+<div class="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center text-secondary font-bold text-xs">RK</div>
+<span class="font-body-md text-on-surface font-semibold">Rahul Kapoor</span>
+</div>
+</td>
+<td class="py-md text-on-surface-variant text-body-sm">Tagged in a static post</td>
+<td class="py-md">
+<span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-[11px] font-bold">₹40 cashback</span>
+</td>
+<td class="py-md text-right text-on-surface-variant text-[11px]">2 hours ago</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-md">
+<div class="flex items-center gap-md">
+<img alt="Sneha Gupta" class="w-8 h-8 rounded-full object-cover" data-alt="A high-key, vibrant portrait of a young woman laughing, holding a cocktail in a luxurious lounge setting. The lighting is sophisticated, with warm accent lights and a cool background, creating a high-contrast and inviting atmosphere. The overall style is upscale, chic, and perfectly aligned with a premium restaurant's digital presence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQBlAzdCnvJaEt2BVFvzIKxBp97kIW34wjxICHTlDwrRw4UY2PXu4ai2aN8jXctYfHYw4iVif-bdgvxqg9zquU1N8uWl0S1M0xs34rxn-g_O907Xo1qCEA9bP8O4kgMxtK1j57rEFs5R5HMGbL4OgKacGYLFaGOG3M1woY8osv3ZkXd4UdNVj91nctfsoacnSWbD3vYI8XK6TsDrO72jFo4vcZ60niMCIVujoVv1c0ok77L8gqPxKMB0Cq8l9hST1dQYJVcX__GKT9"/>
+<span class="font-body-md text-on-surface font-semibold">Sneha Gupta</span>
+</div>
+</td>
+<td class="py-md text-on-surface-variant text-body-sm">Uploaded bill and story</td>
+<td class="py-md">
+<span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-[11px] font-bold">₹120 cashback</span>
+</td>
+<td class="py-md text-right text-on-surface-variant text-[11px]">3 hours ago</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-md">
+<div class="flex items-center gap-md">
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">MD</div>
+<span class="font-body-md text-on-surface font-semibold">Mohit Das</span>
+</div>
+</td>
+<td class="py-md text-on-surface-variant text-body-sm">Followed on Instagram</td>
+<td class="py-md">
+<span class="px-3 py-1 bg-neutral-100 text-neutral-600 rounded-full text-[11px] font-bold">10% Voucher</span>
+</td>
+<td class="py-md text-right text-on-surface-variant text-[11px]">5 hours ago</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-md">
+<div class="flex items-center gap-md">
+<img alt="Karan Johar" class="w-8 h-8 rounded-full object-cover" data-alt="A close-up photograph of a stylish man's face with a short beard and intense gaze, illuminated by golden hour sunlight. The photo has a premium cinematic feel, with a warm color temperature and fine detail. It represents a sophisticated urban customer persona for a high-end Indian dining brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbybRpwz_WOKuM6BzAibbUcRLDnBBG6cVy9AlzK0ewZ3KoV-ONwfJms_EDYo2EXyemUQdHhyO3UuwV-G_dcKFmxIVaWz3alS9QuNTu8JVRxq9YQ5guPCraqdEXxv5TYtrwLYHztFfta7vVwyly8PB-TSeHNSPb1r6FV56Puxh47sbjuws1uZT6auNHkcad-SfriV7kbcvetIbO2oYWNzGUIDylO_LdCZ_FsXC3Gnwj--E6ezy7z4WhIOMW47WsSSzPn_3NPbSW8w-i"/>
+<span class="font-body-md text-on-surface font-semibold">Karan Johar</span>
+</div>
+</td>
+<td class="py-md text-on-surface-variant text-body-sm">Tagged you in a Story</td>
+<td class="py-md">
+<span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-[11px] font-bold">₹50 cashback</span>
+</td>
+<td class="py-md text-right text-on-surface-variant text-[11px]">6 hours ago</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button (FAB) -->
+<button class="fixed bottom-lg right-lg w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined text-2xl">add</span>
+</button>
+<script>
+        // Simple micro-interaction for cards
+        document.querySelectorAll('.bg-surface-container-lowest').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-2px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body></html>

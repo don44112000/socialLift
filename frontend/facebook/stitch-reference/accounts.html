@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Connected Accounts | Wouchh Management Suite</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-nav-indicator {
+            position: absolute;
+            left: 0;
+            width: 4px;
+            height: 24px;
+            border-radius: 0 4px 4px 0;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#b9f6f1",
+                        "on-primary-container": "#a3faef",
+                        "surface-container-low": "#eff4ff",
+                        "inverse-primary": "#80d5cb",
+                        "inverse-surface": "#213145",
+                        "surface-container-high": "#dce9ff",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#b1eee9",
+                        "background": "#f8f9ff",
+                        "on-background": "#0b1c30",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#95d1cd",
+                        "on-secondary-fixed-variant": "#7f2b00",
+                        "primary-container": "#0f766e",
+                        "surface-variant": "#d3e4fe",
+                        "on-surface": "#0b1c30",
+                        "outline": "#6e7977",
+                        "primary-fixed": "#9cf2e8",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#37736f",
+                        "surface": "#f8f9ff",
+                        "on-primary-fixed-variant": "#00504a",
+                        "on-tertiary-fixed": "#00201e",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#571a00",
+                        "secondary": "#a73a00",
+                        "secondary-fixed": "#ffdbce",
+                        "surface-bright": "#f8f9ff",
+                        "secondary-fixed-dim": "#ffb599",
+                        "surface-container-highest": "#d3e4fe",
+                        "secondary-container": "#fd651e",
+                        "on-surface-variant": "#3e4947",
+                        "surface-container": "#e5eeff",
+                        "tertiary": "#1a5a57",
+                        "surface-tint": "#006a63",
+                        "surface-dim": "#cbdbf5",
+                        "primary-fixed-dim": "#80d5cb",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-tertiary-fixed-variant": "#094f4c",
+                        "primary": "#005c55",
+                        "outline-variant": "#bdc9c6",
+                        "on-secondary-fixed": "#370e00",
+                        "on-primary-fixed": "#00201d",
+                        "on-primary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "20px",
+                        "md": "16px",
+                        "margin": "24px",
+                        "xl": "32px",
+                        "2xl": "48px",
+                        "sm": "8px",
+                        "base": "4px",
+                        "lg": "24px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "mono-sm": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "mono-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen">
+<!-- SideNavBar Component -->
+<aside class="fixed left-0 top-0 h-full w-[260px] bg-surface dark:bg-inverse-surface shadow-sm flex flex-col py-lg z-50">
+<div class="px-lg mb-xl">
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">Wouchh</h1>
+<p class="text-body-sm opacity-70">Management Suite</p>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Nav Items -->
+<a class="flex items-center px-lg py-sm text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md" data-icon="dashboard">dashboard</span>
+<span class="font-body-md">Dashboard</span>
+</a>
+<a class="flex items-center px-lg py-sm text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md" data-icon="public">public</span>
+<span class="font-body-md">Social Mentions</span>
+</a>
+<a class="flex items-center px-lg py-sm text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md" data-icon="forum">forum</span>
+<span class="font-body-md">Comments</span>
+</a>
+<a class="flex items-center px-lg py-sm text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md" data-icon="mail">mail</span>
+<span class="font-body-md">Inboxes</span>
+</a>
+<a class="flex items-center px-lg py-sm text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md" data-icon="leaderboard">leaderboard</span>
+<span class="font-body-md">Analytics</span>
+</a>
+<a class="flex items-center px-lg py-sm text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md" data-icon="reorder">reorder</span>
+<span class="font-body-md">Activity</span>
+</a>
+<!-- Active State: Accounts -->
+<a class="flex items-center px-lg py-sm text-primary dark:text-inverse-primary font-bold border-l-4 border-primary dark:border-inverse-primary bg-primary-container/10 transition-all" href="#">
+<span class="material-symbols-outlined mr-md" data-icon="group">group</span>
+<span class="font-body-md">Accounts</span>
+</a>
+<a class="flex items-center px-lg py-sm text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md" data-icon="settings">settings</span>
+<span class="font-body-md">Settings</span>
+</a>
+</nav>
+<div class="px-lg mt-auto pt-lg border-t border-outline-variant/30 flex items-center gap-md">
+<img alt="Restaurant Logo" class="w-10 h-10 rounded-lg object-cover" data-alt="A professional, clean-cut square logo for a high-end Indian restaurant called Bombay Spice Kitchen. The logo features a minimalist spice leaf and an elegant typeface. It is presented in a bright, modern setting with soft studio lighting and warm cream tones, reflecting a premium hospitality brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqH9YYBCK1vuP_y15-wckTlTEnyRU3y8RQxfZFmpd97XI3cisbF0N9YawRoa95GTanHmM6XWmNWyYbSBM1Nkn-pe8QnmXvmeLHOt8FYE-g_llWOMIBClZL_dKKBQ-YJShw3k4of5APjmvpR3W-4-cRS3tBZ7R1MD9GYBo776jpfhFTQpx2k4aDPZiQFwKWrQweNBsAGUoC5IoogTJ7OmAWd5Fpic85-2-fU8is1CV7EmpmiXGgzVXcJFd7AB7xo6ZpsXY399sPzHz5"/>
+<div>
+<p class="font-label-md text-on-surface">Spice Kitchen</p>
+<p class="text-[10px] text-on-surface-variant">Admin Access</p>
+</div>
+</div>
+</aside>
+<!-- TopNavBar Component -->
+<header class="fixed top-0 right-0 w-[calc(100%-260px)] h-16 bg-surface border-b border-outline-variant flex justify-between items-center px-lg z-40">
+<div class="flex items-center gap-xl w-1/2">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-10 pr-4 py-1.5 font-body-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" placeholder="Search accounts or activity..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<button class="text-on-surface-variant hover:bg-surface-container rounded-full p-2 transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container rounded-full p-2 transition-all">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant mx-2"></div>
+<div class="flex items-center gap-md">
+<img alt="Manager Profile" class="w-8 h-8 rounded-full border border-outline-variant" data-alt="Close-up headshot of a professional male restaurant manager in a sharp charcoal suit. He has a warm, confident expression and is lit by soft, natural window light in a clean, modern corporate office. The overall aesthetic is professional, approachable, and high-quality light mode." src="https://lh3.googleusercontent.com/aida-public/AB6AXuABAuxEU1f-Se0spQz5iMuwpB_iCgXh2eqMRjQb0oGuEymlMTj1P423eE0xVcNVme_oR153d2WzdvGFRmwKe0bu8wphLU_R3uocQTMCZaNBqjPlwzQhft0UusgHnuLaAinCa4SM8WMVKVhO87ruml0EaxtgzfI2EFKBALI1Sf7Akxa7fYKwLoiOJZse-cZBIQEEHr3QJi9NDsmfMAdOcgYlfF_r89EMrMvMZ63eoqFPJuTnSIg0cdAG2TtVFlB2-2GL0q56-zpKT-YB"/>
+<span class="font-label-md text-on-surface">Rajiv M.</span>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-[260px] pt-24 px-margin pb-2xl max-w-[1440px]">
+<div class="mb-xl flex justify-between items-end">
+<div>
+<h2 class="font-display-lg text-display-lg text-on-background mb-base">Connected Accounts</h2>
+<p class="text-body-md text-on-surface-variant">Manage your hospitality brand across all social platforms from one central hub.</p>
+</div>
+<button class="bg-primary text-on-primary px-lg py-md rounded-lg font-label-md flex items-center gap-sm hover:opacity-90 transition-all shadow-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="sync">sync</span>
+                Sync All Data
+            </button>
+</div>
+<!-- Account List Grid -->
+<div class="space-y-gutter">
+<!-- Instagram Card -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-sm border border-transparent hover:border-primary/10 transition-all flex flex-col md:flex-row gap-lg items-center group">
+<div class="relative">
+<img alt="Instagram Profile" class="w-20 h-20 rounded-full border-2 border-primary/20 p-1 object-cover" data-alt="Interior shot of a vibrant, upscale Indian restaurant featuring warm amber lighting, copper accents, and plush teal seating. The atmosphere is inviting and sophisticated, captured in a high-detail architectural photography style. The scene feels lively yet organized, perfect for a brand's primary social profile image." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLGIaFkf-3_i7-qOfp9vuwnxfsSedzwRxDKvz3AdVfOrLI8x7tROBk86xClfW-ZWVhKUUzP3Dm3a5cVp-GX0Omy83BfXVE9jJH8F_a_I7VhsdiVA3BWjIbeTDLemtmO9wYrLjHGvJoEdJJT6YMNJZdnxIa2b7M64rk_0Jy8hNMgvJSZC0NgkRnpcX8c3-1DGlmM32awyKH8mdUF5FYn5Z5zLqveLzlPDhCO91VUdNZc-nhOSo1Gx7UymPDm8XIIAFcvbUpLTmStV3E"/>
+<div class="absolute -bottom-1 -right-1 bg-white p-1 rounded-full shadow-sm border border-outline-variant">
+<img alt="Instagram" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAv1I_E_mNUsUBtzWmhS-Nixmcc9gnsHo9jImKIqjKO64Rf_sW-lnPL55Ib1MNR1y1gex67MXqMDwD36OHr7rXrmnkCYYiwT4BjaOZPIopMdUOmAcFpetX0KeWQg6Ga1aN6i5W__fOcBtLGz9Z-OXIbkQFHq5MFn5x61sBq8G3sqa2Lfw7V6QsBfjMIq9YHa3XHdaNDum4fr0ZE6FvEA6QvTVoNyoGlI-Whf974N8VXu0y-sGhKK0P4Bon8OLNNPbI9qd6H6SJyyH4S"/>
+</div>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-md mb-xs">
+<h3 class="font-headline-md text-headline-md text-on-surface">@bombayspicekitchen</h3>
+<span class="bg-primary-container/10 text-primary px-sm py-0.5 rounded font-label-md text-[10px] tracking-wider">BUSINESS</span>
+</div>
+<div class="flex items-center gap-xl text-on-surface-variant font-body-sm">
+<div class="flex flex-col">
+<span class="text-[11px] text-outline uppercase font-semibold">Followers</span>
+<span class="text-on-surface font-bold">12.4k</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[11px] text-outline uppercase font-semibold">Posts</span>
+<span class="text-on-surface font-bold">842</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[11px] text-outline uppercase font-semibold">Engagement</span>
+<span class="text-secondary font-bold">4.8%</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-md">
+<div class="flex items-center gap-sm text-body-sm text-outline">
+<span class="material-symbols-outlined text-[16px]" data-icon="update">update</span>
+                        Synced 14 mins ago
+                    </div>
+<div class="flex items-center gap-sm">
+<button class="px-md py-sm border border-outline-variant rounded-lg text-primary font-label-md hover:bg-surface-container transition-colors">View Profile</button>
+<button class="p-2 border border-outline-variant rounded-lg hover:bg-error/5 hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Facebook Card -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-sm border border-transparent hover:border-primary/10 transition-all flex flex-col md:flex-row gap-lg items-center group">
+<div class="relative">
+<div class="w-20 h-20 rounded-full bg-secondary-container/20 flex items-center justify-center border-2 border-secondary/20 overflow-hidden">
+<img alt="Facebook Profile" class="w-full h-full object-cover" data-alt="A stylized, top-down culinary shot of a gourmet Indian dish with vibrant saffron and green garnish, set against a dark textured plate. The lighting is dramatic yet soft, highlighting the textures of the food. This imagery represents the high-quality visual content used for the restaurant's Facebook presence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmdIlmc_9ca9AiNOvSfH76Sb1zQgCDRsUM6FseRG1TU0paoOwWSycW9V2U_U36pKr5ZTErVLJA01mZtqdwh0vBCR21BqvBVWoWJscIssGEO8HYP_A7m3ZqwPf4q-AFk2W5c2NZAS5799Bq5J49_MzvWJ1sOqfuwblkgBVaIreilUxvoKY7oLJ-5zf81a37vKfzirWRwCHvkWOb3qXUG20JNs0h_M3-4X7ZPMOdDpoKOtcBx_UpbbdQwV1uD2UbtqQI-GOd4m8WTQ17"/>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-white p-1 rounded-full shadow-sm border border-outline-variant">
+<img alt="Facebook" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTPuGnK8kIyT_wG_Hf_Aqrv2u3xng9AXAHnsArWShgJ13iZjWr4worurvfVzcms97_fe0L9ExNBg1PQRoU3pLlmTpsNlP88hYFCn0NLUcwcD1X_ThpsIC8H0U8nx0Q2Efa-v2TLhJV8ne2Lv-LceGAEtC5U4843otbieEjh3f0tgxxYQ4rQwE3rZnTVqQ57y9ImaKAaXMIMTJr3-2KtXw4tUvJ4-A1Tuum3CJqDwu4bgXSaewHDuG6xV32Xjg2A0v7rsq6XLkECt0Q"/>
+</div>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-md mb-xs">
+<h3 class="font-headline-md text-headline-md text-on-surface">Bombay Spice Kitchen</h3>
+<span class="bg-primary-container/10 text-primary px-sm py-0.5 rounded font-label-md text-[10px] tracking-wider">BUSINESS</span>
+</div>
+<div class="flex items-center gap-xl text-on-surface-variant font-body-sm">
+<div class="flex flex-col">
+<span class="text-[11px] text-outline uppercase font-semibold">Followers</span>
+<span class="text-on-surface font-bold">8.2k</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[11px] text-outline uppercase font-semibold">Posts</span>
+<span class="text-on-surface font-bold">1,104</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[11px] text-outline uppercase font-semibold">Engagement</span>
+<span class="text-primary font-bold">2.1%</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-md">
+<div class="flex items-center gap-sm text-body-sm text-outline">
+<span class="material-symbols-outlined text-[16px]" data-icon="update">update</span>
+                        Synced 2 hours ago
+                    </div>
+<div class="flex items-center gap-sm">
+<button class="px-md py-sm border border-outline-variant rounded-lg text-primary font-label-md hover:bg-surface-container transition-colors">View Profile</button>
+<button class="p-2 border border-outline-variant rounded-lg hover:bg-error/5 hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Connect New Account - Dashed Border -->
+<button class="w-full h-32 border-2 border-dashed border-outline-variant/50 rounded-xl flex flex-col items-center justify-center gap-sm text-on-surface-variant hover:border-primary hover:text-primary hover:bg-primary/5 transition-all group">
+<span class="material-symbols-outlined text-4xl group-hover:scale-110 transition-transform" data-icon="add_circle">add_circle</span>
+<span class="font-headline-md text-headline-md">+ Connect another account</span>
+<span class="font-body-sm text-outline group-hover:text-primary/70">Connect TikTok, Google My Business, or TripAdvisor</span>
+</button>
+</div>
+<!-- System Status Footer (Optional UX enhancement) -->
+<div class="mt-2xl flex items-center justify-between border-t border-outline-variant pt-lg text-body-sm text-outline">
+<div class="flex items-center gap-md">
+<span class="flex h-2 w-2 rounded-full bg-primary"></span>
+                API connections healthy
+            </div>
+<div class="flex gap-lg">
+<a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-primary transition-colors" href="#">Help Center</a>
+<a class="hover:text-primary transition-colors" href="#">Developer API</a>
+</div>
+</div>
+</main>
+<script>
+        // Simple hover micro-interaction for cards
+        document.querySelectorAll('.bg-surface-container-lowest').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-2px)';
+                card.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.08)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+                card.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03)';
+            });
+        });
+    </script>
+</body></html>

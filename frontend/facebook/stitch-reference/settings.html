@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Settings - Wouchh Management Suite</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-pill {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        body {
+            background-color: #f8f9ff;
+            color: #0b1c30;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#b9f6f1",
+                        "on-primary-container": "#a3faef",
+                        "surface-container-low": "#eff4ff",
+                        "inverse-primary": "#80d5cb",
+                        "inverse-surface": "#213145",
+                        "surface-container-high": "#dce9ff",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#b1eee9",
+                        "background": "#f8f9ff",
+                        "on-background": "#0b1c30",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#95d1cd",
+                        "on-secondary-fixed-variant": "#7f2b00",
+                        "primary-container": "#0f766e",
+                        "surface-variant": "#d3e4fe",
+                        "on-surface": "#0b1c30",
+                        "outline": "#6e7977",
+                        "primary-fixed": "#9cf2e8",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#37736f",
+                        "surface": "#f8f9ff",
+                        "on-primary-fixed-variant": "#00504a",
+                        "on-tertiary-fixed": "#00201e",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#571a00",
+                        "secondary": "#a73a00",
+                        "secondary-fixed": "#ffdbce",
+                        "surface-bright": "#f8f9ff",
+                        "secondary-fixed-dim": "#ffb599",
+                        "surface-container-highest": "#d3e4fe",
+                        "secondary-container": "#fd651e",
+                        "on-surface-variant": "#3e4947",
+                        "surface-container": "#e5eeff",
+                        "tertiary": "#1a5a57",
+                        "surface-tint": "#006a63",
+                        "surface-dim": "#cbdbf5",
+                        "primary-fixed-dim": "#80d5cb",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-tertiary-fixed-variant": "#094f4c",
+                        "primary": "#005c55",
+                        "outline-variant": "#bdc9c6",
+                        "on-secondary-fixed": "#370e00",
+                        "on-primary-fixed": "#00201d",
+                        "on-primary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "20px",
+                        "md": "16px",
+                        "margin": "24px",
+                        "xl": "32px",
+                        "2xl": "48px",
+                        "sm": "8px",
+                        "base": "4px",
+                        "lg": "24px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "mono-sm": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "mono-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-[260px] bg-surface shadow-sm flex flex-col py-lg z-50">
+<div class="px-lg mb-xl">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-white">
+<span class="material-symbols-outlined">restaurant</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Wouchh</h1>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Management Suite</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-md px-lg py-md text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-lg py-md text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">public</span>
+<span class="font-body-md">Social Mentions</span>
+</a>
+<a class="flex items-center gap-md px-lg py-md text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">forum</span>
+<span class="font-body-md">Comments</span>
+</a>
+<a class="flex items-center gap-md px-lg py-md text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">mail</span>
+<span class="font-body-md">Inboxes</span>
+</a>
+<a class="flex items-center gap-md px-lg py-md text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-body-md">Analytics</span>
+</a>
+<a class="flex items-center gap-md px-lg py-md text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">reorder</span>
+<span class="font-body-md">Activity</span>
+</a>
+<a class="flex items-center gap-md px-lg py-md text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-md">Accounts</span>
+</a>
+<!-- Active Navigation -->
+<a class="flex items-center gap-md px-lg py-md text-primary font-bold border-l-4 border-primary bg-primary-container/10 transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md">Settings</span>
+</a>
+</nav>
+<div class="px-lg mt-auto pt-lg border-t border-outline-variant">
+<div class="flex items-center gap-md">
+<img alt="Manager Profile" class="w-10 h-10 rounded-full bg-surface-container-high" data-alt="A professional headshot of a restaurant manager with a friendly, welcoming expression. The lighting is warm and cinematic, set against the backdrop of a high-end, softly blurred modern restaurant interior with deep teal and cream accents. The style is clean, corporate photography with high-end editorial lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmoWEVjKR_vJKIcovPppyu8EkInXERF2hHCGP2C7xgXrjT6ZxwBWm0uO8NLIkUwRpy-Fxt2YT2HWvsvAV4dirJmxbbRnFkU1_5IINOqFKb_zRNt-DmF9SFcnH5sEy0tOS0L62_oInz7A5KGYSQoNJDXj1I-sUtipM_Er_GEnkhK3ZKaDn-g-ry9XqYZAHcpyncFBgKz8NdmBMbArUt5HrqU4cmF-4i8qc3Y-a9rMk5fRIK7Fhp62fh0LRkQiklXbNSpYFDQpSZ52WB"/>
+<div class="overflow-hidden">
+<p class="font-label-md text-label-md truncate">Alex Chen</p>
+<p class="text-[10px] text-on-surface-variant">Admin Manager</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-260px)] h-16 bg-surface border-b border-outline-variant flex justify-between items-center px-lg z-40">
+<div class="flex items-center gap-xl flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 focus:ring-2 focus:ring-primary transition-all text-body-sm" placeholder="Search settings..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<button class="relative text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-secondary rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant mx-2"></div>
+<span class="font-headline-md text-headline-md text-on-surface font-bold">Bombay Spice Kitchen</span>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-[260px] pt-16 min-h-screen">
+<div class="p-margin max-w-[1200px] mx-auto">
+<header class="mb-xl">
+<h2 class="font-headline-lg text-headline-lg text-on-background mb-base">Account Settings</h2>
+<p class="font-body-md text-on-surface-variant">Manage your restaurant identity, team access, and financial rules.</p>
+</header>
+<div class="grid grid-cols-12 gap-lg">
+<!-- Navigation Sub-Menu -->
+<nav class="col-span-3 space-y-sm">
+<button class="w-full flex items-center gap-md px-md py-3 rounded-lg bg-surface-container-highest text-primary font-bold transition-all" onclick="scrollToSection('profile-section')">
+<span class="material-symbols-outlined">person</span>
+<span class="font-body-md">Profile Info</span>
+</button>
+<button class="w-full flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:bg-surface-container transition-all text-left" onclick="scrollToSection('notifications-section')">
+<span class="material-symbols-outlined">notifications_active</span>
+<span class="font-body-md">Notifications</span>
+</button>
+<button class="w-full flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:bg-surface-container transition-all text-left" onclick="scrollToSection('cashback-section')">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body-md">Cashback Rules</span>
+</button>
+<button class="w-full flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:bg-surface-container transition-all text-left" onclick="scrollToSection('team-section')">
+<span class="material-symbols-outlined">group_add</span>
+<span class="font-body-md">Team Members</span>
+</button>
+<button class="w-full flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:bg-surface-container transition-all text-left" onclick="scrollToSection('billing-section')">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-body-md">Billing</span>
+</button>
+<div class="pt-xl">
+<button class="w-full flex items-center gap-md px-md py-3 rounded-lg text-error hover:bg-error-container/20 transition-all text-left font-bold" onclick="scrollToSection('danger-section')">
+<span class="material-symbols-outlined">dangerous</span>
+<span class="font-body-md">Danger Zone</span>
+</button>
+</div>
+</nav>
+<!-- Settings Content Area -->
+<div class="col-span-9 space-y-lg pb-2xl">
+<!-- Profile Section -->
+<section class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant/30" id="profile-section">
+<div class="flex justify-between items-start mb-lg">
+<div>
+<h3 class="font-headline-md text-headline-md">Profile Information</h3>
+<p class="font-body-sm text-on-surface-variant">Update your restaurant's public profile and contact details.</p>
+</div>
+<button class="bg-primary text-white px-lg py-2 rounded-lg font-label-md hover:bg-primary-container transition-all active:scale-95">Save Changes</button>
+</div>
+<div class="grid grid-cols-2 gap-lg">
+<div class="space-y-sm">
+<label class="block font-body-sm font-bold text-on-surface">Restaurant Name</label>
+<input class="w-full border-outline-variant rounded-lg focus:ring-primary focus:border-primary" type="text" value="Bombay Spice Kitchen"/>
+</div>
+<div class="space-y-sm">
+<label class="block font-body-sm font-bold text-on-surface">Contact Email</label>
+<input class="w-full border-outline-variant rounded-lg focus:ring-primary focus:border-primary" type="email" value="admin@bombayspice.com"/>
+</div>
+<div class="col-span-2 space-y-sm">
+<label class="block font-body-sm font-bold text-on-surface">Bio / Description</label>
+<textarea class="w-full border-outline-variant rounded-lg focus:ring-primary focus:border-primary" rows="3">Authentic Indian cuisine in the heart of the city. Specializing in Tandoori delights and traditional spice blends.</textarea>
+</div>
+</div>
+</section>
+<!-- Notifications Section -->
+<section class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant/30" id="notifications-section">
+<h3 class="font-headline-md text-headline-md mb-md">Notification Preferences</h3>
+<div class="divide-y divide-outline-variant/20">
+<div class="py-md flex items-center justify-between">
+<div>
+<p class="font-body-md font-bold">New Comment Alerts</p>
+<p class="font-body-sm text-on-surface-variant">Receive an email whenever a customer leaves a comment.</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="py-md flex items-center justify-between">
+<div>
+<p class="font-body-md font-bold">Cashback Activity</p>
+<p class="font-body-sm text-on-surface-variant">Daily summary of cashback rewards distributed.</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</section>
+<!-- Cashback Rules Section -->
+<section class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant/30" id="cashback-section">
+<div class="flex items-center gap-md mb-lg">
+<div class="p-3 bg-secondary-container rounded-lg text-white">
+<span class="material-symbols-outlined">volunteer_activism</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md">Cashback Rewards Rules</h3>
+<p class="font-body-sm text-on-surface-variant">Set the limits and percentages for your loyalty program.</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-xl">
+<div class="p-lg bg-surface-container-low rounded-xl border border-secondary/10">
+<div class="flex items-center justify-between mb-md">
+<span class="font-label-md text-secondary uppercase">Percent of Bill</span>
+<span class="material-symbols-outlined text-secondary">percent</span>
+</div>
+<div class="flex items-end gap-xs">
+<input class="w-24 font-headline-lg text-headline-lg bg-transparent border-none p-0 focus:ring-0 text-on-background" type="number" value="15"/>
+<span class="font-headline-md text-on-surface-variant pb-1">%</span>
+</div>
+<p class="font-body-sm text-on-surface-variant mt-sm">Average industry standard is 10-12%.</p>
+</div>
+<div class="p-lg bg-surface-container-low rounded-xl border border-secondary/10">
+<div class="flex items-center justify-between mb-md">
+<span class="font-label-md text-secondary uppercase">Max Amount per Bill</span>
+<span class="material-symbols-outlined text-secondary">payments</span>
+</div>
+<div class="flex items-end gap-xs">
+<span class="font-headline-md text-on-surface-variant pb-1">$</span>
+<input class="w-24 font-headline-lg text-headline-lg bg-transparent border-none p-0 focus:ring-0 text-on-background" type="number" value="50"/>
+</div>
+<p class="font-body-sm text-on-surface-variant mt-sm">Protects your margins on large group bookings.</p>
+</div>
+</div>
+</section>
+<!-- Team Members Section -->
+<section class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant/30" id="team-section">
+<div class="flex justify-between items-center mb-lg">
+<h3 class="font-headline-md text-headline-md">Team Members</h3>
+<button class="flex items-center gap-sm border border-primary text-primary px-lg py-2 rounded-lg font-label-md hover:bg-primary/5 transition-all">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                                Invite Member
+                            </button>
+</div>
+<div class="space-y-md">
+<div class="flex items-center justify-between p-md bg-surface-container-low/50 rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed font-bold">JD</div>
+<div>
+<p class="font-body-md font-bold">Jane Doe</p>
+<p class="font-body-sm text-on-surface-variant">Head Chef (Admin)</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">more_vert</span>
+</div>
+<div class="flex items-center justify-between p-md bg-surface-container-low/50 rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed font-bold">MS</div>
+<div>
+<p class="font-body-md font-bold">Marcus Smith</p>
+<p class="font-body-sm text-on-surface-variant">Floor Manager (Editor)</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">more_vert</span>
+</div>
+</div>
+</section>
+<!-- Billing Section -->
+<section class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant/30" id="billing-section">
+<h3 class="font-headline-md text-headline-md mb-lg">Billing &amp; Subscription</h3>
+<div class="flex items-center gap-xl p-lg bg-surface-container border border-outline-variant/20 rounded-xl">
+<div class="space-y-xs">
+<p class="font-label-md text-on-surface-variant uppercase">Current Plan</p>
+<p class="font-headline-md text-primary font-bold">Professional Pro</p>
+<p class="font-body-sm">$149/month • Next bill Oct 24, 2023</p>
+</div>
+<div class="ml-auto flex gap-md">
+<button class="px-lg py-2 border border-outline-variant rounded-lg font-label-md hover:bg-surface-container-high transition-colors">Change Plan</button>
+<button class="px-lg py-2 bg-inverse-surface text-inverse-on-surface rounded-lg font-label-md hover:opacity-90 transition-opacity">Manage Cards</button>
+</div>
+</div>
+</section>
+<!-- Danger Zone Section -->
+<section class="bg-error-container/10 p-lg rounded-xl shadow-sm border border-error/20" id="danger-section">
+<h3 class="font-headline-md text-headline-md text-error mb-base">Danger Zone</h3>
+<p class="font-body-sm text-on-surface-variant mb-lg">Irreversible actions that affect your data and integrations.</p>
+<div class="space-y-md">
+<div class="flex items-center justify-between p-md bg-white/50 rounded-lg border border-error/10">
+<div>
+<p class="font-body-md font-bold">Disconnect Social Accounts</p>
+<p class="font-body-sm text-on-surface-variant">Remove all linked Instagram and Google My Business profiles.</p>
+</div>
+<button class="text-error font-label-md hover:underline decoration-error underline-offset-4">Disconnect All</button>
+</div>
+<div class="flex items-center justify-between p-md bg-white/50 rounded-lg border border-error/10">
+<div>
+<p class="font-body-md font-bold">Deactivate Restaurant Suite</p>
+<p class="font-body-sm text-on-surface-variant">Suspend management access and hide your business from Wouchh.</p>
+</div>
+<button class="bg-error text-white px-lg py-2 rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95">Deactivate Suite</button>
+</div>
+</div>
+</section>
+</div>
+</div>
+</div>
+</main>
+<script>
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            const offset = 80;
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const elementRect = element.getBoundingClientRect().top;
+            const elementPosition = elementRect - bodyRect;
+            const offsetPosition = elementPosition - offset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+
+            // Update active state in nav
+            document.querySelectorAll('nav.col-span-3 button').forEach(btn => {
+                btn.classList.remove('bg-surface-container-highest', 'text-primary', 'font-bold');
+                btn.classList.add('text-on-surface-variant', 'hover:bg-surface-container');
+            });
+
+            const activeBtn = Array.from(document.querySelectorAll('nav.col-span-3 button'))
+                .find(btn => btn.getAttribute('onclick').includes(id));
+            
+            if (activeBtn) {
+                activeBtn.classList.add('bg-surface-container-highest', 'text-primary', 'font-bold');
+                activeBtn.classList.remove('text-on-surface-variant', 'hover:bg-surface-container');
+            }
+        }
+
+        // Intersection Observer for scroll-spy effect
+        const observerOptions = {
+            root: null,
+            rootMargin: '-10% 0px -80% 0px',
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    const activeBtn = Array.from(document.querySelectorAll('nav.col-span-3 button'))
+                        .find(btn => btn.getAttribute('onclick').includes(id));
+                    
+                    if (activeBtn) {
+                        document.querySelectorAll('nav.col-span-3 button').forEach(btn => {
+                            btn.classList.remove('bg-surface-container-highest', 'text-primary', 'font-bold');
+                            btn.classList.add('text-on-surface-variant', 'hover:bg-surface-container');
+                        });
+                        activeBtn.classList.add('bg-surface-container-highest', 'text-primary', 'font-bold');
+                        activeBtn.classList.remove('text-on-surface-variant', 'hover:bg-surface-container');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => observer.observe(section));
+    </script>
+</body></html>

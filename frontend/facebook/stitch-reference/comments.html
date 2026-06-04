@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Comments Management | Wouchh</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#b9f6f1",
+                    "on-primary-container": "#a3faef",
+                    "surface-container-low": "#eff4ff",
+                    "inverse-primary": "#80d5cb",
+                    "inverse-surface": "#213145",
+                    "surface-container-high": "#dce9ff",
+                    "error": "#ba1a1a",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed": "#b1eee9",
+                    "background": "#f8f9ff",
+                    "on-background": "#0b1c30",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed-dim": "#95d1cd",
+                    "on-secondary-fixed-variant": "#7f2b00",
+                    "primary-container": "#0f766e",
+                    "surface-variant": "#d3e4fe",
+                    "on-surface": "#0b1c30",
+                    "outline": "#6e7977",
+                    "primary-fixed": "#9cf2e8",
+                    "on-error-container": "#93000a",
+                    "tertiary-container": "#37736f",
+                    "surface": "#f8f9ff",
+                    "on-primary-fixed-variant": "#00504a",
+                    "on-tertiary-fixed": "#00201e",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-secondary-container": "#571a00",
+                    "secondary": "#a73a00",
+                    "secondary-fixed": "#ffdbce",
+                    "surface-bright": "#f8f9ff",
+                    "secondary-fixed-dim": "#ffb599",
+                    "surface-container-highest": "#d3e4fe",
+                    "secondary-container": "#fd651e",
+                    "on-surface-variant": "#3e4947",
+                    "surface-container": "#e5eeff",
+                    "tertiary": "#1a5a57",
+                    "surface-tint": "#006a63",
+                    "surface-dim": "#cbdbf5",
+                    "primary-fixed-dim": "#80d5cb",
+                    "inverse-on-surface": "#eaf1ff",
+                    "on-tertiary-fixed-variant": "#094f4c",
+                    "primary": "#005c55",
+                    "outline-variant": "#bdc9c6",
+                    "on-secondary-fixed": "#370e00",
+                    "on-primary-fixed": "#00201d",
+                    "on-primary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "20px",
+                    "md": "16px",
+                    "margin": "24px",
+                    "xl": "32px",
+                    "2xl": "48px",
+                    "sm": "8px",
+                    "base": "4px",
+                    "lg": "24px",
+                    "xs": "4px"
+            },
+            "fontFamily": {
+                    "mono-sm": ["JetBrains Mono"],
+                    "body-md": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "mono-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .scale-98:active { transform: scale(0.98); }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-hidden">
+<!-- Side Navigation Shell -->
+<aside class="fixed left-0 top-0 h-full w-[260px] bg-surface dark:bg-inverse-surface shadow-sm flex flex-col h-full py-lg z-50">
+<div class="px-lg mb-xl">
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">Wouchh</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant opacity-70">Management Suite</p>
+</div>
+<nav class="flex-1 space-y-base px-sm">
+<!-- Navigation Items Mapping from JSON -->
+<a class="flex items-center gap-md px-md py-sm rounded-lg transition-all duration-200 text-on-surface-variant hover:bg-surface-container-low" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg transition-all duration-200 text-on-surface-variant hover:bg-surface-container-low" href="#">
+<span class="material-symbols-outlined">public</span>
+<span class="font-body-md">Social Mentions</span>
+</a>
+<!-- Active State: Comments -->
+<a class="flex items-center gap-md px-md py-sm rounded-lg transition-all duration-200 text-primary dark:text-inverse-primary font-bold border-l-4 border-primary dark:border-inverse-primary bg-primary-container/10" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">forum</span>
+<span class="font-body-md">Comments</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg transition-all duration-200 text-on-surface-variant hover:bg-surface-container-low" href="#">
+<span class="material-symbols-outlined">mail</span>
+<span class="font-body-md">Inboxes</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg transition-all duration-200 text-on-surface-variant hover:bg-surface-container-low" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-body-md">Analytics</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg transition-all duration-200 text-on-surface-variant hover:bg-surface-container-low" href="#">
+<span class="material-symbols-outlined">reorder</span>
+<span class="font-body-md">Activity</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg transition-all duration-200 text-on-surface-variant hover:bg-surface-container-low" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-md">Accounts</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg transition-all duration-200 text-on-surface-variant hover:bg-surface-container-low" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md">Settings</span>
+</a>
+</nav>
+<div class="px-lg mt-auto border-t border-outline-variant pt-lg">
+<div class="flex items-center gap-md">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="A sophisticated restaurant logo featuring a stylized minimalist spice leaf in deep teal against a warm cream background. The design is elegant, modern, and high-contrast, evoking a sense of premium culinary excellence and professional organization." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOv1bcN2iE3UdjinX2pl8OyapcdkFILzaFaIPjzv1rtWRglNG2mdXQW8ubT8_KX4dU2J1vDJ5PuGwJ79sEoP-4GnVrrbYyMBA4ZBAl3t3hSpvMM9rCwj-ccxUTfFfJUvTiTvlHAMd7G9alpGvlPMQUrnlxT5Pfb6WyTRcOzHfUS1oiXwcL5Kudh4olpUohFKj7VG29G7Qwf_3ZYSTa1KJsHhBk3xnpN2QxU5quQ4pvsAMfC7joVSJhBBGvvKXoZsdUlOq7kqpNhzAu"/>
+<div>
+<p class="font-label-md text-label-md">Bombay Spice</p>
+<p class="text-[10px] text-on-surface-variant">Manager Access</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Top Navigation Bar Shell -->
+<header class="fixed top-0 right-0 w-[calc(100%-260px)] h-16 bg-surface dark:bg-inverse-surface border-b border-outline-variant flex justify-between items-center px-lg z-40">
+<div class="flex items-center gap-md w-1/3">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container rounded-full py-2 pl-10 pr-4 text-body-sm border-none focus:ring-2 focus:ring-primary" placeholder="Search comments..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<div class="flex items-center gap-md">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+<div class="h-8 w-px bg-outline-variant"></div>
+<img class="w-9 h-9 rounded-full object-cover border border-outline-variant" data-alt="A professional headshot of a restaurant manager in a brightly lit, modern commercial kitchen environment. He wears a clean white chef coat and has a friendly, authoritative expression. The lighting is soft and natural, emphasizing a professional yet warm hospitality atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEgCS7neS_7KUDcjcxum1leNnJfjFDGJziLpwaMzEI2rn2kWhHwioXiFYylApYSeo2oxII1DjX4kbRKlaAW9aAxzgzvF-uV9fJS5kQWmUIJHqxO_Q53jOZQXxKwIngAvcaQmodD0kNyuZd7VPKvV0L7qfJB6kteKMaxhHCcgkWbQ2mrSVs4_02FbPIQeu5ekm1AHnos6sMfl-M3kaayFqWxR8S2fqajQqEa8BX0pjNIdqOl9Xp3hlDhKRsO1q6sOZlixtlqONORc1P"/>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-[260px] mt-16 p-lg h-[calc(100vh-64px)] overflow-y-auto hide-scrollbar">
+<!-- Header Section -->
+<div class="mb-lg">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-base">Comments</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Engage with your audience across all linked platforms.</p>
+</div>
+<!-- Metric Cards Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-xl">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+<div>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Total Comments</span>
+<p class="font-headline-lg text-headline-lg text-on-surface mt-sm">1,247</p>
+</div>
+<div class="mt-md flex items-center gap-xs text-primary font-bold">
+<span class="material-symbols-outlined text-[18px]">trending_up</span>
+<span class="text-body-sm">+12% this week</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+<div>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Mentions</span>
+<p class="font-headline-lg text-headline-lg text-on-surface mt-sm">89</p>
+</div>
+<div class="mt-md flex items-center gap-xs text-secondary font-bold">
+<span class="material-symbols-outlined text-[18px]">priority_high</span>
+<span class="text-body-sm">Requires Attention</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+<div>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Replied</span>
+<p class="font-headline-lg text-headline-lg text-on-surface mt-sm">76</p>
+</div>
+<div class="mt-md flex items-center gap-xs text-primary font-bold">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span class="text-body-sm">85% engagement</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+<div>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Pending</span>
+<p class="font-headline-lg text-headline-lg text-secondary mt-sm">13</p>
+</div>
+<div class="mt-md flex items-center gap-xs text-secondary font-bold">
+<span class="material-symbols-outlined text-[18px]">hourglass_empty</span>
+<span class="text-body-sm">Avg. wait 4h</span>
+</div>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="flex flex-wrap items-center justify-between gap-md mb-lg p-md bg-surface-container-low rounded-lg">
+<div class="flex gap-md">
+<div class="relative">
+<select class="bg-surface-container-lowest border-outline-variant rounded-lg px-lg py-2 text-body-sm pr-10 appearance-none focus:ring-primary focus:border-primary">
+<option>All Platforms</option>
+<option>Google Maps</option>
+<option>Instagram</option>
+<option>Yelp</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none opacity-50">expand_more</span>
+</div>
+<div class="relative">
+<select class="bg-surface-container-lowest border-outline-variant rounded-lg px-lg py-2 text-body-sm pr-10 appearance-none focus:ring-primary focus:border-primary">
+<option>Any Sentiment</option>
+<option>Positive</option>
+<option>Neutral</option>
+<option>Negative</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none opacity-50">expand_more</span>
+</div>
+<div class="relative">
+<select class="bg-surface-container-lowest border-outline-variant rounded-lg px-lg py-2 text-body-sm pr-10 appearance-none focus:ring-primary focus:border-primary">
+<option>Status: All</option>
+<option>Resolved</option>
+<option>Unresolved</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none opacity-50">expand_more</span>
+</div>
+</div>
+<button class="bg-primary text-white px-lg py-2 rounded-lg font-label-md flex items-center gap-sm scale-98 transition-all hover:bg-primary/90">
+<span class="material-symbols-outlined text-[18px]">refresh</span>
+                Update Feed
+            </button>
+</div>
+<!-- Conversation-style List -->
+<div class="space-y-md">
+<!-- Comment Row 1 (Mention) -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<div class="p-lg flex gap-lg">
+<div class="relative shrink-0">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A candid, high-resolution portrait of a young woman with a joyful expression, smiling at the camera in a modern cafe setting. Soft morning sunlight filters through large windows, creating a warm, vibrant glow. The background is softly blurred, focusing on her friendly and authentic character." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAu7-yVtVdHkXgb-wpYhgIfcpwZHCKQ5D3OZ9pdSZqJgEsmszKOWA-Ui1-Hr_ylV0sF-hFvpvtevmq2rNP2PMEESLWzAZWPgDSNPczjNypAoV4oYgfKXgW7lFGKXMhKCnYicxkqe5gWVyFJIcGJDGZnLwlcGBYKPu58RokBH1uqK_lsxaq3ShOCAihaeRsmUP-Jydehiq6GxiRboI4_Z0A3BIoR5Kjl3YGw1kx0ji0AQZnF2K04k1V2cup2wtQFavJQlrACZU7Xb3kE"/>
+<div class="absolute -bottom-1 -right-1 bg-surface-container-lowest p-1 rounded-full">
+<img alt="Instagram" class="w-4 h-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqYCeLRCrLRUShQKi0j_s4_80eoH3mDDSAcQ7rL5gmIuDgJrCI7kc0HsCwUbWpl1K2O-4hktGnEo2Aok9g3Ds9zmdRZpPaehwDyt0GQXj8kIrpLMFnflH7cqZcTbNd4CmL54Ta8odTrjC2aE9wDIboaj4eIJBrN0vZ9fIZ6YDLgh_VcHNfmpnLhzL776kkknA4GtOjP2WoHn0IuOWLvbmVfUWogzbDBk_WyB7UqfbG5ffm1TVT-EtLSytE0wu04hFbmvkmH3eZTLZB"/>
+</div>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-sm">
+<div class="flex items-center gap-md">
+<span class="font-body-lg font-bold text-on-background">Sarah Jenkins</span>
+<span class="text-body-sm text-on-surface-variant opacity-60">@sjenks_foodie</span>
+<span class="text-body-sm text-on-surface-variant opacity-60">• 2 hours ago</span>
+</div>
+<div class="flex items-center gap-md">
+<span class="bg-tertiary-container/20 text-tertiary text-[11px] font-bold px-sm py-1 rounded-full flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">alternate_email</span>
+                                    Mentioned you
+                                </span>
+<div class="bg-green-100 text-green-700 text-[11px] font-bold px-sm py-1 rounded-full">Positive</div>
+</div>
+</div>
+<p class="text-on-surface-variant font-body-md leading-relaxed mb-lg">
+                            The butter chicken at @BombaySpiceKitchen is absolutely divine! Best I've had in the city. Can't wait to bring my family next weekend. 🍛🔥
+                        </p>
+<!-- Quick Actions -->
+<div class="flex items-center gap-xl">
+<button class="flex items-center gap-sm text-primary font-bold text-label-md hover:underline" onclick="toggleReply('reply-1')">
+<span class="material-symbols-outlined text-[18px]">reply</span>
+                                Reply
+                            </button>
+<button class="flex items-center gap-sm text-on-surface-variant text-label-md hover:text-on-surface">
+<span class="material-symbols-outlined text-[18px]">visibility_off</span>
+                                Hide
+                            </button>
+<button class="flex items-center gap-sm text-on-surface-variant text-label-md hover:text-error">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+                                Delete
+                            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Comment Row 2 (Inline Reply Example) -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm">
+<div class="p-lg flex gap-lg">
+<div class="relative shrink-0">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A professional close-up portrait of a man in his late 30s with short hair and glasses. He is looking thoughtfully towards the camera in a modern office lounge. The lighting is crisp and clean, creating a high-end corporate aesthetic with a neutral, sophisticated color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4WyDWofkMrlS2zQibSy9basJtpWZ_2kqvyXS2DTrRfzZwsghaYN2_pErZ0kUvFgn_lqLoMlfHpjlrr9vpzPrdBPnBTqaNnaMrl8sEhbBCPd5tscytG2EHm2NI7AcUF75adyWBk6UcFhkw3JWPgkmj30Kngg_0ur1OeHza_t3ztRK65gSo-CBwBp48unpP7z1X4yXoDYQi4msuw7n4dgpDHgajRZ8cgbMMUoZwTudK-6nlzqq8PpyeVFymA7-OhIhir0Nxw7cgpCvY"/>
+<div class="absolute -bottom-1 -right-1 bg-surface-container-lowest p-1 rounded-full">
+<span class="material-symbols-outlined text-[16px] text-[#4285F4]">google</span>
+</div>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-sm">
+<div class="flex items-center gap-md">
+<span class="font-body-lg font-bold text-on-background">David Chen</span>
+<span class="text-body-sm text-on-surface-variant opacity-60">• 5 hours ago</span>
+</div>
+<div class="flex items-center gap-md">
+<div class="bg-secondary-container/20 text-secondary text-[11px] font-bold px-sm py-1 rounded-full">Pending</div>
+</div>
+</div>
+<p class="text-on-surface-variant font-body-md leading-relaxed mb-lg">
+                            Do you have vegan options for the weekend brunch? Looking to book a table for 6.
+                        </p>
+<!-- Reply UI -->
+<div class="mt-lg pt-lg border-t border-outline-variant/30" id="reply-1">
+<div class="flex gap-md bg-surface-container-low p-md rounded-xl">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-[12px]">BS</div>
+<div class="flex-1">
+<textarea autofocus="" class="w-full bg-transparent border-none focus:ring-0 text-body-sm resize-none h-16" placeholder="Write your reply..."></textarea>
+<div class="flex items-center justify-between mt-sm">
+<div class="flex gap-sm">
+<button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined text-[20px]">image</span></button>
+<button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined text-[20px]">sentiment_satisfied</span></button>
+<button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined text-[20px]">auto_fix</span></button>
+</div>
+<div class="flex gap-md">
+<button class="px-md py-1 text-label-md text-on-surface-variant" onclick="toggleReply('reply-1')">Cancel</button>
+<button class="px-lg py-1.5 bg-primary text-white rounded-lg text-label-md font-bold scale-98 transition-all">Send Reply</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Comment Row 3 (Negative sentiment) -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm opacity-80">
+<div class="p-lg flex gap-lg">
+<div class="relative shrink-0">
+<img class="w-12 h-12 rounded-full object-cover grayscale" data-alt="A portrait of a person with an expressive face, leaning slightly forward in a stylishly furnished urban apartment. The lighting is dramatic and moody, with deep shadows and soft highlights that suggest an early evening atmosphere. The overall aesthetic is cinematic and high-contrast." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCea0oRGd3HX8MvvQ6EpITgM0Mh_vKbuU4L184CAeYDDKm8ONhbanTWhZgc144u7MW3ql9_VI7R8H2X4Im96wXShkYOt45OSfLQD3tuBgbIihOC0YGMHMHQRX5X_V611W2HDicH__UVPSA-0W04gu0N2LH1sfA7ppRX41TjVu-R7lz7Lb-Prfgu_9gLBrV2UWdbze0WWgki_AHLiUXi8n1HPRaULxcHA8xXHjvrgc6PbQs9EriCuw8x11Sy2-IfuYo_x96NsaV7jvik"/>
+<div class="absolute -bottom-1 -right-1 bg-surface-container-lowest p-1 rounded-full">
+<span class="material-symbols-outlined text-[16px] text-[#FF0000]">forum</span>
+</div>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-sm">
+<div class="flex items-center gap-md">
+<span class="font-body-lg font-bold text-on-background">Anonymous</span>
+<span class="text-body-sm text-on-surface-variant opacity-60">• Yesterday</span>
+</div>
+<div class="flex items-center gap-md">
+<div class="bg-error-container/20 text-error text-[11px] font-bold px-sm py-1 rounded-full">Negative</div>
+<div class="bg-surface-container text-on-surface-variant text-[11px] font-bold px-sm py-1 rounded-full">Hidden</div>
+</div>
+</div>
+<p class="text-on-surface-variant font-body-md leading-relaxed mb-lg italic">
+                            Wait time was over 45 minutes even with a reservation. Needs better management.
+                        </p>
+<div class="flex items-center gap-xl">
+<button class="flex items-center gap-sm text-primary font-bold text-label-md hover:underline">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+                                Show Comment
+                            </button>
+<button class="flex items-center gap-sm text-on-surface-variant text-label-md hover:text-error">
+<span class="material-symbols-outlined text-[18px]">delete_forever</span>
+                                Purge
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-xl flex items-center justify-center gap-lg">
+<button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-all text-on-surface-variant">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<div class="flex gap-md">
+<button class="w-10 h-10 rounded-lg bg-primary text-white font-bold">1</button>
+<button class="w-10 h-10 rounded-lg border border-outline-variant hover:bg-surface-container transition-all">2</button>
+<button class="w-10 h-10 rounded-lg border border-outline-variant hover:bg-surface-container transition-all">3</button>
+<span class="flex items-end pb-2">...</span>
+<button class="w-10 h-10 rounded-lg border border-outline-variant hover:bg-surface-container transition-all">12</button>
+</div>
+<button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-all text-on-surface-variant">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</main>
+<script>
+        function toggleReply(id) {
+            const el = document.getElementById(id);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+        
+        // Auto-hide the reply on start for demonstration of the interactive nature
+        // Note: For the task, it shows an "inline reply example" as requested
+        // document.getElementById('reply-1').classList.add('hidden'); 
+    </script>
+</body></html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wouchh | Restaurant Management Suite</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#b9f6f1",
+                        "on-primary-container": "#a3faef",
+                        "surface-container-low": "#eff4ff",
+                        "inverse-primary": "#80d5cb",
+                        "inverse-surface": "#213145",
+                        "surface-container-high": "#dce9ff",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#b1eee9",
+                        "background": "#f8f9ff",
+                        "on-background": "#0b1c30",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#95d1cd",
+                        "on-secondary-fixed-variant": "#7f2b00",
+                        "primary-container": "#0f766e",
+                        "surface-variant": "#d3e4fe",
+                        "on-surface": "#0b1c30",
+                        "outline": "#6e7977",
+                        "primary-fixed": "#9cf2e8",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#37736f",
+                        "surface": "#f8f9ff",
+                        "on-primary-fixed-variant": "#00504a",
+                        "on-tertiary-fixed": "#00201e",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#571a00",
+                        "secondary": "#a73a00",
+                        "secondary-fixed": "#ffdbce",
+                        "surface-bright": "#f8f9ff",
+                        "secondary-fixed-dim": "#ffb599",
+                        "surface-container-highest": "#d3e4fe",
+                        "secondary-container": "#fd651e",
+                        "on-surface-variant": "#3e4947",
+                        "surface-container": "#e5eeff",
+                        "tertiary": "#1a5a57",
+                        "surface-tint": "#006a63",
+                        "surface-dim": "#cbdbf5",
+                        "primary-fixed-dim": "#80d5cb",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-tertiary-fixed-variant": "#094f4c",
+                        "primary": "#005c55",
+                        "outline-variant": "#bdc9c6",
+                        "on-secondary-fixed": "#370e00",
+                        "on-primary-fixed": "#00201d",
+                        "on-primary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "20px",
+                        "md": "16px",
+                        "margin": "24px",
+                        "xl": "32px",
+                        "2xl": "48px",
+                        "sm": "8px",
+                        "base": "4px",
+                        "lg": "24px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "mono-sm": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "mono-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #FAF8F5; /* Brand warm cream fallback */
+        }
+        .bento-glow {
+            background: radial-gradient(circle at center, rgba(15, 118, 110, 0.05) 0%, transparent 70%);
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-surface antialiased bg-[#FAF8F5]">
+<!-- Main Wrapper -->
+<div class="min-h-screen flex flex-col md:flex-row">
+<!-- Left Section: Hero Branding (Section A) -->
+<section class="relative w-full md:w-1/2 flex flex-col justify-between p-lg md:p-2xl overflow-hidden bg-primary overflow-hidden min-h-[400px] md:min-h-screen">
+<!-- Decorative Background Element -->
+<div class="absolute top-0 right-0 w-full h-full opacity-10 pointer-events-none">
+<div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-white blur-3xl"></div>
+<div class="absolute bottom-1/4 -left-24 w-64 h-64 rounded-full bg-on-primary-container blur-2xl"></div>
+</div>
+<!-- Logo -->
+<div class="relative z-10 flex items-center gap-sm">
+<div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined text-primary text-[28px]" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md font-bold text-white tracking-tight">Wouchh</span>
+<span class="font-label-md text-[10px] uppercase tracking-widest text-on-primary-container">Management Suite</span>
+</div>
+</div>
+<!-- Hero Content -->
+<div class="relative z-10 mt-auto mb-12">
+<h1 class="font-display-lg text-display-lg text-white max-w-lg mb-lg">
+                    Turn diners into your brand ambassadors
+                </h1>
+<p class="font-body-lg text-body-lg text-on-primary-container max-w-md leading-relaxed">
+                    Reward customers with cashback when they post about your restaurant on Instagram and Facebook. Automate your social proof and grow your community effortlessly.
+                </p>
+</div>
+<!-- Image/Visual Hint -->
+<div class="relative z-10 w-full rounded-xl overflow-hidden shadow-2xl border border-white/10 aspect-video group">
+<img alt="Restaurant Atmosphere" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A high-end modern restaurant interior during a vibrant golden hour. The space features warm wood textures, deep teal upholstered chairs, and sleek marble tables. Elegant patrons are seen blurred in the background, capturing photos of beautifully plated gourmet dishes. The lighting is soft and atmospheric, emphasizing a premium light-mode hospitality aesthetic with sophisticated cream and teal tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6uzMI3ggMtnRVsI57IIBoSWxlmnWMw7ZHJLBfKDv2ZZ96XQWm3-T1eQdLhrsDZWbSv9-gCkaW-pVJArEfhPMeICdf72QIpdqvS8_ZnK2c1E5E10cu8qiiUxunxcMKaeO5xaU8DbNpkSpDviIkRVnyZ8lub74dw6LcHR1fd7qXvclwhKPpGGTM-hEmGWoHwUWTGvnbodgIOgZRK6hl4Eol6zLvDI7Iywa4IJvNc64SDjYB6_WL109cj0oq7tad7ivY5d8mkM-YT6Is"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+</div>
+</section>
+<!-- Right Section: Auth & Permissions (Section B & C) -->
+<main class="w-full md:w-1/2 flex items-center justify-center p-lg md:p-2xl bg-[#FAF8F5]">
+<div class="w-full max-w-[520px] space-y-lg">
+<!-- Permissions Disclosure Card (Section B) -->
+<div class="bg-white rounded-xl shadow-sm border border-outline-variant/30 overflow-hidden">
+<div class="p-lg bg-surface-container-low/50 border-b border-outline-variant/20">
+<h2 class="font-headline-md text-headline-md text-on-surface">Permissions SocialDine will request</h2>
+<p class="font-body-sm text-on-surface-variant mt-1">To enable automated cashback rewards, we require specific access to your professional accounts.</p>
+</div>
+<div class="p-lg space-y-md">
+<!-- Permission 1 -->
+<div class="flex gap-md group">
+<div class="w-10 h-10 shrink-0 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="pages_read_engagement">stress_management</span>
+</div>
+<div>
+<h3 class="font-label-md text-on-surface">pages_read_engagement</h3>
+<p class="font-body-sm text-on-surface-variant">Allows us to detect when your restaurant is tagged in posts and stories.</p>
+</div>
+</div>
+<!-- Permission 2 -->
+<div class="flex gap-md group">
+<div class="w-10 h-10 shrink-0 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="pages_manage_metadata">stress_management</span>
+</div>
+<div>
+<h3 class="font-label-md text-on-surface">pages_manage_metadata</h3>
+<p class="font-body-sm text-on-surface-variant">Used to sync your restaurant's profile information and business location.</p>
+</div>
+</div>
+<!-- Permission 3 -->
+<div class="flex gap-md group">
+<div class="w-10 h-10 shrink-0 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="instagram_basic">install_mobile</span>
+</div>
+<div>
+<h3 class="font-label-md text-on-surface">instagram_basic</h3>
+<p class="font-body-sm text-on-surface-variant">Basic access to verify users' posts and media for reward eligibility.</p>
+</div>
+</div>
+<!-- Permission 4 -->
+<div class="flex gap-md group">
+<div class="w-10 h-10 shrink-0 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="instagram_manage_comments">stress_management</span>
+</div>
+<div>
+<h3 class="font-label-md text-on-surface">instagram_manage_comments</h3>
+<p class="font-body-sm text-on-surface-variant">Enables automated "Thank you" comments on customer promotional posts.</p>
+</div>
+</div>
+<!-- Permission 5 -->
+<div class="flex gap-md group">
+<div class="w-10 h-10 shrink-0 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="instagram_manage_messages">android_messages</span>
+</div>
+<div>
+<h3 class="font-label-md text-on-surface">instagram_manage_messages</h3>
+<p class="font-body-sm text-on-surface-variant">Required to send direct cashback redemption codes to your customers.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Consent & Action (Section C) -->
+<div class="space-y-md">
+<!-- Checkbox -->
+<label class="flex items-start gap-md cursor-pointer group">
+<div class="relative flex items-center">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20 transition-all cursor-pointer" id="terms-consent" type="checkbox"/>
+</div>
+<span class="font-body-sm text-on-surface-variant leading-tight">
+                            I agree to the <a class="text-primary font-semibold hover:underline" href="#">Terms of Service</a> and <a class="text-primary font-semibold hover:underline" href="#">Privacy Policy</a>. I understand how my data will be used to manage restaurant campaigns.
+                        </span>
+</label>
+<!-- CTA Button -->
+<button class="w-full flex items-center justify-center gap-md py-4 px-lg bg-[#1877F2] hover:bg-[#166fe5] text-white rounded-xl shadow-md transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed" id="login-btn" onclick="handleLogin()">
+<svg class="w-6 h-6 fill-current" viewbox="0 0 24 24">
+<path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path>
+</svg>
+<span class="font-headline-md text-headline-md !text-white !font-semibold">Continue with Facebook</span>
+</button>
+<!-- Footer Text -->
+<p class="text-center font-body-sm text-on-surface-variant/70 italic px-lg">
+                        You will be redirected to Facebook to securely authorize these permissions. Wouchh does not store your Facebook password.
+                    </p>
+</div>
+<!-- Trust Badges -->
+<div class="pt-lg border-t border-outline-variant/20 flex justify-center gap-xl grayscale opacity-50">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+<span class="font-label-md text-[10px] uppercase">Secure API</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">encrypted</span>
+<span class="font-label-md text-[10px] uppercase">Data Privacy</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span class="font-label-md text-[10px] uppercase">Meta Partner</span>
+</div>
+</div>
+</div>
+</main>
+</div>
+<script>
+        const checkbox = document.getElementById('terms-consent');
+        const loginBtn = document.getElementById('login-btn');
+
+        // Initial state
+        loginBtn.disabled = !checkbox.checked;
+
+        checkbox.addEventListener('change', () => {
+            loginBtn.disabled = !checkbox.checked;
+        });
+
+        function handleLogin() {
+            if (!checkbox.checked) return;
+            
+            // Interaction feedback
+            loginBtn.innerHTML = `
+                <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Connecting...</span>
+            `;
+            
+            setTimeout(() => {
+                alert('In a real environment, this would initiate the Facebook OAuth flow.');
+                window.location.reload();
+            }, 1500);
+        }
+
+        // Lightweight hover effect for permission cards
+        document.querySelectorAll('.group').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                // Potential for micro-animations here
+            });
+        });
+    </script>
+</body></html>

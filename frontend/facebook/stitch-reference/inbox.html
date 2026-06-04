@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wouchh Inbox - Management Suite</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#b9f6f1",
+                        "on-primary-container": "#a3faef",
+                        "surface-container-low": "#eff4ff",
+                        "inverse-primary": "#80d5cb",
+                        "inverse-surface": "#213145",
+                        "surface-container-high": "#dce9ff",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#b1eee9",
+                        "background": "#f8f9ff",
+                        "on-background": "#0b1c30",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#95d1cd",
+                        "on-secondary-fixed-variant": "#7f2b00",
+                        "primary-container": "#0f766e",
+                        "surface-variant": "#d3e4fe",
+                        "on-surface": "#0b1c30",
+                        "outline": "#6e7977",
+                        "primary-fixed": "#9cf2e8",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#37736f",
+                        "surface": "#f8f9ff",
+                        "on-primary-fixed-variant": "#00504a",
+                        "on-tertiary-fixed": "#00201e",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#571a00",
+                        "secondary": "#a73a00",
+                        "secondary-fixed": "#ffdbce",
+                        "surface-bright": "#f8f9ff",
+                        "secondary-fixed-dim": "#ffb599",
+                        "surface-container-highest": "#d3e4fe",
+                        "secondary-container": "#fd651e",
+                        "on-surface-variant": "#3e4947",
+                        "surface-container": "#e5eeff",
+                        "tertiary": "#1a5a57",
+                        "surface-tint": "#006a63",
+                        "surface-dim": "#cbdbf5",
+                        "primary-fixed-dim": "#80d5cb",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-tertiary-fixed-variant": "#094f4c",
+                        "primary": "#005c55",
+                        "outline-variant": "#bdc9c6",
+                        "on-secondary-fixed": "#370e00",
+                        "on-primary-fixed": "#00201d",
+                        "on-primary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "20px",
+                        "md": "16px",
+                        "margin": "24px",
+                        "xl": "32px",
+                        "2xl": "48px",
+                        "sm": "8px",
+                        "base": "4px",
+                        "lg": "24px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "mono-sm": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "mono-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full w-[260px] bg-surface dark:bg-inverse-surface shadow-sm flex flex-col py-lg z-50">
+<div class="px-lg mb-xl">
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">Wouchh</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Management Suite</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center px-lg py-md text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md">dashboard</span>
+<span class="font-body-md">Dashboard</span>
+</a>
+<a class="flex items-center px-lg py-md text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md">public</span>
+<span class="font-body-md">Social Mentions</span>
+</a>
+<a class="flex items-center px-lg py-md text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md">forum</span>
+<span class="font-body-md">Comments</span>
+</a>
+<a class="flex items-center px-lg py-md text-primary dark:text-inverse-primary font-bold border-l-4 border-primary dark:border-inverse-primary bg-primary-container/10" href="#">
+<span class="material-symbols-outlined mr-md" style="font-variation-settings: 'FILL' 1;">mail</span>
+<span class="font-body-md">Inboxes</span>
+</a>
+<a class="flex items-center px-lg py-md text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md">leaderboard</span>
+<span class="font-body-md">Analytics</span>
+</a>
+<a class="flex items-center px-lg py-md text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md">reorder</span>
+<span class="font-body-md">Activity</span>
+</a>
+<a class="flex items-center px-lg py-md text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md">group</span>
+<span class="font-body-md">Accounts</span>
+</a>
+<a class="flex items-center px-lg py-md text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md">settings</span>
+<span class="font-body-md">Settings</span>
+</a>
+</nav>
+<div class="px-lg pt-lg border-t border-outline-variant">
+<div class="flex items-center gap-md">
+<img alt="Restaurant Logo" class="w-10 h-10 rounded-lg bg-surface-container" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrPne17YOtnypVemBBdzHhROWcJh5yZyMrpPHv0woI8AKHuB0-ML8SYSrOYWV91gfKcyfCh-QroHieFpNp-jHlQg4sVbtLEVFF-QiWVBCKk45gWYsXRqFTks0I891K-Qjt5PAAPPYSLUXY95mALWh-06tV2Lr51VJPI80jUvTIMg5_-XYdBd8NeV3KEhxTIGeo30Av17j51ryVFuzzh5dlXQNg_frVpnOYNOIxdsAiB72Nd9nYZBEZfwMGGT8YveXwA2_NO8_pUIAr"/>
+<div>
+<p class="font-label-md text-label-md">Bombay Spice</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider">Store #402</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Top Navigation -->
+<header class="fixed top-0 right-0 w-[calc(100%-260px)] h-16 bg-surface border-b border-outline-variant flex justify-between items-center px-lg z-40">
+<div class="flex items-center gap-xl">
+<h2 class="font-headline-md text-headline-md text-on-surface">Inbox</h2>
+<div class="relative w-80">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full font-body-sm focus:ring-2 focus:ring-primary" placeholder="Search conversations..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container p-2 rounded-full transition-all">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container p-2 rounded-full transition-all">help</button>
+<div class="flex items-center gap-md pl-md border-l border-outline-variant">
+<span class="text-right">
+<p class="font-label-md text-label-md">Karan Sharma</p>
+<p class="text-[10px] text-on-surface-variant">General Manager</p>
+</span>
+<img alt="Manager Profile" class="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center font-bold" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMxtOJ5y8n3n5ffxzJkNl_XmsGejjElw6pavPlda6aNYQ5SVcxuOQmo6F1BSlYHz8iPQ_3SMP5mBIZYjtMCdqUyRsoPFHMz4KFzP3lMiZthaS9cQFjctP1U4XvXYiUnr6BWrHlqZTqb9etgHRUCZVLN-itW66lXDbl1qdBOaM_b6qujJP-jkZnuelQQlvgyL7vtYFERgkkZ8oKwT3avoeBfGVWLKLaXIxMiVsTBYouVDcqOAM-B2W97Kx8VYRZ-kCoqPgKWMCa3RY4"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area: Inbox Layout -->
+<main class="ml-[260px] pt-16 h-screen flex overflow-hidden">
+<!-- Left: Conversation List -->
+<section class="w-[380px] bg-white border-r border-outline-variant flex flex-col h-full">
+<div class="p-lg flex items-center justify-between border-b border-outline-variant">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Active Chats</span>
+<div class="flex gap-sm">
+<button class="material-symbols-outlined text-[20px] text-on-surface-variant">filter_list</button>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto hide-scrollbar">
+<!-- Chat Item (Active) -->
+<div class="p-lg flex gap-md cursor-pointer bg-surface-container-low border-l-4 border-primary">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A close-up portrait of a vibrant young woman with a friendly smile, photographed in soft, warm golden hour lighting that creates a welcoming and high-end feel. The background is a blurred, upscale restaurant interior with warm teal and cream accents, maintaining the brand's premium and tactile visual identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2Gzn1F80bDAdM2mGO4_eBitPQh7sE9YRUNkcW_b83dblwIuvq-MBEdwtpgjlNA03LiqFbh4Mz-6-rGtfSKlfmQr4KcDKsrjDaRyEVa8mrpSq2ZGgGzZQPvn601KwRYJ8JYemwmn2Rf9zvkF_sNK9kJrm5vptmYupjEUT81lpkRnT1BZ7_GBPQ5QEsPFPgAg3t7fxFc0Py0oq9fQB_nmwWdGQJxAZjp4mnW18J3bUY5Z4lh6Ch6PPwV332sGmhEgn4zpL4dPuhhD0Z"/>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-0.5">
+<h3 class="font-body-lg font-bold text-on-surface truncate">Sarah Jenkins</h3>
+<span class="font-label-md text-[10px] text-on-surface-variant">14:22</span>
+</div>
+<p class="text-body-sm text-on-surface-variant line-clamp-1">The butter chicken was amazing! Just wondering about my reward credit...</p>
+</div>
+<div class="flex flex-col items-end gap-md">
+<div class="w-2 h-2 bg-primary rounded-full"></div>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">push_pin</span>
+</div>
+</div>
+<!-- Chat Item -->
+<div class="p-lg flex gap-md cursor-pointer hover:bg-surface-container-lowest transition-colors border-l-4 border-transparent">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A professional headshot of a middle-aged man with a clean-cut look, wearing a neutral-toned linen shirt. The lighting is bright and even, evoking a clean, corporate yet warm aesthetic. The shallow depth of field isolates the subject against a soft, creamy architectural background consistent with a modern hospitality setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB54T_DAwTXNvhxqT633RlYcUc-zvJzFCaUYdURqxM5Q8e-2ZI4WMKBAIPdRZvG-tdvTk5Zn-1izBQkX2eLRG6VaXFZGOaa2ukkS0rxSVNunWocjSGgMOqq7xODMWXtSuu9EKePHX1rjlBFA7YISBqipkqqAPtnwpWSZ3aMl7VUJqcI_zGA0voYxG6Wlxy7ATJ1PxKZUK3D04RGlTKoXYzpCrl7Zm38Q8k9l1Y75vUFE0xUkvEiJlczIgdjH-kdWNGQZg8WTP6B1rYR"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-0.5">
+<h3 class="font-body-lg font-bold text-on-surface truncate">David Miller</h3>
+<span class="font-label-md text-[10px] text-on-surface-variant">11:05</span>
+</div>
+<p class="text-body-sm text-on-surface-variant line-clamp-1">Can I book a table for 8 people this Friday at 7 PM?</p>
+</div>
+</div>
+<!-- Chat Item -->
+<div class="p-lg flex gap-md cursor-pointer hover:bg-surface-container-lowest transition-colors border-l-4 border-transparent">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="Portrait of a young man with a creative, modern style, featuring soft, atmospheric lighting that emphasizes textures. The image uses a palette of warm teals and neutral creams to align with the brand's sophisticated hospitality aesthetic, showing a person who looks like a regular, valued diner in a premium urban setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHHowcvOGztPsjk0Vi-9736mi1XlWVGIezbpw5W2ZKCM104cQjvJFRGoJR5mEI3znLmvMJC7sUsh4pv4E3IvZ7jot2ksXORK78WlThm2BMf2X7ZU10xBf5MznljIDKyAyOq3Hh2TEOtt5AanbAuMmfAWfe9k_q3fLxXJpB2CM4B9I3WnwAVGvLAyPobeUBJ0Pys4B_w57s1FNMtfHN6TJgxByLIQBi4pzOp6givF4_qu7kbqU_weo4Gryx6rUSSZQADjlAsAbyNf-I"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-0.5">
+<h3 class="font-body-lg font-bold text-on-surface truncate">Alex Rivera</h3>
+<span class="font-label-md text-[10px] text-on-surface-variant">Yesterday</span>
+</div>
+<p class="text-body-sm text-on-surface-variant line-clamp-1">Thanks for the quick response! See you then.</p>
+</div>
+</div>
+<!-- Chat Item -->
+<div class="p-lg flex gap-md cursor-pointer hover:bg-surface-container-lowest transition-colors border-l-4 border-transparent opacity-60">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A bright and cheerful portrait of a woman in her late 20s, with soft natural light hitting her face. The environment is an airy, light-filled modern cafe with subtle wood textures and clean white walls. The photography style is high-key and professional, capturing a moment of genuine hospitality and calm." src="https://lh3.googleusercontent.com/aida-public/AB6AXuACCoT2ExPJZpxSpQ2v8uz8tvdP0HmxdEH9AkR__ZcdsZ5IUSNUDlXHu_uImFFBZubP8wFZ0ziJ9xma5g8SwoDiAPUfoCFtnNJB3JJdSt8B5oLen0DGBSq20Le6XpoJrzmzfshdvhxqlLPBH5vt2PCdCcA20nfdK3d8glw_uvea-SFnukWxZN8IBef7sLaX6sSyrr4UwB3JecZVlVBpUttO5JRWws0A0EckZqG9qDB9e3vM4bdKXPoDGm5zIz_uHw97LI7nXWf1hf0p"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-0.5">
+<h3 class="font-body-lg font-bold text-on-surface truncate">Jessica Chen</h3>
+<span class="font-label-md text-[10px] text-on-surface-variant">Oct 12</span>
+</div>
+<p class="text-body-sm text-on-surface-variant line-clamp-1">The gluten-free options were fantastic, thank you!</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Right: Active Chat Window -->
+<section class="flex-1 flex flex-col bg-surface-container-lowest">
+<!-- Chat Header -->
+<header class="h-20 border-b border-outline-variant bg-white px-lg flex items-center justify-between">
+<div class="flex items-center gap-md">
+<img alt="Sarah Jenkins" class="w-10 h-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvTK9MsKQ6AGnuzLcFTn4w8ug42qZ47lBLu8c0uZydVj46ksVUD_oWJJIUvmNwfr2jVjBUJbKOkul4eYUCdOtXDByeoMFqob6F_De5fTcjjFnXK7kScTMpsvbN4GuWMxX5CWcCmBpHGGzvrIrr0WgnfUEEimrY3LTvlGbnXa2dD0TqbFu5XKKejKo6mpArK6BQLpuvvIfM4w9jepSavZ6lo-Ytbm9woAK9zkJABRb-w687XUAdvfmNS1mufg8BPsdWQoQllUF6LJbI"/>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Sarah Jenkins</h2>
+<div class="flex items-center gap-sm">
+<span class="w-2 h-2 bg-green-500 rounded-full"></span>
+<p class="text-body-sm text-on-surface-variant">Active now • Local Guide Level 4</p>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<button class="flex items-center gap-sm px-md py-sm bg-secondary-container text-white rounded-lg hover:opacity-90 transition-all">
+<span class="material-symbols-outlined text-[20px]">stars</span>
+<span class="font-label-md">Loyalty Status</span>
+</button>
+<button class="material-symbols-outlined text-on-surface-variant">more_vert</button>
+</div>
+</header>
+<!-- Message Thread -->
+<div class="flex-1 overflow-y-auto p-lg space-y-lg flex flex-col" id="chat-thread">
+<!-- System Verification Message -->
+<div class="flex justify-center">
+<div class="bg-surface-container px-lg py-sm rounded-full flex items-center gap-sm">
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+<p class="text-body-sm text-on-surface-variant">Diner verified via Wouchh QR Scan • Table 12</p>
+</div>
+</div>
+<!-- Recipient Message -->
+<div class="flex gap-md max-w-[70%]">
+<img class="w-8 h-8 rounded-full object-cover self-end" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsGlGI2wzbeFDXPXUJ8Ynx6cIuqNQQGBfziXLnrf_oRKmIU58muHCJ4w74vI4zR9uuLix7yvF6-byU3T2KYxgNM_pQ-bswNaC07Rz6Oy8Kz4Qmwz3PKJdtXd1TQxEB6edKHdwyoqjmk5QG65NPox_AWRDoLTPjilX_gkTeDyRvnYHL8PH5CKrQXxl1zYGvWIPGX4lGkMagyw0WGBQcrisGPYGt6U6NpF_gAbmcWGEmXkY8iPHrjk6YRA0goInXtdR3p_Ehkslhzs18"/>
+<div class="bg-surface-container px-lg py-md rounded-2xl rounded-bl-none text-on-surface shadow-sm">
+<p class="text-body-md">Hello! I just finished my lunch at Bombay Spice. The butter chicken was absolutely amazing! 🍛</p>
+<p class="text-[10px] text-on-surface-variant mt-sm text-right">14:15</p>
+</div>
+</div>
+<!-- Recipient Message -->
+<div class="flex gap-md max-w-[70%] ml-11">
+<div class="bg-surface-container px-lg py-md rounded-2xl text-on-surface shadow-sm">
+<p class="text-body-md">I noticed I didn't get my 10% cashback credited to my Wouchh wallet. Could you look into it? I have the receipt here.</p>
+<p class="text-[10px] text-on-surface-variant mt-sm text-right">14:16</p>
+</div>
+</div>
+<!-- User Message (You) -->
+<div class="flex flex-col items-end gap-md self-end max-w-[70%]">
+<div class="bg-primary text-white px-lg py-md rounded-2xl rounded-br-none shadow-sm">
+<p class="text-body-md">Hi Sarah! Thank you so much for the kind words about the butter chicken. Let me check your transaction right away.</p>
+<p class="text-[10px] text-on-primary-container mt-sm text-right">14:20</p>
+</div>
+<div class="flex items-center gap-xs">
+<span class="text-[10px] text-on-surface-variant uppercase font-bold tracking-tighter">Delivered</span>
+<span class="material-symbols-outlined text-[14px] text-primary">done_all</span>
+</div>
+</div>
+<!-- Recipient Message -->
+<div class="flex gap-md max-w-[70%]">
+<img class="w-8 h-8 rounded-full object-cover self-end" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCx-uev8CyAHMFvYIDrC_Xu0XRCUeppa6NplmUSNyd8tnP9pM_jGFXEGmsb6kuxmJoGHSHUm21RORiAdjYY-KlfOuC-9Awxw_WqCBNORJYFJqk2zu72Eou1TX71hcg4iCjgVi7P-TE_-V5_YFEUnub8YdVMjkpCvxYey3yRC_qECiCrN2bm_Ay3bOW0ApORZioRBsTyDuCZRp5zR2JMwPSpI8uCCLVHtanmwfPoQdVmWGQxLT9Wq4HH8g2vMglVUJDvdKA92Jfa9cXQ"/>
+<div class="bg-surface-container px-lg py-md rounded-2xl rounded-bl-none text-on-surface shadow-sm">
+<p class="text-body-md">Thanks, Karan! I'm planning to bring some friends next Tuesday so I'd love to use that credit then.</p>
+<p class="text-[10px] text-on-surface-variant mt-sm text-right">14:22</p>
+</div>
+</div>
+</div>
+<!-- Bottom: Input Area -->
+<footer class="bg-white p-lg border-t border-outline-variant space-y-md">
+<!-- Quick Reply Chips -->
+<div class="flex gap-md overflow-x-auto hide-scrollbar pb-xs">
+<button class="whitespace-nowrap px-lg py-sm bg-surface-container-low border border-outline-variant rounded-full text-body-sm font-bold text-primary hover:bg-primary-container/10 transition-all">
+                        Cashback credited
+                    </button>
+<button class="whitespace-nowrap px-lg py-sm bg-surface-container-low border border-outline-variant rounded-full text-body-sm font-bold text-primary hover:bg-primary-container/10 transition-all">
+                        Table reserved
+                    </button>
+<button class="whitespace-nowrap px-lg py-sm bg-surface-container-low border border-outline-variant rounded-full text-body-sm font-bold text-primary hover:bg-primary-container/10 transition-all">
+                        Send menu
+                    </button>
+<button class="whitespace-nowrap px-lg py-sm bg-surface-container-low border border-outline-variant rounded-full text-body-sm font-bold text-primary hover:bg-primary-container/10 transition-all">
+                        Check receipt
+                    </button>
+</div>
+<div class="flex items-center gap-md bg-surface-container-lowest border border-outline-variant rounded-xl p-md shadow-inner">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary">add_circle</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary">image</button>
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-body-md" placeholder="Type your message here..." type="text"/>
+<div class="flex items-center gap-md">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary">mood</button>
+<button class="w-10 h-10 bg-primary text-white rounded-lg flex items-center justify-center shadow-md active:scale-95 transition-transform">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</footer>
+</section>
+</main>
+<script>
+        // Simple Micro-interaction for chat thread auto-scroll
+        const thread = document.getElementById('chat-thread');
+        thread.scrollTop = thread.scrollHeight;
+
+        // Quick Reply Button logic
+        document.querySelectorAll('button.whitespace-nowrap').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const input = document.querySelector('input[type="text"]');
+                input.value = btn.innerText;
+                input.focus();
+            });
+        });
+
+        // Hover animation for chat items
+        document.querySelectorAll('section.w-[380px] div.cursor-pointer').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                item.style.transform = 'translateX(4px)';
+            });
+            item.addEventListener('mouseleave', () => {
+                item.style.transform = 'translateX(0px)';
+            });
+            item.style.transition = 'transform 0.2s ease-out';
+        });
+    </script>
+</body></html>

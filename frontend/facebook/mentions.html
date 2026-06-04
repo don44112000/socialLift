@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mentions — Wouchh</title>
+    <link rel="icon" href="/assets/logo-favicon.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./tw-config.js"></script>
+    <link rel="stylesheet" href="./facebook.css" />
+  </head>
+  <body>
+    <div id="fb-page-content">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-xl" id="metrics"></div>
+      <div id="filter-bar"></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter" id="mention-grid"></div>
+    </div>
+    <script src="./data.js"></script>
+    <script src="./ui.js"></script>
+    <script src="./shell.js"></script>
+    <script>
+      (async () => {
+        await FB.requireAuth({ activePath: "/facebook/mentions.html", pageTitle: "Social Mentions", searchPlaceholder: "Search mentions, creators…" });
+        const mentions = await FBData.getMentions();
+        const metrics = document.getElementById("metrics");
+        [
+          { label: "Total Mentions", value: mentions.length, badge: "+12%" },
+          { label: "Stories", value: mentions.filter((m) => m.type === "STORY").length, badge: "+8%" },
+          { label: "Posts", value: mentions.filter((m) => m.type === "POST").length, badge: "-3%", badgeOrange: true },
+          { label: "Eligible", value: mentions.filter((m) => m.eligible).length, badge: "₹150 avg" },
+        ].forEach((x) => metrics.appendChild(FBUi.metricCard(x)));
+
+        const grid = document.getElementById("mention-grid");
+        function render(f) {
+          grid.innerHTML = "";
+          let list = mentions;
+          if (f === "eligible") list = list.filter((m) => m.eligible);
+          if (f === "instagram" || f === "facebook") list = list.filter((m) => m.platform === f);
+          list.forEach((m) => {
+            const card = document.createElement("article");
+            card.className = "bg-surface-container-lowest rounded-xl border border-outline-variant/30 overflow-hidden shadow-sm hover:shadow-md transition-shadow";
+            card.innerHTML =
+              '<div class="p-4 flex gap-3 border-b border-outline-variant/20">' +
+              '<img src="' + m.user.avatar + '" class="w-11 h-11 rounded-full object-cover" alt="">' +
+              '<div class="flex-1 min-w-0"><p class="font-semibold text-body-md">' + m.user.name + '</p><p class="text-body-sm text-on-surface-variant">@' + m.user.handle + "</p></div>" +
+              '<span class="text-[11px] text-on-surface-variant">' + FBData.relativeTime(m.time) + "</span></div>" +
+              '<div class="p-4"><p class="text-body-md text-on-surface mb-3">' + (m.text || m.media) + '</p>' +
+              '<div class="flex flex-wrap gap-2 mb-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ' + (m.platform === "instagram" ? "bg-secondary-fixed text-secondary" : "bg-primary-container/20 text-primary") + '">' + m.platform + "</span>" +
+              (m.eligible ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-800">Eligible · ₹150</span>' : '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-yellow-100 text-yellow-800">Review</span>') +
+              "</div>" +
+              '<p class="text-body-sm text-on-surface-variant">👁 ' + FBData.formatCount(m.reach) + " · ❤ " + m.likes + " · 💬 " + m.comments + "</p>" +
+              '<div class="mt-4 flex gap-2"><button type="button" class="flex-1 py-2 rounded-lg bg-primary text-white text-body-sm font-semibold approve-btn">Approve cashback</button>' +
+              '<button type="button" class="px-3 py-2 rounded-lg border border-outline-variant text-body-sm view-btn">View</button></div></div>';
+            card.querySelector(".approve-btn").addEventListener("click", () => FB.toast("Cashback approved (demo)"));
+            grid.appendChild(card);
+          });
+        }
+        document.getElementById("filter-bar").appendChild(
+          FBUi.tabBar(
+            [
+              { label: "All", value: "all" },
+              { label: "Eligible", value: "eligible" },
+              { label: "Instagram", value: "instagram" },
+              { label: "Facebook", value: "facebook" },
+            ],
+            render
+          )
+        );
+        render("all");
+      })();
+    </script>
+  </body>
+</html>

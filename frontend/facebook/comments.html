@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Comments — Wouchh</title>
+    <link rel="icon" href="/assets/logo-favicon.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./tw-config.js"></script>
+    <link rel="stylesheet" href="./facebook.css" />
+  </head>
+  <body>
+    <div id="fb-page-content">
+      <div class="mb-lg">
+        <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Comments</h2>
+        <p class="font-body-md text-on-surface-variant">Engage with your audience across all linked platforms.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-xl" id="metrics"></div>
+      <div class="flex flex-wrap gap-4 mb-4 items-end">
+        <div class="flex-1 min-w-[200px]">
+          <label class="font-label-md text-on-surface-variant block mb-1">Post</label>
+          <select id="post-select" class="w-full bg-surface-container-low rounded-lg py-2 px-3 border-none text-body-sm focus:ring-2 focus:ring-primary"></select>
+        </div>
+      </div>
+      <div id="filter-bar" class="mb-4"></div>
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm divide-y divide-outline-variant/30" id="comments-list"></div>
+    </div>
+    <script src="./data.js"></script>
+    <script src="./ui.js"></script>
+    <script src="./shell.js"></script>
+    <script>
+      (async () => {
+        await FB.requireAuth({ activePath: "/facebook/comments.html", pageTitle: "Comments", searchPlaceholder: "Search comments…" });
+        const metrics = document.getElementById("metrics");
+        ["Total Comments|1,247|+12%", "Mentions|89|Live", "Needs reply|12|Urgent", "Avg response|2.4h|-18%"].forEach((s) => {
+          const [label, value, badge] = s.split("|");
+          metrics.appendChild(FBUi.metricCard({ label, value, badge }));
+        });
+        const posts = await FBData.getPosts();
+        const sel = document.getElementById("post-select");
+        posts.forEach((p) => {
+          const o = document.createElement("option");
+          o.value = p.id;
+          o.textContent = p.title + " (" + p.platform + ")";
+          sel.appendChild(o);
+        });
+        const list = document.getElementById("comments-list");
+        async function load(filter) {
+          list.innerHTML = "";
+          const comments = await FBData.getComments(sel.value);
+          let filtered = comments;
+          if (filter === "unreplied") filtered = comments.filter((c) => !c.replied);
+          if (filter === "replied") filtered = comments.filter((c) => c.replied);
+          filtered.forEach((c) => {
+            const row = document.createElement("div");
+            row.className = "p-5 flex gap-4";
+            row.innerHTML =
+              '<img src="' + c.user.avatar + '" class="w-10 h-10 rounded-full shrink-0" alt="">' +
+              '<div class="flex-1 min-w-0"><div class="flex flex-wrap items-center gap-2 mb-1"><span class="font-semibold">' + c.user.name + '</span><span class="text-body-sm text-on-surface-variant">' + FBData.relativeTime(c.time) + '</span><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-surface-container">' + c.platform + "</span></div>" +
+              '<p class="text-body-md text-on-surface mb-3">' + c.text + "</p>" +
+              (c.replied && c.reply
+                ? '<div class="bg-surface-container-low rounded-lg p-3 mb-3 text-body-sm"><strong class="text-primary">You:</strong> ' + c.reply.text + "</div>"
+                : '<div class="flex gap-2 reply-wrap"><input type="text" class="flex-1 py-2 px-3 rounded-full bg-surface-container-low border-none text-body-sm focus:ring-2 focus:ring-primary" placeholder="Write a reply…"><button type="button" class="px-4 py-2 rounded-full bg-primary text-white text-body-sm font-semibold send-btn">Send</button></div>') +
+              "</div>";
+            if (!c.replied) {
+              row.querySelector(".send-btn").addEventListener("click", async () => {
+                const input = row.querySelector("input");
+                const text = input.value.trim();
+                if (!text) return;
+                await FBData.replyComment(c.id, text);
+                FB.toast("Reply sent (demo)");
+                load(filter);
+              });
+            }
+            list.appendChild(row);
+          });
+        }
+        document.getElementById("filter-bar").appendChild(
+          FBUi.tabBar(
+            [
+              { label: "All", value: "all" },
+              { label: "Needs reply", value: "unreplied" },
+              { label: "Replied", value: "replied" },
+            ],
+            load
+          )
+        );
+        sel.addEventListener("change", () => load("all"));
+        load("all");
+      })();
+    </script>
+  </body>
+</html>

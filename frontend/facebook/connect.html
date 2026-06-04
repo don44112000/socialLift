@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wouchh — Connect Facebook & Instagram</title>
+    <link rel="icon" type="image/png" href="/assets/logo-favicon.png" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="./tw-config.js"></script>
+    <link rel="stylesheet" href="./facebook.css" />
+    <style>
+      body { background-color: #faf8f5; }
+    </style>
+  </head>
+  <body class="font-body-md text-on-surface antialiased bg-[#FAF8F5]">
+    <div class="min-h-screen flex flex-col md:flex-row">
+      <!-- Left: Hero -->
+      <section class="relative w-full md:w-1/2 flex flex-col justify-between p-6 md:p-12 overflow-hidden bg-primary min-h-[400px] md:min-h-screen">
+        <div class="absolute inset-0 opacity-10 pointer-events-none">
+          <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-white blur-3xl"></div>
+          <div class="absolute bottom-1/4 -left-24 w-64 h-64 rounded-full bg-on-primary-container blur-2xl"></div>
+        </div>
+        <div class="relative z-10 flex items-center gap-3">
+          <div class="w-11 h-11 bg-white rounded-lg flex items-center justify-center shadow-lg p-1">
+            <img src="/assets/logo-square.png" alt="" class="w-full h-full object-contain" />
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-white text-xl tracking-tight">Wouchh</span>
+            <span class="text-[10px] uppercase tracking-widest text-on-primary-container">Management Suite</span>
+          </div>
+        </div>
+        <div class="relative z-10 mt-auto mb-8 md:mb-12">
+          <h1 class="font-display-lg text-display-lg text-white max-w-lg mb-6">
+            Turn diners into your brand ambassadors
+          </h1>
+          <p class="font-body-lg text-body-lg text-on-primary-container max-w-md leading-relaxed">
+            Reward customers with cashback when they post about your restaurant on Instagram and Facebook.
+            Automate your social proof and grow your community effortlessly.
+          </p>
+        </div>
+        <div class="relative z-10 w-full rounded-xl overflow-hidden shadow-2xl border border-white/10 aspect-video">
+          <img
+            alt="Restaurant interior"
+            class="w-full h-full object-cover"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6uzMI3ggMtnRVsI57IIBoSWxlmnWMw7ZHJLBfKDv2ZZ96XQWm3-T1eQdLhrsDZWbSv9-gCkaW-pVJArEfhPMeICdf72QIpdqvS8_ZnK2c1E5E10cu8qiiUxunxcMKaeO5xaU8DbNpkSpDviIkRVnyZ8lub74dw6LcHR1fd7qXvclwhKPpGGTM-hEmGWoHwUWTGvnbodgIOgZRK6hl4Eol6zLvDI7Iywa4IJvNc64SDjYB6_WL109cj0oq7tad7ivY5d8mkM-YT6Is"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+        </div>
+      </section>
+
+      <!-- Right: Permissions + CTA -->
+      <main class="w-full md:w-1/2 flex items-center justify-center p-6 md:p-12 bg-[#FAF8F5]">
+        <div class="w-full max-w-[520px] space-y-6">
+          <div class="flex justify-center md:justify-start mb-2">
+            <img src="/assets/logo-wide.png" alt="Wouchh" class="h-9 max-w-[160px] object-contain" />
+          </div>
+          <div class="bg-white rounded-xl shadow-sm border border-outline-variant/30 overflow-hidden">
+            <div class="p-6 bg-surface-container-low/50 border-b border-outline-variant/20">
+              <h2 class="font-headline-md text-headline-md text-on-surface">Permissions Wouchh will request</h2>
+              <p class="font-body-sm text-on-surface-variant mt-1">
+                To enable automated cashback rewards, we require specific access to your professional accounts.
+              </p>
+            </div>
+            <div class="p-6 space-y-4" id="permissions-list"></div>
+          </div>
+
+          <div class="space-y-4">
+            <label class="flex items-start gap-3 cursor-pointer">
+              <input type="checkbox" id="terms-consent" class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20 mt-0.5" />
+              <span class="font-body-sm text-on-surface-variant leading-snug">
+                I agree to the
+                <a class="text-primary font-semibold hover:underline" href="/terms.html" target="_blank">Terms of Service</a>
+                and
+                <a class="text-primary font-semibold hover:underline" href="/privacy.html" target="_blank">Privacy Policy</a>.
+                I understand how my data will be used to manage restaurant campaigns.
+              </span>
+            </label>
+            <label class="flex items-start gap-3 cursor-pointer">
+              <input type="checkbox" id="privacy-consent" class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20 mt-0.5" />
+              <span class="font-body-sm text-on-surface-variant leading-snug">
+                I consent to Wouchh processing social engagement data for cashback eligibility (demo mode).
+              </span>
+            </label>
+
+            <button
+              type="button"
+              id="login-btn"
+              disabled
+              class="w-full flex items-center justify-center gap-3 py-4 px-6 bg-[#1877F2] hover:bg-[#166fe5] text-white rounded-xl shadow-md transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+              </svg>
+              <span class="font-semibold text-lg">Continue with Facebook</span>
+            </button>
+
+            <p class="text-center font-body-sm text-on-surface-variant/80 italic px-4">
+              You will be redirected to Facebook to securely authorize these permissions. Wouchh does not store your Facebook password.
+            </p>
+            <p class="text-center">
+              <a href="/" class="text-primary text-body-sm font-semibold hover:underline">← Back to all platforms</a>
+            </p>
+          </div>
+
+          <div class="pt-6 border-t border-outline-variant/20 flex justify-center gap-8 grayscale opacity-60">
+            <div class="flex items-center gap-1 text-[10px] uppercase font-semibold text-on-surface-variant">
+              <span class="material-symbols-outlined text-base">verified_user</span> Secure API
+            </div>
+            <div class="flex items-center gap-1 text-[10px] uppercase font-semibold text-on-surface-variant">
+              <span class="material-symbols-outlined text-base">encrypted</span> Data Privacy
+            </div>
+            <div class="flex items-center gap-1 text-[10px] uppercase font-semibold text-on-surface-variant">
+              <span class="material-symbols-outlined text-base">check_circle</span> Meta Partner
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="/config.js"></script>
+    <script src="/shell.js"></script>
+    <script src="./data.js"></script>
+    <script src="./shell.js"></script>
+    <script src="./auth.js"></script>
+    <script>
+      (function () {
+        const PERMS = [
+          { icon: "tag", scope: "pages_read_engagement", desc: "Detect when your restaurant is tagged in posts and stories." },
+          { icon: "store", scope: "pages_manage_metadata", desc: "Sync your restaurant profile information and business location." },
+          { icon: "photo_camera", scope: "instagram_basic", desc: "Verify users' posts and media for reward eligibility." },
+          { icon: "forum", scope: "instagram_manage_comments", desc: "Send thank-you comments on customer promotional posts." },
+          { icon: "chat", scope: "instagram_manage_messages", desc: "Send direct cashback redemption codes to customers." },
+        ];
+
+        const list = document.getElementById("permissions-list");
+        PERMS.forEach((p) => {
+          const row = document.createElement("div");
+          row.className = "flex gap-4 group";
+          row.innerHTML =
+            '<div class="w-10 h-10 shrink-0 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary/10 transition-colors">' +
+            '<span class="material-symbols-outlined text-primary">' + p.icon + "</span></div>" +
+            '<div><h3 class="font-label-md text-on-surface">' + p.scope + '</h3><p class="font-body-sm text-on-surface-variant">' + p.desc + "</p></div>";
+          list.appendChild(row);
+        });
+
+        const terms = document.getElementById("terms-consent");
+        const privacy = document.getElementById("privacy-consent");
+        const btn = document.getElementById("login-btn");
+
+        function syncBtn() {
+          btn.disabled = !(terms.checked && privacy.checked);
+        }
+        terms.addEventListener("change", syncBtn);
+        privacy.addEventListener("change", syncBtn);
+
+        if (FB.getSession()) {
+          window.location.href = "/facebook/dashboard.html";
+          return;
+        }
+
+        const cfg = window.WOUCHH_CONFIG || {};
+        const hasFb = cfg.FB_APP_ID && !String(cfg.FB_APP_ID).startsWith("REPLACE_");
+        if (hasFb && window.SL) {
+          SL.loadFbSdk().catch(console.error);
+        }
+
+        btn.addEventListener("click", async () => {
+          if (btn.disabled) return;
+          btn.disabled = true;
+          btn.innerHTML =
+            '<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>Connecting…</span>';
+          try {
+            const session = await FBAuth.completeFacebookLogin();
+            FB.setSession(session);
+            window.location.href = "/facebook/dashboard.html";
+          } catch (e) {
+            alert(e.message || "Connection failed");
+            btn.disabled = false;
+            btn.innerHTML =
+              '<svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg><span class="font-semibold text-lg">Continue with Facebook</span>';
+            syncBtn();
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

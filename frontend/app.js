@@ -38,7 +38,76 @@
   let connecting = false;
 
   async function onFbLogin() {
-    SL.toast("Facebook integration is coming soon!", "info");
+    connecting = true;
+    el.fbLoginBtn.disabled = true;
+    el.ttLoginBtn.disabled = true;
+    el.fbLabel.textContent = "Connecting…";
+
+    const hasFb = cfg.FB_APP_ID && !cfg.FB_APP_ID.startsWith("REPLACE_");
+    if (hasFb && window.FB) {
+      try {
+        const auth = await fbLogin();
+        const me = await fbGet("/me", { fields: "id,name,email,picture" });
+        const accounts = await fbGet("/me/accounts", {
+          fields: "id,name,category,access_token,instagram_business_account{id,username}",
+        });
+        const pages = (accounts.data || []).map((p) => ({
+          id: p.id,
+          name: p.name,
+          category: p.category,
+          access_token: p.access_token,
+          instagram_business_account: p.instagram_business_account || null,
+        }));
+        FB.setSession({
+          user: {
+            id: me.id,
+            name: me.name,
+            email: me.email,
+            picture: me.picture,
+            userAccessToken: auth.accessToken,
+          },
+          pages,
+          restaurant: {
+            name: pages[0] ? pages[0].name : me.name,
+            shortName: pages[0] ? pages[0].name.split(" ")[0] : "Restaurant",
+            plan: "Connected",
+            logo: FBData.RESTAURANT.logo,
+            location: "India",
+          },
+          manager: { name: me.name, role: "Admin", avatar: FBData.MANAGER.avatar },
+          platforms: ["facebook", "instagram"],
+          grantedAt: new Date().toISOString(),
+          demo: false,
+        });
+        window.location.href = "/facebook/dashboard.html";
+        return;
+      } catch (err) {
+        if (err.message !== "Login cancelled") showError(err.message || String(err));
+        connecting = false;
+        el.fbLabel.textContent = "Continue with Facebook";
+        const termsCb = document.getElementById("accept-terms");
+        const privacyCb = document.getElementById("accept-privacy");
+        const accepted = termsCb.checked && privacyCb.checked;
+        el.ttLoginBtn.disabled = !accepted;
+        el.fbLoginBtn.disabled = !accepted;
+        return;
+      }
+    }
+
+    /* Demo mode — no Meta API */
+    try {
+      FB.setSession(FBData.createDemoSession());
+      window.location.href = "/facebook/dashboard.html";
+    } catch (err) {
+      showError(err.message || String(err));
+      connecting = false;
+      el.fbLabel.textContent = "Continue with Facebook";
+      const termsCb = document.getElementById("accept-terms");
+      const privacyCb = document.getElementById("accept-privacy");
+      const accepted = termsCb.checked && privacyCb.checked;
+      el.ttLoginBtn.disabled = !accepted;
+      el.fbLoginBtn.disabled = !accepted;
+    }
   }
 
   /* ---------- TikTok login ---------- */
@@ -91,6 +160,10 @@
 
   /* ---------- Init ---------- */
   async function init() {
+    if (window.FB && typeof FB.getSession === "function" && FB.getSession()) {
+      window.location.href = "/facebook/dashboard.html";
+      return;
+    }
     if (SL.getSession()) { window.location.href = "/dashboard.html"; return; }
 
     const termsCb = document.getElementById("accept-terms");
@@ -120,7 +193,7 @@
         await SL.loadFbSdk();
       } catch (err) { console.error(err); }
     }
-    el.fbLabel.textContent = "Facebook (Coming Soon)";
+    el.fbLabel.textContent = "Continue with Facebook";
 
     /* TikTok button */
     el.ttLabel.textContent = "Continue with TikTok";

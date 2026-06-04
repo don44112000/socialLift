@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inbox — Wouchh</title>
+    <link rel="icon" href="/assets/logo-favicon.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./tw-config.js"></script>
+    <link rel="stylesheet" href="./facebook.css" />
+  </head>
+  <body>
+    <div id="fb-page-content">
+      <div id="filter-bar" class="mb-4"></div>
+      <div class="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-4 min-h-[520px]">
+        <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 overflow-hidden" id="convo-list"></div>
+        <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 flex flex-col min-h-[480px]" id="thread-panel">
+          <div class="flex-1 flex flex-col items-center justify-center text-on-surface-variant p-8">
+            <span class="material-symbols-outlined text-5xl mb-2">forum</span>
+            <p>Select a conversation</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="./data.js"></script>
+    <script src="./ui.js"></script>
+    <script src="./shell.js"></script>
+    <script>
+      (async () => {
+        await FB.requireAuth({ activePath: "/facebook/inbox.html", pageTitle: "Inboxes", searchPlaceholder: "Search messages…" });
+        let convos = await FBData.getConversations();
+        const listEl = document.getElementById("convo-list");
+        const threadEl = document.getElementById("thread-panel");
+
+        function renderList(platform) {
+          listEl.innerHTML = "";
+          const filtered = platform === "all" ? convos : convos.filter((c) => c.platform === platform);
+          filtered.forEach((c) => {
+            const item = document.createElement("button");
+            item.type = "button";
+            item.className = "w-full text-left flex gap-3 p-4 border-b border-outline-variant/20 hover:bg-surface-container-low transition-colors";
+            item.innerHTML =
+              '<img src="' + c.user.avatar + '" class="w-10 h-10 rounded-full" alt="">' +
+              '<div class="flex-1 min-w-0"><p class="font-semibold text-body-sm">' + c.user.name + '</p><p class="text-body-sm text-on-surface-variant truncate">' + c.last_message + "</p></div>" +
+              '<div class="text-right shrink-0"><p class="text-[10px] text-on-surface-variant">' + FBData.relativeTime(c.updated_at) + "</p>" +
+              (c.unread_count ? '<span class="inline-block mt-1 px-2 py-0.5 rounded-full bg-primary text-white text-[10px] font-bold">' + c.unread_count + "</span>" : "") +
+              "</div>";
+            item.addEventListener("click", () => {
+              listEl.querySelectorAll("button").forEach((b) => b.classList.remove("bg-surface-container-low"));
+              item.classList.add("bg-surface-container-low");
+              renderThread(c);
+            });
+            listEl.appendChild(item);
+          });
+        }
+
+        function renderThread(c) {
+          threadEl.innerHTML =
+            '<div class="p-4 border-b border-outline-variant/20 flex items-center gap-3"><img src="' + c.user.avatar + '" class="w-9 h-9 rounded-full" alt=""><div><p class="font-semibold">' + c.user.name + '</p><p class="text-[11px] text-on-surface-variant capitalize">' + c.platform + "</p></div></div>" +
+            '<div class="flex-1 overflow-y-auto p-5 flex flex-col gap-3" id="msgs"></div>' +
+            '<div class="p-4 border-t border-outline-variant/20 flex gap-2"><input id="dm-in" type="text" class="flex-1 py-2.5 px-4 rounded-full bg-surface-container-low border-none text-body-sm focus:ring-2 focus:ring-primary" placeholder="Type a message…"><button type="button" id="dm-send" class="px-5 py-2.5 rounded-full bg-primary text-white font-semibold text-body-sm">Send</button></div>';
+          const msgs = threadEl.querySelector("#msgs");
+          c.messages.forEach((msg) => {
+            const b = document.createElement("div");
+            b.className = "max-w-[75%] py-2.5 px-4 rounded-2xl text-body-sm " + (msg.from === "us" ? "self-end bg-primary text-white rounded-br-sm" : "self-start bg-surface-container text-on-surface rounded-bl-sm");
+            b.textContent = msg.text;
+            msgs.appendChild(b);
+          });
+          threadEl.querySelector("#dm-send").addEventListener("click", async () => {
+            const text = threadEl.querySelector("#dm-in").value.trim();
+            if (!text) return;
+            await FBData.sendMessage(c.id, text);
+            c.messages.push({ from: "us", text, time: Date.now() / 1000 });
+            renderThread(c);
+            FB.toast("Message sent (demo)");
+          });
+        }
+
+        document.getElementById("filter-bar").appendChild(
+          FBUi.tabBar(
+            [
+              { label: "All", value: "all" },
+              { label: "Messenger", value: "messenger" },
+              { label: "Instagram", value: "instagram" },
+            ],
+            renderList
+          )
+        );
+        renderList("all");
+      })();
+    </script>
+  </body>
+</html>

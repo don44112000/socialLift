@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Activity — Wouchh</title>
+    <link rel="icon" href="/assets/logo-favicon.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./tw-config.js"></script>
+    <link rel="stylesheet" href="./facebook.css" />
+  </head>
+  <body>
+    <div id="fb-page-content">
+      <div class="mb-xl flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h2 class="font-display-lg text-display-lg text-on-background mb-1">Activity Log</h2>
+          <p class="font-body-lg text-body-lg text-on-surface-variant">
+            Monitor every social mention, cashback event, and system notification in real time.
+          </p>
+        </div>
+        <button type="button" id="export-btn" class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg font-label-md hover:opacity-90 transition-all shadow-sm self-start">
+          <span class="material-symbols-outlined text-lg">download</span>
+          Export Report
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-xl" id="stats"></div>
+
+      <div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/30 mb-6 flex flex-wrap items-center gap-3">
+        <div class="flex items-center gap-2 text-on-surface-variant">
+          <span class="material-symbols-outlined">filter_list</span>
+          <span class="font-label-md">Filters:</span>
+        </div>
+        <select id="type-filter" class="bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2 font-body-sm text-on-surface focus:ring-2 focus:ring-primary/20">
+          <option value="all">Activity type: All</option>
+          <option value="mention">Mentions</option>
+          <option value="cashback">Cashback</option>
+          <option value="system">System</option>
+          <option value="comment">Comments</option>
+          <option value="dm">Messages</option>
+          <option value="account">Accounts</option>
+        </select>
+        <select class="bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2 font-body-sm text-on-surface" disabled title="Demo only">
+          <option>Date range: Last 7 days</option>
+        </select>
+        <button type="button" id="clear-filters" class="ml-auto font-label-md text-primary hover:underline">Clear all filters</button>
+      </div>
+
+      <div class="space-y-3" id="activity-feed"></div>
+
+      <div class="mt-8 flex justify-center">
+        <button type="button" id="load-more" class="px-8 py-3 border-2 border-primary text-primary font-bold rounded-lg hover:bg-primary/5 transition-all">
+          Load older activities
+        </button>
+      </div>
+    </div>
+
+    <script src="./data.js"></script>
+    <script src="./shell.js"></script>
+    <script>
+      (async () => {
+        await FB.requireAuth({
+          activePath: "/facebook/activity.html",
+          pageTitle: "Activity",
+          searchPlaceholder: "Search activities, mentions, or customers…",
+        });
+
+        const statsEl = document.getElementById("stats");
+        const s = await FBData.getActivityStats();
+        statsEl.innerHTML =
+          statCard("Total Activities", s.total, s.totalDelta, "trending_up", "text-primary") +
+          statCard("New Mentions", s.newMentions, s.mentionsDelta, "trending_up", "text-primary") +
+          statCard("Cashback Disbursed", s.cashbackDisbursed, s.cashbackNote, "payments", "text-secondary") +
+          statCard("System Health", s.systemHealth, s.healthNote, "check_circle", "text-green-600");
+
+        const feed = document.getElementById("activity-feed");
+        const typeFilter = document.getElementById("type-filter");
+
+        function statCard(label, value, sub, icon, subClass) {
+          return (
+            '<div class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant/30">' +
+            '<p class="font-label-md text-on-surface-variant mb-2">' + label + "</p>" +
+            '<h3 class="font-headline-lg text-headline-lg text-on-background">' + value + "</h3>" +
+            '<div class="flex items-center gap-1 text-[12px] mt-2 ' + subClass + '">' +
+            '<span class="material-symbols-outlined text-sm">' + icon + "</span><span>" + sub + "</span></div></div>"
+          );
+        }
+
+        function renderFeedItem(item) {
+          const avatarBlock = item.systemAvatar
+            ? '<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant shrink-0"><span class="material-symbols-outlined">smart_toy</span></div>'
+            : '<img src="' + item.avatar + '" alt="" class="w-12 h-12 rounded-full object-cover border-2 border-surface shadow-sm shrink-0">';
+
+          const el = document.createElement("div");
+          el.className =
+            "activity-row bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant/20 hover:border-primary/30 transition-all flex flex-col sm:flex-row items-start sm:items-center gap-4 group";
+          el.innerHTML =
+            '<div class="w-12 h-12 rounded-full flex items-center justify-center shrink-0 ' + item.iconWrap + '">' +
+            '<span class="material-symbols-outlined" style="font-variation-settings:\'FILL\' 1">' + item.icon + "</span></div>" +
+            avatarBlock +
+            '<div class="flex-1 min-w-0">' +
+            '<h4 class="font-body-lg text-on-surface"><span class="font-bold">' + item.customerName + "</span> " + item.description + "</h4>" +
+            '<p class="font-body-sm text-on-surface-variant flex items-center gap-1 mt-1">' +
+            '<span class="material-symbols-outlined text-sm">schedule</span>' +
+            FBData.relativeTime(item.time) +
+            "</p></div>" +
+            '<div class="text-left sm:text-right shrink-0 w-full sm:w-auto">' +
+            '<span class="px-3 py-1 rounded-full font-label-md border inline-block mb-2 ' + item.statusClass + '">' + item.status + "</span>" +
+            '<button type="button" class="action-btn text-primary font-label-md flex items-center gap-1 sm:justify-end hover:gap-2 transition-all">' +
+            item.action +
+            ' <span class="material-symbols-outlined text-base">arrow_forward</span></button></div>';
+          el.querySelector(".action-btn").addEventListener("click", () => FB.toast(item.action + " (demo)"));
+          return el;
+        }
+
+        async function render(type) {
+          feed.innerHTML = "";
+          const items = await FBData.getActivityLog(type);
+          if (!items.length) {
+            feed.innerHTML =
+              '<div class="text-center py-12 text-on-surface-variant"><span class="material-symbols-outlined text-4xl mb-2">inbox</span><p>No activities match this filter.</p></div>';
+            return;
+          }
+          items.forEach((item) => feed.appendChild(renderFeedItem(item)));
+        }
+
+        typeFilter.addEventListener("change", () => render(typeFilter.value));
+        document.getElementById("clear-filters").addEventListener("click", () => {
+          typeFilter.value = "all";
+          render("all");
+        });
+        document.getElementById("export-btn").addEventListener("click", () => FB.toast("Export started (demo)"));
+        document.getElementById("load-more").addEventListener("click", () => FB.toast("No older activities in demo mode"));
+
+        render("all");
+      })();
+    </script>
+  </body>
+</html>

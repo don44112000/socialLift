@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings — Wouchh</title>
+    <link rel="icon" href="/assets/logo-favicon.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./tw-config.js"></script>
+    <link rel="stylesheet" href="./facebook.css" />
+  </head>
+  <body>
+    <div id="fb-page-content" class="max-w-2xl">
+      <div id="page-hdr"></div>
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm p-6 mb-4">
+        <h3 class="font-headline-md text-headline-md mb-4">Restaurant profile</h3>
+        <div class="flex items-center gap-4">
+          <img id="restaurant-logo" alt="" class="w-14 h-14 rounded-xl object-cover border border-outline-variant/30" />
+          <div>
+            <p id="restaurant-info" class="font-semibold text-on-surface"></p>
+            <p class="text-body-sm text-on-surface-variant mt-1">Connected via Wouchh</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm p-6 mb-4">
+        <h3 class="font-headline-md text-headline-md mb-4">Cashback preferences</h3>
+        <label class="flex items-center gap-3 mb-4 text-body-md">
+          <input type="checkbox" checked class="rounded text-primary focus:ring-primary" />
+          Auto-approve mentions with restaurant tag
+        </label>
+        <label class="block mb-4 text-body-md">
+          Default reward (INR)
+          <input type="number" value="150" class="mt-2 w-32 block py-2 px-3 rounded-lg bg-surface-container-low border-none focus:ring-2 focus:ring-primary" />
+        </label>
+        <label class="block mb-4 text-body-md">
+          Max cashback / diner / month (INR)
+          <input type="number" value="500" class="mt-2 w-32 block py-2 px-3 rounded-lg bg-surface-container-low border-none focus:ring-2 focus:ring-primary" />
+        </label>
+        <button type="button" id="save-prefs" class="px-5 py-2.5 rounded-xl bg-primary text-white font-semibold text-body-sm">Save preferences</button>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm p-6">
+        <h3 class="font-headline-md text-headline-md mb-2">Session</h3>
+        <p class="text-body-sm text-on-surface-variant mb-4">Demo session — no live Meta API unless configured.</p>
+        <div class="flex flex-wrap gap-3">
+          <button type="button" id="logout-btn" class="px-5 py-2.5 rounded-xl border border-outline-variant font-semibold text-body-sm">Log out</button>
+          <button type="button" id="disconnect-btn" class="px-5 py-2.5 rounded-xl border border-error text-error font-semibold text-body-sm">Disconnect Facebook</button>
+        </div>
+      </div>
+    </div>
+    <script src="./data.js"></script>
+    <script src="./ui.js"></script>
+    <script src="./shell.js"></script>
+    <script>
+      (async () => {
+        const session = await FB.requireAuth({ activePath: "/facebook/settings.html", pageTitle: "Settings", searchPlaceholder: "Search settings…" });
+        if (!session) return;
+        document.getElementById("page-hdr").appendChild(FBUi.pageHeader("Settings", "Account preferences and cashback rules."));
+        const r = session.restaurant || FBData.RESTAURANT;
+        document.getElementById("restaurant-info").textContent = r.name + " · " + r.location;
+        document.getElementById("restaurant-logo").src = r.logo;
+        document.getElementById("restaurant-logo").alt = r.name;
+        document.getElementById("save-prefs").addEventListener("click", () => FB.toast("Preferences saved (demo)"));
+        document.getElementById("logout-btn").addEventListener("click", () => {
+          FB.clearSession();
+          window.location.href = "/";
+        });
+        document.getElementById("disconnect-btn").addEventListener("click", () => {
+          FB.clearSession();
+          window.location.href = "/";
+        });
+      })();
+    </script>
+  </body>
+</html>

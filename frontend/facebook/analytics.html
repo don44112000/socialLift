@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analytics — Wouchh</title>
+    <link rel="icon" href="/assets/logo-favicon.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./tw-config.js"></script>
+    <link rel="stylesheet" href="./facebook.css" />
+  </head>
+  <body>
+    <div id="fb-page-content">
+      <div id="page-hdr"></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-xl" id="stats"></div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter mb-xl">
+        <div class="bg-surface-container-lowest p-lg rounded-xl border border-outline-variant/30 shadow-sm">
+          <h3 class="font-headline-md text-headline-md mb-4">Weekly active diners</h3>
+          <div class="flex items-end gap-2 h-32" id="chart"></div>
+        </div>
+        <div class="bg-surface-container-lowest p-lg rounded-xl border border-outline-variant/30 shadow-sm">
+          <h3 class="font-headline-md text-headline-md mb-4">Audience by city</h3>
+          <div id="cities" class="space-y-3"></div>
+        </div>
+      </div>
+      <div class="bg-surface-container-lowest p-lg rounded-xl border border-outline-variant/30 shadow-sm">
+        <h3 class="font-headline-md text-headline-md mb-4">Platform engagement split</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6" id="split"></div>
+      </div>
+    </div>
+    <script src="./data.js"></script>
+    <script src="./ui.js"></script>
+    <script src="./shell.js"></script>
+    <script>
+      (async () => {
+        await FB.requireAuth({ activePath: "/facebook/analytics.html", pageTitle: "Analytics", searchPlaceholder: "Search analytics…" });
+        document.getElementById("page-hdr").appendChild(
+          FBUi.pageHeader("Analytics Dashboard", "Performance across Facebook, Instagram, and cashback campaigns.")
+        );
+        const a = await FBData.getAnalytics();
+        const stats = document.getElementById("stats");
+        [
+          { label: "Reach (7d)", value: FBData.formatCount(a.reach_7d), badge: "+8.2%" },
+          { label: "Engagement rate", value: a.engagement_7d + "%", badge: "Avg" },
+          { label: "Mentions (7d)", value: a.mentions_7d, badge: "+12%" },
+          { label: "Cashback paid", value: FBData.formatInr(a.cashback_7d), badge: "₹1.2k today", badgeOrange: true, spark: FBUi.SPARK_ORANGE, stroke: "#a73a00" },
+        ].forEach((x) => stats.appendChild(FBUi.metricCard(x)));
+        const chart = document.getElementById("chart");
+        const max = Math.max(...a.chart_weekly);
+        ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].forEach((day, i) => {
+          const col = document.createElement("div");
+          col.className = "flex-1 flex flex-col items-center gap-1";
+          const v = a.chart_weekly[i];
+          col.innerHTML =
+            '<div class="w-full rounded-t bg-gradient-to-t from-primary to-primary-fixed-dim" style="height:' + Math.round((v / max) * 100) + '%;min-height:8px"></div>' +
+            '<span class="text-[10px] text-on-surface-variant">' + day + "</span>";
+          chart.appendChild(col);
+        });
+        const cities = document.getElementById("cities");
+        a.top_cities.forEach((c) => {
+          const row = document.createElement("div");
+          row.innerHTML =
+            '<div class="flex justify-between text-body-sm mb-1"><span>' + c.city + "</span><span class=\"font-semibold\">" + c.pct + "%</span></div>" +
+            '<div class="h-2 bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width:' + c.pct + '%"></div></div>';
+          cities.appendChild(row);
+        });
+        const split = document.getElementById("split");
+        Object.entries(a.platform_split).forEach(([k, v]) => {
+          const card = document.createElement("div");
+          card.className = "p-4 bg-surface-container rounded-xl flex items-center gap-4";
+          card.innerHTML =
+            '<div class="w-12 h-12 rounded-full flex items-center justify-center text-white ' + (k === "instagram" ? "bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600" : "bg-blue-600") + '"><span class="material-symbols-outlined">' + (k === "instagram" ? "photo_camera" : "thumb_up") + "</span></div>" +
+            '<div class="flex-1"><p class="font-semibold capitalize">' + k + '</p><div class="h-2 bg-surface-container-lowest rounded-full mt-2"><div class="h-full bg-primary rounded-full" style="width:' + v + '%"></div></div></div>' +
+            '<span class="font-headline-md">' + v + "%</span>";
+          split.appendChild(card);
+        });
+      })();
+    </script>
+  </body>
+</html>

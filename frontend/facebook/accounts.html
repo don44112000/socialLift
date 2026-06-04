@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accounts — Wouchh</title>
+    <link rel="icon" href="/assets/logo-favicon.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./tw-config.js"></script>
+    <link rel="stylesheet" href="./facebook.css" />
+  </head>
+  <body>
+    <div id="fb-page-content">
+      <div id="page-hdr"></div>
+      <a href="/" class="inline-flex items-center gap-2 mb-6 px-5 py-2.5 bg-primary text-white rounded-xl font-semibold text-body-sm no-underline hover:bg-primary-container transition-colors">
+        <span class="material-symbols-outlined text-lg">add</span> Connect another account
+      </a>
+      <div class="space-y-4" id="account-list"></div>
+    </div>
+    <script src="./data.js"></script>
+    <script src="./ui.js"></script>
+    <script src="./shell.js"></script>
+    <script>
+      (async () => {
+        await FB.requireAuth({ activePath: "/facebook/accounts.html", pageTitle: "Accounts", searchPlaceholder: "Search accounts…" });
+        document.getElementById("page-hdr").appendChild(
+          FBUi.pageHeader("Connected Accounts", "Facebook Pages and Instagram business profiles linked to your restaurant.")
+        );
+        const accounts = await FBData.getAccounts();
+        const list = document.getElementById("account-list");
+        accounts.forEach((p) => {
+          const ig = p.instagram_business_account;
+          const card = document.createElement("div");
+          card.className = "bg-surface-container-lowest p-lg rounded-xl border border-outline-variant/30 shadow-sm flex flex-wrap items-center justify-between gap-4";
+          card.innerHTML =
+            '<div class="flex items-center gap-4">' +
+            '<div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center"><span class="material-symbols-outlined text-primary text-2xl">' + (ig ? "photo_camera" : "thumb_up") + "</span></div>" +
+            "<div><h3 class=\"font-headline-md text-headline-md\">" + p.name + '</h3><p class="text-body-sm text-on-surface-variant">' + p.category + " · " + FBData.formatCount(p.followers) + " followers</p>" +
+            '<div class="flex gap-2 mt-2"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary-container/20 text-primary">Facebook</span>' +
+            (ig ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-secondary-fixed text-secondary">@' + ig.username + "</span>" : "") +
+            "</div></div>" +
+            '<div class="flex gap-2"><button type="button" class="px-4 py-2 rounded-lg border border-outline-variant text-body-sm font-semibold sync-btn">Sync</button>' +
+            '<button type="button" class="w-10 h-10 rounded-lg border border-outline-variant flex items-center justify-center menu-btn"><span class="material-symbols-outlined">more_vert</span></button></div>';
+          card.querySelector(".sync-btn").addEventListener("click", () => FB.toast("Sync scheduled (demo)"));
+          card.querySelector(".menu-btn").addEventListener("click", () => FB.toast("Manage in Settings (demo)"));
+          list.appendChild(card);
+        });
+      })();
+    </script>
+  </body>
+</html>

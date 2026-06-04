@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard — Wouchh</title>
+    <link rel="icon" href="/assets/logo-favicon.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./tw-config.js"></script>
+    <link rel="stylesheet" href="./facebook.css" />
+  </head>
+  <body>
+    <div id="fb-page-content">
+      <div id="dash-header"></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-xl" id="metrics"></div>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter mb-xl">
+        <div class="lg:col-span-2 bg-surface-container-lowest p-lg rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05)]">
+          <div class="flex items-center justify-between mb-lg">
+            <h3 class="font-headline-md text-headline-md">Quick Actions</h3>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-md">
+            <a href="./mentions.html" class="flex flex-col items-center justify-center p-6 bg-surface-container rounded-xl border border-transparent hover:border-primary transition-all no-underline text-inherit">
+              <span class="material-symbols-outlined text-primary text-3xl mb-2">verified</span>
+              <span class="font-label-md text-label-md">Verify mention</span>
+            </a>
+            <a href="./inbox.html" class="flex flex-col items-center justify-center p-6 bg-surface-container rounded-xl border border-transparent hover:border-primary transition-all no-underline text-inherit">
+              <span class="material-symbols-outlined text-primary text-3xl mb-2">schedule_send</span>
+              <span class="font-label-md text-label-md">Send reminder</span>
+            </a>
+            <a href="./analytics.html" class="flex flex-col items-center justify-center p-6 bg-primary-container text-white rounded-xl shadow-md hover:bg-primary transition-all no-underline">
+              <span class="material-symbols-outlined text-3xl mb-2">campaign</span>
+              <span class="font-label-md text-label-md">Run campaign</span>
+            </a>
+          </div>
+        </div>
+        <div class="bg-surface-container-lowest p-lg rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05)]" id="platforms-card">
+          <h3 class="font-headline-md text-headline-md mb-lg">Connected platforms</h3>
+          <div id="platforms" class="space-y-md"></div>
+        </div>
+      </div>
+      <div class="bg-surface-container-lowest p-lg rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05)]">
+        <div class="flex items-center justify-between mb-lg">
+          <h3 class="font-headline-md text-headline-md">Recent Activity</h3>
+          <a href="./activity.html" class="text-primary font-label-md text-label-md hover:underline no-underline">View all activity</a>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="border-b border-outline-variant">
+                <th class="pb-3 font-label-md text-on-surface-variant">Diner</th>
+                <th class="pb-3 font-label-md text-on-surface-variant">Activity</th>
+                <th class="pb-3 font-label-md text-on-surface-variant">Reward</th>
+                <th class="pb-3 font-label-md text-on-surface-variant text-right">Time</th>
+              </tr>
+            </thead>
+            <tbody id="activity-rows" class="divide-y divide-outline-variant"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script src="./data.js"></script>
+    <script src="./ui.js"></script>
+    <script src="./shell.js"></script>
+    <script>
+      (async () => {
+        const session = await FB.requireAuth({
+          activePath: "/facebook/dashboard.html",
+          pageTitle: "Dashboard",
+          searchPlaceholder: "Search analytics…",
+        });
+        if (!session) return;
+        const r = session.restaurant || FBData.RESTAURANT;
+        document.getElementById("dash-header").appendChild(
+          FBUi.pageHeader("Dashboard Overview", "Welcome back! Here's what's happening at " + r.name + " today.")
+        );
+        const m = await FBData.getMetrics();
+        const grid = document.getElementById("metrics");
+        [
+          { label: "Total mentions", value: m.mentions.value, badge: m.mentions.delta },
+          { label: "Cashback distributed", value: m.cashback.value, badge: m.cashback.sub, badgeOrange: true, spark: FBUi.SPARK_ORANGE, stroke: "#a73a00" },
+          { label: "Active diners", value: m.activeDiners.value, badge: m.activeDiners.delta },
+          { label: "Avg reach per post", value: "3,420", badge: "+5.4%" },
+        ].forEach((x) => grid.appendChild(FBUi.metricCard(x)));
+
+        const plat = document.getElementById("platforms");
+        (session.pages || []).forEach((p) => {
+          const ig = p.instagram_business_account;
+          const row = document.createElement("div");
+          row.className = "flex items-center justify-between p-md bg-surface-container rounded-lg";
+          row.innerHTML =
+            '<div class="flex items-center gap-md">' +
+            (ig
+              ? '<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 flex items-center justify-center text-white"><span class="material-symbols-outlined text-sm" style="font-variation-settings:\'FILL\' 1">photo_camera</span></div><div><p class="font-label-md">Instagram</p><p class="text-[11px] text-on-surface-variant">@' + ig.username + "</p></div>"
+              : '<div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white"><span class="material-symbols-outlined text-sm" style="font-variation-settings:\'FILL\' 1">thumb_up</span></div><div><p class="font-label-md">Facebook</p><p class="text-[11px] text-on-surface-variant">' + p.name + "</p></div>") +
+            '</div><span class="material-symbols-outlined text-primary text-sm">check_circle</span>';
+          plat.appendChild(row);
+        });
+
+        const rows = await FBData.getActivityTable();
+        const tbody = document.getElementById("activity-rows");
+        rows.forEach((row) => {
+          const tr = document.createElement("tr");
+          tr.className = "hover:bg-surface-container-low transition-colors";
+          tr.innerHTML =
+            '<td class="py-4"><div class="flex items-center gap-3">' + row.avatarHtml +
+            '<span class="font-semibold text-body-md">' + row.name + "</span></div></td>" +
+            '<td class="py-4 text-on-surface-variant text-body-sm">' + row.activity + "</td>" +
+            '<td class="py-4">' + row.rewardHtml + "</td>" +
+            '<td class="py-4 text-right text-on-surface-variant text-[11px]">' + row.time + "</td>";
+          tbody.appendChild(tr);
+        });
+      })();
+    </script>
+  </body>
+</html>

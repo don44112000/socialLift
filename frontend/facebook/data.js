@@ -1,42 +1,47 @@
 (function () {
   "use strict";
 
-  const RESTAURANT = {
-    name: "Bombay Spice Kitchen",
-    shortName: "Bombay Spice",
+  const BUSINESS = {
+    name: "Lumen Studio",
+    shortName: "Lumen",
     plan: "Premium Plan",
-    logo: "https://api.dicebear.com/9.x/initials/svg?seed=BSK&backgroundColor=0f766e",
-    location: "Bandra West, Mumbai",
+    logo: "https://api.dicebear.com/9.x/initials/svg?seed=LS&backgroundColor=005c55",
+    location: "Mumbai, India",
   };
 
   const MANAGER = {
     name: "Rajesh Kumar",
     role: "Manager",
-    avatar:
-      "https://api.dicebear.com/9.x/avataaars/svg?seed=Rajesh&backgroundColor=e5eeff",
+    avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Rajesh&backgroundColor=e5eeff",
   };
 
   const DEMO_PAGES = [
     {
-      id: "page_bsk_fb",
-      name: "Bombay Spice Kitchen",
-      category: "Indian Restaurant",
-      platform: "facebook",
-      followers: 12400,
-      access_token: "demo_page_token",
+      id: "page_lumen_ig",
+      name: "Lumen Studio Instagram",
+      category: "Design Studio",
+      platform: "instagram",
+      username: "lumenstudio",
+      followers: 18700,
+      posts: 142,
+      engagement: "4.8%",
+      access_token: "demo_ig_token",
       instagram_business_account: {
-        id: "ig_bsk",
-        username: "bombayspicekitchen",
+        id: "ig_lumen",
+        username: "lumenstudio",
         followers: 18700,
       },
     },
     {
-      id: "page_bsk_events",
-      name: "Bombay Spice — Events",
-      category: "Event Venue",
+      id: "page_lumen_fb",
+      name: "Lumen Studio Facebook",
+      category: "Design Studio",
       platform: "facebook",
-      followers: 3200,
-      access_token: "demo_page_token_2",
+      username: "lumenstudio.fb",
+      followers: 12400,
+      posts: 96,
+      engagement: "3.2%",
+      access_token: "demo_fb_token",
       instagram_business_account: null,
     },
   ];
@@ -44,213 +49,151 @@
   const DEMO_USER = {
     id: "fb_demo_user_1",
     name: MANAGER.name,
-    email: "rajesh@bombayspicekitchen.in",
+    email: "rajesh@lumenstudio.in",
     picture: { data: { url: MANAGER.avatar } },
     userAccessToken: "demo_user_token",
   };
 
   const METRICS = {
-    mentions: { value: 247, delta: "+12%" },
-    cashback: { value: "₹14,250", sub: "₹1.2k today" },
-    activeDiners: { value: 89, delta: "Live" },
-    pendingRewards: { value: 12, delta: "3 urgent" },
+    mentions: { value: 247, delta: "+18% vs last month" },
+    engagement: { value: "8,420", delta: "+12%" },
+    followers: { value: "142", delta: "+8%" },
+    reach: { value: "3,420", delta: "Avg. reach per post" },
   };
 
-  const ACTIVITY_TABLE = [
-    { name: "Priya Sharma", activity: "Tagged you in a Story", reward: "₹50 cashback", rewardClass: "bg-green-100 text-green-800", time: "2 mins ago", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Priya" },
-    { name: "Arjun Singh", activity: "Posted a review on Google", reward: "Free Dessert", rewardClass: "bg-blue-100 text-blue-800", time: "15 mins ago", initials: "AS" },
-    { name: "Vikram Mehta", activity: "Shared your post to Facebook", reward: "₹25 cashback", rewardClass: "bg-green-100 text-green-800", time: "42 mins ago", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Vikram" },
-    { name: "Ananya Rao", activity: "Mentioned in a Reel", reward: "Awaiting Verification", rewardClass: "bg-yellow-100 text-yellow-800", time: "1 hour ago", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Ananya" },
-    { name: "Rahul Kapoor", activity: "Tagged in a static post", reward: "₹40 cashback", rewardClass: "bg-green-100 text-green-800", time: "2 hours ago", initials: "RK" },
-    { name: "Sneha Gupta", activity: "Uploaded bill and story", reward: "₹120 cashback", rewardClass: "bg-green-100 text-green-800", time: "3 hours ago", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Sneha" },
-  ];
-
-  const ACTIVITY = [
-    { id: "a1", type: "mention", text: "@priya.sharma tagged Bombay Spice in a Reel", time: Date.now() / 1000 - 900, platform: "instagram" },
-    { id: "a2", type: "cashback", text: "₹150 cashback issued to Ananya Patel", time: Date.now() / 1000 - 3600, platform: "system" },
-    { id: "a3", type: "comment", text: "New comment on weekend brunch post", time: Date.now() / 1000 - 7200, platform: "facebook" },
-    { id: "a4", type: "dm", text: "DM from Vikram Mehta — table booking inquiry", time: Date.now() / 1000 - 10800, platform: "messenger" },
-    { id: "a5", type: "mention", text: "@foodie_mumbai mentioned you in a Story", time: Date.now() / 1000 - 86400, platform: "instagram" },
-    { id: "a6", type: "cashback", text: "₹200 cashback issued to Rohan Desai", time: Date.now() / 1000 - 172800, platform: "system" },
+  const RECENT_ACTIVITY = [
+    { name: "Priya Sharma", activity: "tagged you in a Story", time: "2 min ago", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Priya" },
+    { name: "Rahul Mehta", activity: "mentioned you in a comment", time: "14 min ago", initials: "RM" },
+    { name: "Aanya Kapoor", activity: "posted a feed photo tagging you", time: "1 hr ago", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Aanya" },
+    { name: "Vikram Singh", activity: "shared your recent post on Facebook", time: "2 hr ago", initials: "VS" },
+    { name: "Neha Iyer", activity: "commented on your Instagram post", time: "3 hr ago", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Neha" },
+    { name: "Amit Patel", activity: "tagged you in an Instagram Reel", time: "4 hr ago", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Amit" },
+    { name: "Karan Johar", activity: "mentioned you in a Facebook post", time: "6 hr ago", initials: "KJ" },
+    { name: "Rohan Gupta", activity: "sent you a direct message", time: "8 hr ago", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Rohan" },
+    { name: "Meera Joshi", activity: "replied to your comment", time: "10 hr ago", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Meera" },
+    { name: "Siddharth Malhotra", activity: "tagged you in a photo", time: "12 hr ago", initials: "SM" }
   ];
 
   const ACTIVITY_LOG = [
-    {
-      id: "al1",
-      type: "mention",
-      icon: "share",
-      iconWrap: "bg-blue-100 text-blue-600",
-      customerName: "Arjun Singh",
-      description: "tagged Bombay Spice Kitchen in an Instagram Story",
-      avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Arjun",
-      status: "₹50 Cashback credited",
-      statusClass: "bg-green-50 text-green-700 border-green-100",
-      action: "View Post",
-      time: Date.now() / 1000 - 120,
-    },
-    {
-      id: "al2",
-      type: "system",
-      icon: "settings_suggest",
-      iconWrap: "bg-orange-100 text-orange-600",
-      customerName: "System",
-      description: "Monthly analytics report for August is now ready",
-      systemAvatar: true,
-      status: "Ready for Review",
-      statusClass: "bg-blue-50 text-blue-700 border-blue-100",
-      action: "Open Report",
-      time: Date.now() / 1000 - 900,
-    },
-    {
-      id: "al3",
-      type: "cashback",
-      icon: "currency_rupee",
-      iconWrap: "bg-emerald-100 text-emerald-600",
-      customerName: "Priya Kapoor",
-      description: "redeemed a loyalty voucher at Bandra West outlet",
-      avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=PriyaK",
-      status: "₹250 Discount applied",
-      statusClass: "bg-emerald-50 text-emerald-700 border-emerald-100",
-      action: "Receipt Details",
-      time: Date.now() / 1000 - 2520,
-    },
-    {
-      id: "al4",
-      type: "account",
-      icon: "person_add",
-      iconWrap: "bg-purple-100 text-purple-600",
-      customerName: "Rahul Khanna",
-      description: "joined the Platinum tier loyalty programme",
-      avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=RahulK",
-      status: "New VIP Member",
-      statusClass: "bg-purple-50 text-purple-700 border-purple-100",
-      action: "View Profile",
-      time: Date.now() / 1000 - 3600,
-    },
-    {
-      id: "al5",
-      type: "comment",
-      icon: "forum",
-      iconWrap: "bg-blue-100 text-blue-600",
-      customerName: "Sara D'Souza",
-      description: "left a 5-star review on your weekend brunch post",
-      avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Sara",
-      status: "Excellent Rating",
-      statusClass: "bg-yellow-50 text-yellow-700 border-yellow-100",
-      action: "Respond",
-      time: Date.now() / 1000 - 7200,
-    },
-    {
-      id: "al6",
-      type: "dm",
-      icon: "mail",
-      iconWrap: "bg-surface-container text-on-surface-variant",
-      customerName: "Vikram Mehta",
-      description: "asked about table booking for 4 on Saturday 8pm",
-      avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Vikram",
-      status: "Awaiting reply",
-      statusClass: "bg-amber-50 text-amber-800 border-amber-100",
-      action: "Open Inbox",
-      time: Date.now() / 1000 - 10800,
-    },
-    {
-      id: "al7",
-      type: "mention",
-      icon: "photo_camera",
-      iconWrap: "bg-pink-100 text-pink-600",
-      customerName: "Ananya Patel",
-      description: "mentioned @bombayspicekitchen in a Sunday family lunch Reel",
-      avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Ananya",
-      status: "₹150 Cashback pending",
-      statusClass: "bg-yellow-50 text-yellow-700 border-yellow-100",
-      action: "Verify mention",
-      time: Date.now() / 1000 - 86400,
-    },
-    {
-      id: "al8",
-      type: "cashback",
-      icon: "payments",
-      iconWrap: "bg-emerald-100 text-emerald-600",
-      customerName: "Rohan Desai",
-      description: "cashback approved for Facebook post share",
-      avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Rohan",
-      status: "₹200 Cashback credited",
-      statusClass: "bg-green-50 text-green-700 border-green-100",
-      action: "View details",
-      time: Date.now() / 1000 - 172800,
-    },
+    { id: "a1", actor: "Priya Sharma", channel: "Instagram", action: "Tagged @lumenstudio in a Story about the spring studio refresh.", status: "New mention", time: "2 min ago" },
+    { id: "a2", actor: "Rahul Mehta", channel: "Facebook", action: "Left a comment asking about a branding discovery call.", status: "Needs reply", time: "14 min ago" },
+    { id: "a3", actor: "Aanya Kapoor", channel: "Instagram", action: "Shared your Reel to her followers and mentioned the visual direction.", status: "High reach", time: "1 hr ago" },
+    { id: "a4", actor: "Vikram Singh", channel: "Messenger", action: "Sent a direct message asking for your latest case study deck.", status: "Unread", time: "2 hr ago" },
+    { id: "a5", actor: "Neha Iyer", channel: "Instagram", action: "Reacted to your carousel and saved the post for later.", status: "Positive", time: "3 hr ago" },
+    { id: "a6", actor: "Amit Patel", channel: "Facebook", action: "Shared your launch update to a local founder group.", status: "Shared", time: "4 hr ago" },
+    { id: "a7", actor: "Karan Johar", channel: "Instagram", action: "Mentioned Lumen Studio in a photo from a creator meetup.", status: "New mention", time: "6 hr ago" },
+    { id: "a8", actor: "Rohan Gupta", channel: "Instagram", action: "Sent a direct message asking for a callback next week.", status: "Follow up", time: "8 hr ago" }
   ];
-
-  const ACTIVITY_STATS = {
-    total: 1284,
-    totalDelta: "12% from yesterday",
-    newMentions: 42,
-    mentionsDelta: "8 new since login",
-    cashbackDisbursed: "₹8,450",
-    cashbackNote: "Daily budget: 82%",
-    systemHealth: "Optimal",
-    healthNote: "All nodes active",
-  };
 
   const MENTIONS = [
     {
       id: "m1",
       platform: "instagram",
-      type: "STORY",
-      user: { name: "Priya Sharma", handle: "priya.sharma", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Priya" },
-      text: "Best butter chicken in Mumbai! @bombayspicekitchen 🍛",
-      media: "Weekend brunch spread",
+      type: "Instagram Story",
+      user: { name: "Priya Sharma", handle: "priya_sharma", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Priya" },
+      text: "Obsessed with the new design details from @lumenstudio! Absolutely stunning work. ✨",
+      thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=design1&backgroundColor=005c55",
+      reach: 4200,
       likes: 342,
       comments: 28,
-      reach: 4200,
-      eligible: true,
-      time: Date.now() / 1000 - 3600,
+      time: Date.now() / 1000 - 120,
     },
     {
       id: "m2",
       platform: "facebook",
-      type: "POST",
-      user: { name: "Vikram Mehta", handle: "vikram.mehta", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Vikram" },
-      text: "Celebrated my anniversary at Bombay Spice Kitchen. Impeccable service!",
-      media: "Anniversary dinner",
+      type: "FB Post",
+      user: { name: "Rahul Mehta", handle: "rahul.mehta", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Rahul" },
+      text: "Highly recommend Lumen Studio for their professional branding services. Seamless experience!",
+      thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=design2&backgroundColor=0f766e",
+      reach: 1800,
       likes: 89,
       comments: 12,
-      reach: 1800,
-      eligible: true,
-      time: Date.now() / 1000 - 14400,
+      time: Date.now() / 1000 - 840,
     },
     {
       id: "m3",
       platform: "instagram",
-      type: "REEL",
-      user: { name: "Foodie Mumbai", handle: "foodie_mumbai", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Foodie" },
-      text: "",
-      media: "Top 5 Bandra restaurants — #3 is a hidden gem",
-      likes: 2100,
-      comments: 156,
-      reach: 45000,
-      eligible: false,
-      time: Date.now() / 1000 - 86400,
+      type: "Instagram Post",
+      user: { name: "Aanya Kapoor", handle: "aanya_k", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Aanya" },
+      text: "Collaborated with @lumenstudio on our latest summer collection launch. Look at this branding! 🌈",
+      thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=design3&backgroundColor=1a5a57",
+      reach: 2900,
+      likes: 156,
+      comments: 9,
+      time: Date.now() / 1000 - 3600,
     },
     {
       id: "m4",
       platform: "instagram",
-      type: "POST",
-      user: { name: "Ananya Patel", handle: "ananya.patel", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Ananya" },
-      text: "Sunday family lunch done right ✨ @bombayspicekitchen",
-      media: "Family thali photo",
-      likes: 156,
-      comments: 9,
-      reach: 2900,
-      eligible: true,
-      time: Date.now() / 1000 - 172800,
+      type: "Instagram Story",
+      user: { name: "Vikram Singh", handle: "vikram_s", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Vikram" },
+      text: "Can't get over how clean this workspace layout is. @lumenstudio nailed it.",
+      thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=design4&backgroundColor=37736f",
+      reach: 3500,
+      likes: 120,
+      comments: 14,
+      time: Date.now() / 1000 - 7200,
     },
-  ];
-
-  const POSTS = [
-    { id: "p1", title: "Weekend brunch — book your table", platform: "facebook", comments: 24 },
-    { id: "p2", title: "New seasonal menu launch", platform: "instagram", comments: 18 },
-    { id: "p3", title: "Diwali special thali preview", platform: "facebook", comments: 31 },
+    {
+      id: "m5",
+      platform: "instagram",
+      type: "Instagram Post",
+      user: { name: "Neha Iyer", handle: "neha_iyer", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Neha" },
+      text: "Beautiful aesthetics and top-notch packaging design by @lumenstudio.",
+      thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=design5&backgroundColor=094f4c",
+      reach: 5100,
+      likes: 412,
+      comments: 32,
+      time: Date.now() / 1000 - 10800,
+    },
+    {
+      id: "m6",
+      platform: "facebook",
+      type: "FB Post",
+      user: { name: "Amit Patel", handle: "amit.patel", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Amit" },
+      text: "Lumen Studio did an amazing job on our rebranding campaign. Highly recommended!",
+      thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=design6&backgroundColor=95d1cd",
+      reach: 2200,
+      likes: 95,
+      comments: 8,
+      time: Date.now() / 1000 - 14400,
+    },
+    {
+      id: "m7",
+      platform: "instagram",
+      type: "Instagram Story",
+      user: { name: "Karan Johar", handle: "karan_j", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Karan" },
+      text: "Love their design philosophy. Clean, minimal, modern. @lumenstudio",
+      thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=design7&backgroundColor=eff4ff",
+      reach: 8400,
+      likes: 980,
+      comments: 75,
+      time: Date.now() / 1000 - 21600,
+    },
+    {
+      id: "m8",
+      platform: "instagram",
+      type: "Instagram Post",
+      user: { name: "Rohan Gupta", handle: "rohan_g", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Rohan" },
+      text: "New studio setup is looking great! Congrats to @lumenstudio.",
+      thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=design8&backgroundColor=dce9ff",
+      reach: 1900,
+      likes: 84,
+      comments: 5,
+      time: Date.now() / 1000 - 28800,
+    },
+    {
+      id: "m9",
+      platform: "facebook",
+      type: "FB Post",
+      user: { name: "Meera Joshi", handle: "meera.j", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Meera" },
+      text: "A beautiful portfolio of work. Inspiring design inspiration from Lumen Studio.",
+      thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=design9&backgroundColor=a3faef",
+      reach: 1400,
+      likes: 62,
+      comments: 4,
+      time: Date.now() / 1000 - 36000,
+    }
   ];
 
   const COMMENTS = [
@@ -258,70 +201,204 @@
       id: "c1",
       post_id: "p1",
       user: { name: "Sneha Reddy", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Sneha" },
-      text: "Is the brunch buffet still ₹899 per person?",
+      text: "Love this!",
       likes: 5,
       time: Date.now() / 1000 - 1800,
       replied: false,
       platform: "facebook",
+      post_thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=post1&backgroundColor=005c55"
     },
     {
       id: "c2",
       post_id: "p1",
       user: { name: "Arjun Nair", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Arjun" },
-      text: "We came last Sunday — absolutely worth it!",
+      text: "When's the next launch?",
       likes: 12,
       time: Date.now() / 1000 - 7200,
       replied: true,
-      reply: { text: "Thank you Arjun! We're glad you enjoyed it. See you again soon 🙏", time: Date.now() / 1000 - 6000 },
+      reply: { text: "We are tracking a mid-July release. Stay tuned! 🚀", time: Date.now() / 1000 - 6000 },
       platform: "facebook",
+      post_thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=post1&backgroundColor=005c55"
     },
     {
       id: "c3",
       post_id: "p2",
       user: { name: "Meera Iyer", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Meera" },
-      text: "Do you have Jain options on the new menu?",
+      text: "Where can I buy this?",
       likes: 3,
       time: Date.now() / 1000 - 3600,
       replied: false,
       platform: "instagram",
+      post_thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=post2&backgroundColor=0f766e"
     },
+    {
+      id: "c4",
+      post_id: "p2",
+      user: { name: "Varun Verma", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Varun" },
+      text: "@lumenstudio I'm a huge fan!",
+      likes: 22,
+      time: Date.now() / 1000 - 14400,
+      replied: false,
+      platform: "instagram",
+      mentioned_you: true,
+      post_thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=post2&backgroundColor=0f766e"
+    },
+    {
+      id: "c5",
+      post_id: "p3",
+      user: { name: "Deepika Sen", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Deepika" },
+      text: "Looks amazing 🔥",
+      likes: 9,
+      time: Date.now() / 1000 - 18000,
+      replied: false,
+      platform: "facebook",
+      post_thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=post3&backgroundColor=1a5a57"
+    },
+    {
+      id: "c6",
+      post_id: "p3",
+      user: { name: "Rohan Shah", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=RohanS" },
+      text: "Please ship to India",
+      likes: 15,
+      time: Date.now() / 1000 - 25200,
+      replied: false,
+      platform: "instagram",
+      post_thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=post3&backgroundColor=1a5a57"
+    },
+    {
+      id: "c7",
+      post_id: "p4",
+      user: { name: "Kunal Gupta", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Kunal" },
+      text: "Is it available in Delhi?",
+      likes: 4,
+      time: Date.now() / 1000 - 32400,
+      replied: true,
+      reply: { text: "Yes! We ship nationwide across India. Order link in bio.", time: Date.now() / 1000 - 30000 },
+      platform: "instagram",
+      post_thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=post4&backgroundColor=37736f"
+    },
+    {
+      id: "c8",
+      post_id: "p4",
+      user: { name: "Pooja Roy", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Pooja" },
+      text: "Beautiful collection!",
+      likes: 18,
+      time: Date.now() / 1000 - 43200,
+      replied: false,
+      platform: "facebook",
+      post_thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=post4&backgroundColor=37736f"
+    }
   ];
 
   const CONVERSATIONS = [
     {
       id: "dm1",
-      platform: "messenger",
-      user: { name: "Vikram Mehta", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Vikram" },
-      last_message: "Table for 4 this Saturday 8pm?",
-      updated_at: Date.now() / 1000 - 600,
-      unread_count: 2,
+      platform: "instagram",
+      user: { name: "Priya Sharma", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Priya" },
+      last_message: "Where can I find your latest collection?",
+      updated_at: Date.now() / 1000 - 120,
+      unread_count: 1,
       messages: [
-        { from: "them", text: "Hi, I'd like to book a table for 4.", time: Date.now() / 1000 - 3600 },
-        { from: "us", text: "Namaste! We'd love to host you. Which date and time?", time: Date.now() / 1000 - 3400 },
-        { from: "them", text: "Table for 4 this Saturday 8pm?", time: Date.now() / 1000 - 600 },
+        { from: "them", text: "Hi, just discovered your brand. Love your work!", time: Date.now() / 1000 - 3600 },
+        { from: "us", text: "Thank you so much, Priya! 🙌 Glad you found us.", time: Date.now() / 1000 - 3400 },
+        { from: "them", text: "Where can I find your latest collection?", time: Date.now() / 1000 - 120 },
       ],
     },
     {
       id: "dm2",
+      platform: "messenger",
+      user: { name: "Rahul Mehta", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Rahul" },
+      last_message: "Do you offer branding consults?",
+      updated_at: Date.now() / 1000 - 1800,
+      unread_count: 2,
+      messages: [
+        { from: "them", text: "Do you offer branding consults?", time: Date.now() / 1000 - 1800 }
+      ],
+    },
+    {
+      id: "dm3",
       platform: "instagram",
-      user: { name: "Priya Sharma", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Priya" },
-      last_message: "Thank you for the cashback! 🙏",
+      user: { name: "Aanya Kapoor", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Aanya" },
+      last_message: "Thank you for the fast delivery!",
       updated_at: Date.now() / 1000 - 7200,
       unread_count: 0,
       messages: [
-        { from: "them", text: "I posted about my visit — how do I claim cashback?", time: Date.now() / 1000 - 14400 },
-        { from: "us", text: "We've approved your post! ₹150 cashback will reflect in 24 hrs.", time: Date.now() / 1000 - 12000 },
-        { from: "them", text: "Thank you for the cashback! 🙏", time: Date.now() / 1000 - 7200 },
+        { from: "them", text: "Hey! Can you share the invoice?", time: Date.now() / 1000 - 14400 },
+        { from: "us", text: "Sure, sent it over to your email. Check it out!", time: Date.now() / 1000 - 12000 },
+        { from: "them", text: "Thank you for the fast delivery!", time: Date.now() / 1000 - 7200 }
       ],
     },
+    {
+      id: "dm4",
+      platform: "messenger",
+      user: { name: "Vikram Singh", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Vikram" },
+      last_message: "Loved the UI package!",
+      updated_at: Date.now() / 1000 - 14400,
+      unread_count: 0,
+      messages: [
+        { from: "them", text: "Hi, when is the UI package launching?", time: Date.now() / 1000 - 18000 },
+        { from: "us", text: "It's live now on our website! Enjoy coding.", time: Date.now() / 1000 - 16000 },
+        { from: "them", text: "Loved the UI package!", time: Date.now() / 1000 - 14400 }
+      ],
+    },
+    {
+      id: "dm5",
+      platform: "instagram",
+      user: { name: "Neha Iyer", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Neha" },
+      last_message: "Great portfolio, sent an inquiry.",
+      updated_at: Date.now() / 1000 - 28800,
+      unread_count: 0,
+      messages: [
+        { from: "them", text: "Hi, sent a design project inquiry.", time: Date.now() / 1000 - 28800 }
+      ],
+    },
+    {
+      id: "dm6",
+      platform: "instagram",
+      user: { name: "Amit Patel", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Amit" },
+      last_message: "Let's plan the collab next week.",
+      updated_at: Date.now() / 1000 - 43200,
+      unread_count: 0,
+      messages: [
+        { from: "them", text: "Collab sounds great!", time: Date.now() / 1000 - 45000 },
+        { from: "us", text: "Awesome, let's schedule a Zoom call.", time: Date.now() / 1000 - 44000 },
+        { from: "them", text: "Let's plan the collab next week.", time: Date.now() / 1000 - 43200 }
+      ],
+    },
+    {
+      id: "dm7",
+      platform: "messenger",
+      user: { name: "Karan Johar", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Karan" },
+      last_message: "Perfect! Thanks a lot.",
+      updated_at: Date.now() / 1000 - 86400,
+      unread_count: 0,
+      messages: [
+        { from: "them", text: "Are you open on weekends?", time: Date.now() / 1000 - 90000 },
+        { from: "us", text: "Yes, our team is active. DMs are open.", time: Date.now() / 1000 - 88000 },
+        { from: "them", text: "Perfect! Thanks a lot.", time: Date.now() / 1000 - 86400 }
+      ],
+    },
+    {
+      id: "dm8",
+      platform: "instagram",
+      user: { name: "Rohan Gupta", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Rohan" },
+      last_message: "Can we set up a call?",
+      updated_at: Date.now() / 1000 - 172800,
+      unread_count: 0,
+      messages: [
+        { from: "them", text: "Can we set up a call?", time: Date.now() / 1000 - 172800 }
+      ],
+    }
   ];
 
   const ANALYTICS = {
-    reach_7d: 128400,
-    engagement_7d: 6.2,
-    mentions_7d: 247,
-    cashback_7d: 14250,
-    chart_weekly: [42, 58, 51, 72, 65, 80, 89],
+    followers_total: "31.1K",
+    following_total: "408",
+    posts_total: "238",
+    views_total: "248.5K",
+    profile_visits: "12,450",
+    chart_growth: [120, 140, 190, 220, 247],
+    chart_weekly: [4.2, 5.8, 5.1, 7.2, 6.5, 8.0, 8.9],
     top_cities: [
       { city: "Mumbai", pct: 68 },
       { city: "Pune", pct: 14 },
@@ -329,13 +406,39 @@
       { city: "Other", pct: 8 },
     ],
     platform_split: { facebook: 38, instagram: 62 },
+    top_posts: [
+      { id: "tp1", title: "New Studio Workspace Reveal 🖥", platform: "instagram", likes: 2100, comments: 156, views: "45K", thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=tpost1&backgroundColor=005c55" },
+      { id: "tp2", title: "Branding Case Study: TechStart 🚀", platform: "facebook", likes: 890, comments: 42, views: "18K", thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=tpost2&backgroundColor=0f766e" },
+      { id: "tp3", title: "Summer Color Palette Inspiration 🎨", platform: "instagram", likes: 1200, comments: 88, views: "29K", thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=tpost3&backgroundColor=1a5a57" },
+      { id: "tp4", title: "UI Design Workflow Secrets 🤫", platform: "instagram", likes: 1750, comments: 112, views: "38K", thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=tpost4&backgroundColor=37736f" },
+      { id: "tp5", title: "Behind the Scenes at Lumen Studio 🎥", platform: "facebook", likes: 450, comments: 23, views: "9K", thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=tpost5&backgroundColor=094f4c" },
+      { id: "tp6", title: "Typography Trends in 2026 ✍️", platform: "instagram", likes: 1560, comments: 95, views: "34K", thumbnail: "https://api.dicebear.com/9.x/shapes/svg?seed=tpost6&backgroundColor=95d1cd" }
+    ],
+    demographics: {
+      gender: { male: 42, female: 55, other: 3 },
+      age: [
+        { group: "18-24", pct: 28 },
+        { group: "25-34", pct: 45 },
+        { group: "35-44", pct: 18 },
+        { group: "45+", pct: 9 }
+      ]
+    },
+    top_followers: [
+      { name: "Priya Sharma", handle: "@priya_sharma", engagement: "High", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Priya" },
+      { name: "Rahul Mehta", handle: "@rahul.mehta", engagement: "High", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Rahul" },
+      { name: "Aanya Kapoor", handle: "@aanya_k", engagement: "Medium", avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Aanya" }
+    ],
+    heatmap: {
+      bestDay: "Wednesday",
+      bestTime: "6:00 PM - 8:00 PM"
+    }
   };
 
   function createDemoSession() {
     return {
       user: DEMO_USER,
       pages: DEMO_PAGES,
-      restaurant: RESTAURANT,
+      business: BUSINESS,
       manager: MANAGER,
       platforms: ["facebook", "instagram"],
       grantedAt: new Date().toISOString(),
@@ -359,54 +462,16 @@
     return String(n);
   }
 
-  function formatInr(n) {
-    return "₹" + Number(n).toLocaleString("en-IN");
-  }
-
-  function getActivityTable() {
-    return Promise.resolve(
-      ACTIVITY_TABLE.map((row) => {
-        let avatarHtml;
-        if (row.avatar) {
-          avatarHtml = '<img class="w-8 h-8 rounded-full object-cover" src="' + row.avatar + '" alt="">';
-        } else {
-          avatarHtml =
-            '<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">' +
-            row.initials +
-            "</div>";
-        }
-        return {
-          name: row.name,
-          activity: row.activity,
-          time: row.time,
-          avatarHtml,
-          rewardHtml:
-            '<span class="px-3 py-1 ' + row.rewardClass + ' rounded-full text-[11px] font-bold">' + row.reward + "</span>",
-        };
-      })
-    );
-  }
-
   window.FBData = {
-    RESTAURANT,
+    BUSINESS,
     MANAGER,
     METRICS,
     createDemoSession,
     getMetrics: () => Promise.resolve(METRICS),
-    getActivity: () => Promise.resolve(ACTIVITY),
-    getActivityLog: (type) => {
-      const list =
-        !type || type === "all"
-          ? ACTIVITY_LOG
-          : ACTIVITY_LOG.filter((a) => a.type === type);
-      return Promise.resolve(list);
-    },
-    getActivityStats: () => Promise.resolve(ACTIVITY_STATS),
-    getActivityTable,
+    getActivity: () => Promise.resolve(RECENT_ACTIVITY),
+    getActivityLog: () => Promise.resolve(ACTIVITY_LOG),
     getMentions: () => Promise.resolve(MENTIONS),
-    getPosts: () => Promise.resolve(POSTS),
-    getComments: (postId) =>
-      Promise.resolve(COMMENTS.filter((c) => !postId || c.post_id === postId)),
+    getComments: () => Promise.resolve(COMMENTS),
     replyComment: (id, text) => Promise.resolve({ success: true, id, text }),
     getConversations: () => Promise.resolve(CONVERSATIONS),
     sendMessage: (id, text) => Promise.resolve({ success: true, id, text }),
@@ -414,6 +479,5 @@
     getAccounts: () => Promise.resolve(DEMO_PAGES),
     relativeTime,
     formatCount,
-    formatInr,
   };
 })();

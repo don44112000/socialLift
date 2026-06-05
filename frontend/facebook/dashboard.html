@@ -11,103 +11,141 @@
   </head>
   <body>
     <div id="fb-page-content">
-      <div id="dash-header"></div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-xl" id="metrics"></div>
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter mb-xl">
-        <div class="lg:col-span-2 bg-surface-container-lowest p-lg rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05)]">
-          <div class="flex items-center justify-between mb-lg">
-            <h3 class="font-headline-md text-headline-md">Quick Actions</h3>
+      <div class="space-y-6">
+        <div id="page-head"></div>
+
+        <section class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4" id="metrics"></section>
+
+        <section class="grid grid-cols-1 gap-5 xl:grid-cols-[1.2fr_0.8fr]">
+          <div class="fb-panel p-4 sm:p-6">
+            <div class="flex items-center justify-between gap-3">
+              <div>
+                <h3 class="font-headline-md text-headline-md text-on-surface">Quick Actions</h3>
+                <p class="mt-1 text-sm text-on-surface-variant">Keep daily community work moving.</p>
+              </div>
+              <a href="./activity.html" class="text-sm font-semibold text-primary">Open activity</a>
+            </div>
+            <div class="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              <a href="./comments.html" class="rounded-2xl border border-outline-variant/30 bg-surface-container-low p-5 text-left transition hover:border-primary/30 hover:bg-white">
+                <span class="material-symbols-outlined text-primary">forum</span>
+                <h4 class="mt-4 font-semibold text-on-surface">Pending replies</h4>
+                <p class="mt-1 text-sm text-on-surface-variant">Jump into comments that still need a brand response.</p>
+              </a>
+              <button type="button" onclick="FB.toast('Scheduling is a demo interaction for now.')" class="rounded-2xl border border-outline-variant/30 bg-surface-container-low p-5 text-left transition hover:border-primary/30 hover:bg-white">
+                <span class="material-symbols-outlined text-primary">schedule</span>
+                <h4 class="mt-4 font-semibold text-on-surface">Schedule post</h4>
+                <p class="mt-1 text-sm text-on-surface-variant">Prepare your next campaign update for the best slot.</p>
+              </button>
+              <button type="button" onclick="FB.toast('Campaign setup is a demo interaction for now.')" class="rounded-2xl bg-primary p-5 text-left text-white shadow-sm transition hover:opacity-95">
+                <span class="material-symbols-outlined">bolt</span>
+                <h4 class="mt-4 font-semibold">Run campaign</h4>
+                <p class="mt-1 text-sm text-white/80">Start a boosted push around your strongest visual story.</p>
+              </button>
+            </div>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-md">
-            <a href="./mentions.html" class="flex flex-col items-center justify-center p-6 bg-surface-container rounded-xl border border-transparent hover:border-primary transition-all no-underline text-inherit">
-              <span class="material-symbols-outlined text-primary text-3xl mb-2">verified</span>
-              <span class="font-label-md text-label-md">Verify mention</span>
-            </a>
-            <a href="./inbox.html" class="flex flex-col items-center justify-center p-6 bg-surface-container rounded-xl border border-transparent hover:border-primary transition-all no-underline text-inherit">
-              <span class="material-symbols-outlined text-primary text-3xl mb-2">schedule_send</span>
-              <span class="font-label-md text-label-md">Send reminder</span>
-            </a>
-            <a href="./analytics.html" class="flex flex-col items-center justify-center p-6 bg-primary-container text-white rounded-xl shadow-md hover:bg-primary transition-all no-underline">
-              <span class="material-symbols-outlined text-3xl mb-2">campaign</span>
-              <span class="font-label-md text-label-md">Run campaign</span>
-            </a>
+
+          <div class="fb-panel p-4 sm:p-6">
+            <div class="flex items-center justify-between gap-3">
+              <div>
+                <h3 class="font-headline-md text-headline-md text-on-surface">Connected Platforms</h3>
+                <p class="mt-1 text-sm text-on-surface-variant">Instagram and Facebook accounts currently active.</p>
+              </div>
+              <a href="./accounts.html" class="text-sm font-semibold text-primary">Manage</a>
+            </div>
+            <div class="mt-5 space-y-3" id="platforms"></div>
           </div>
-        </div>
-        <div class="bg-surface-container-lowest p-lg rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05)]" id="platforms-card">
-          <h3 class="font-headline-md text-headline-md mb-lg">Connected platforms</h3>
-          <div id="platforms" class="space-y-md"></div>
-        </div>
-      </div>
-      <div class="bg-surface-container-lowest p-lg rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05)]">
-        <div class="flex items-center justify-between mb-lg">
-          <h3 class="font-headline-md text-headline-md">Recent Activity</h3>
-          <a href="./activity.html" class="text-primary font-label-md text-label-md hover:underline no-underline">View all activity</a>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left">
-            <thead>
-              <tr class="border-b border-outline-variant">
-                <th class="pb-3 font-label-md text-on-surface-variant">Diner</th>
-                <th class="pb-3 font-label-md text-on-surface-variant">Activity</th>
-                <th class="pb-3 font-label-md text-on-surface-variant">Reward</th>
-                <th class="pb-3 font-label-md text-on-surface-variant text-right">Time</th>
-              </tr>
-            </thead>
-            <tbody id="activity-rows" class="divide-y divide-outline-variant"></tbody>
-          </table>
-        </div>
+        </section>
+
+        <section class="fb-panel overflow-hidden">
+          <div class="flex items-center justify-between gap-3 border-b border-outline-variant/20 px-4 py-4 sm:px-6">
+            <div>
+              <h3 class="font-headline-md text-headline-md text-on-surface">Recent Activity</h3>
+              <p class="mt-1 text-sm text-on-surface-variant">The latest mentions, shares, messages, and reactions.</p>
+            </div>
+            <a href="./activity.html" class="text-sm font-semibold text-primary">View all</a>
+          </div>
+          <div class="fb-table-scroll">
+            <table class="w-full border-collapse">
+              <thead class="bg-surface-container-low text-left text-xs uppercase tracking-[0.14em] text-on-surface-variant">
+                <tr>
+                  <th class="px-4 py-3 sm:px-6">User</th>
+                  <th class="px-4 py-3 sm:px-6">Activity</th>
+                  <th class="px-4 py-3 sm:px-6">Time</th>
+                </tr>
+              </thead>
+              <tbody id="activity-list"></tbody>
+            </table>
+          </div>
+        </section>
       </div>
     </div>
+
     <script src="./data.js"></script>
     <script src="./ui.js"></script>
     <script src="./shell.js"></script>
     <script>
-      (async () => {
+      (async function () {
         const session = await FB.requireAuth({
           activePath: "/facebook/dashboard.html",
           pageTitle: "Dashboard",
-          searchPlaceholder: "Search analytics…",
+          searchPlaceholder: "Search activity or analytics...",
         });
         if (!session) return;
-        const r = session.restaurant || FBData.RESTAURANT;
-        document.getElementById("dash-header").appendChild(
-          FBUi.pageHeader("Dashboard Overview", "Welcome back! Here's what's happening at " + r.name + " today.")
-        );
-        const m = await FBData.getMetrics();
-        const grid = document.getElementById("metrics");
-        [
-          { label: "Total mentions", value: m.mentions.value, badge: m.mentions.delta },
-          { label: "Cashback distributed", value: m.cashback.value, badge: m.cashback.sub, badgeOrange: true, spark: FBUi.SPARK_ORANGE, stroke: "#a73a00" },
-          { label: "Active diners", value: m.activeDiners.value, badge: m.activeDiners.delta },
-          { label: "Avg reach per post", value: "3,420", badge: "+5.4%" },
-        ].forEach((x) => grid.appendChild(FBUi.metricCard(x)));
 
-        const plat = document.getElementById("platforms");
-        (session.pages || []).forEach((p) => {
-          const ig = p.instagram_business_account;
+        document.getElementById("page-head").appendChild(
+          FBUi.pageHeader(
+            "Dashboard Overview",
+            "Welcome back. Here is a quick view of how Lumen Studio is performing across your connected social channels."
+          )
+        );
+
+        const metrics = await FBData.getMetrics();
+        const metricGrid = document.getElementById("metrics");
+        [
+          { label: "Total mentions", value: metrics.mentions.value, badge: metrics.mentions.delta },
+          { label: "Total engagement", value: metrics.engagement.value, badge: metrics.engagement.delta, spark: FBUi.SPARK_ORANGE, stroke: "#a73a00" },
+          { label: "New followers", value: metrics.followers.value, badge: metrics.followers.delta },
+          { label: "Avg. reach per post", value: metrics.reach.value, badge: metrics.reach.delta },
+        ].forEach((metric) => metricGrid.appendChild(FBUi.metricCard(metric)));
+
+        const platformsEl = document.getElementById("platforms");
+        (session.pages || []).forEach((page) => {
           const row = document.createElement("div");
-          row.className = "flex items-center justify-between p-md bg-surface-container rounded-lg";
+          const instagram = page.platform === "instagram" || page.instagram_business_account;
+          row.className = "rounded-2xl border border-outline-variant/20 bg-surface-container-low px-4 py-4";
           row.innerHTML =
-            '<div class="flex items-center gap-md">' +
-            (ig
-              ? '<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 flex items-center justify-center text-white"><span class="material-symbols-outlined text-sm" style="font-variation-settings:\'FILL\' 1">photo_camera</span></div><div><p class="font-label-md">Instagram</p><p class="text-[11px] text-on-surface-variant">@' + ig.username + "</p></div>"
-              : '<div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white"><span class="material-symbols-outlined text-sm" style="font-variation-settings:\'FILL\' 1">thumb_up</span></div><div><p class="font-label-md">Facebook</p><p class="text-[11px] text-on-surface-variant">' + p.name + "</p></div>") +
-            '</div><span class="material-symbols-outlined text-primary text-sm">check_circle</span>';
-          plat.appendChild(row);
+            '<div class="flex items-center justify-between gap-3">' +
+              '<div class="flex items-center gap-3">' +
+                '<div class="flex h-12 w-12 items-center justify-center rounded-2xl ' + (instagram ? "bg-gradient-to-br from-yellow-400 via-rose-500 to-violet-600 text-white" : "bg-[#1877f2] text-white") + '">' +
+                  '<span class="material-symbols-outlined">' + (instagram ? "photo_camera" : "thumb_up") + "</span>" +
+                "</div>" +
+                "<div>" +
+                  '<p class="font-semibold text-on-surface">' + page.name + "</p>" +
+                  '<p class="text-sm text-on-surface-variant">' + (instagram ? "@lumenstudio" : "Lumen Studio Facebook") + "</p>" +
+                "</div>" +
+              "</div>" +
+              '<span class="rounded-full bg-white px-3 py-1 text-xs font-bold text-primary">Connected</span>' +
+            "</div>";
+          platformsEl.appendChild(row);
         });
 
-        const rows = await FBData.getActivityTable();
-        const tbody = document.getElementById("activity-rows");
-        rows.forEach((row) => {
-          const tr = document.createElement("tr");
-          tr.className = "hover:bg-surface-container-low transition-colors";
-          tr.innerHTML =
-            '<td class="py-4"><div class="flex items-center gap-3">' + row.avatarHtml +
-            '<span class="font-semibold text-body-md">' + row.name + "</span></div></td>" +
-            '<td class="py-4 text-on-surface-variant text-body-sm">' + row.activity + "</td>" +
-            '<td class="py-4">' + row.rewardHtml + "</td>" +
-            '<td class="py-4 text-right text-on-surface-variant text-[11px]">' + row.time + "</td>";
-          tbody.appendChild(tr);
+        const activityRows = document.getElementById("activity-list");
+        const activities = await FBData.getActivity();
+        activities.forEach((activity) => {
+          const row = document.createElement("tr");
+          row.className = "border-t border-outline-variant/10";
+          row.innerHTML =
+            '<td class="px-4 py-4 sm:px-6">' +
+              '<div class="flex items-center gap-3">' +
+                (activity.avatar
+                  ? '<img src="' + activity.avatar + '" alt="" class="h-10 w-10 rounded-full border border-outline-variant/10 object-cover">'
+                  : '<div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">' + activity.initials + "</div>") +
+                '<span class="font-semibold text-on-surface">' + activity.name + "</span>" +
+              "</div>" +
+            "</td>" +
+            '<td class="px-4 py-4 text-sm text-on-surface-variant sm:px-6">' + activity.activity + "</td>" +
+            '<td class="px-4 py-4 text-sm text-on-surface-variant sm:px-6">' + activity.time + "</td>";
+          activityRows.appendChild(row);
         });
       })();
     </script>

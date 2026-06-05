@@ -2,6 +2,7 @@
   "use strict";
 
   const SESSION_KEY = "sl_fb_session";
+  const MOBILE_QUERY = "(max-width: 1023px)";
 
   const ASSETS = {
     logoSquare: "/assets/logo-square.png",
@@ -11,12 +12,12 @@
 
   const NAV = [
     ["/facebook/dashboard.html", "Dashboard", "dashboard"],
-    ["/facebook/mentions.html", "Social Mentions", "public"],
-    ["/facebook/comments.html", "Comments", "forum"],
-    ["/facebook/inbox.html", "Inboxes", "mail"],
-    ["/facebook/analytics.html", "Analytics", "leaderboard"],
-    ["/facebook/activity.html", "Activity", "reorder"],
     ["/facebook/accounts.html", "Accounts", "group"],
+    ["/facebook/mentions.html", "Mentions", "campaign"],
+    ["/facebook/comments.html", "Comments", "forum"],
+    ["/facebook/inbox.html", "Inbox", "mail"],
+    ["/facebook/analytics.html", "Analytics", "leaderboard"],
+    ["/facebook/activity.html", "Activity", "history"],
     ["/facebook/settings.html", "Settings", "settings"],
   ];
 
@@ -48,96 +49,99 @@
     }, 3200);
   }
 
+  function closeDrawer() {
+    const aside = document.getElementById("fb-shell-aside");
+    const overlay = document.getElementById("fb-shell-overlay");
+    if (!aside || !overlay) return;
+    aside.classList.remove("is-open");
+    overlay.hidden = true;
+    document.body.classList.remove("fb-drawer-open");
+  }
+
+  function openDrawer() {
+    const aside = document.getElementById("fb-shell-aside");
+    const overlay = document.getElementById("fb-shell-overlay");
+    if (!aside || !overlay) return;
+    aside.classList.add("is-open");
+    overlay.hidden = false;
+    document.body.classList.add("fb-drawer-open");
+  }
+
   function mountShell(opts) {
     if (document.getElementById("fb-shell-aside")) return document.getElementById("fb-root");
 
     const session = getSession();
-    const r = (session && session.restaurant) || FBData.RESTAURANT;
-    const m = (session && session.manager) || FBData.MANAGER;
-    const appName = (window.WOUCHH_CONFIG && window.WOUCHH_CONFIG.COMPANY_NAME) || "Wouchh";
+    const business = (session && session.business) || FBData.BUSINESS;
+    const manager = (session && session.manager) || FBData.MANAGER;
     const activePath = opts.activePath || window.location.pathname;
     const pageTitle = opts.pageTitle || "Dashboard";
     const searchPh = opts.searchPlaceholder || "Search…";
 
-    document.body.className = "bg-background text-on-surface font-body-md antialiased";
+    document.body.className = "fb-shell-body bg-background text-on-surface font-body-md antialiased";
+
+    const overlay = document.createElement("button");
+    overlay.type = "button";
+    overlay.id = "fb-shell-overlay";
+    overlay.className = "fb-shell-overlay";
+    overlay.hidden = true;
+    overlay.addEventListener("click", closeDrawer);
 
     const aside = document.createElement("aside");
     aside.id = "fb-shell-aside";
-    aside.className =
-      "fixed left-0 top-0 h-full w-[260px] bg-surface shadow-sm flex flex-col py-lg z-50 border-r border-outline-variant/40";
+    aside.className = "fb-sidebar";
 
     let navHtml = "";
-    NAV.forEach(([href, label, ic]) => {
+    NAV.forEach(([href, label, icon]) => {
       const active = href === activePath;
       navHtml +=
-        '<a class="flex items-center px-lg py-md transition-all ' +
-        (active
-          ? "text-primary font-bold border-l-4 border-primary bg-primary-container/10"
-          : "text-on-surface-variant hover:text-primary hover:bg-surface-container-low border-l-4 border-transparent") +
+        '<a class="fb-nav-link ' +
+        (active ? "is-active" : "") +
         '" href="' +
         href +
-        '"><span class="material-symbols-outlined mr-md">' +
-        ic +
+        '"><span class="material-symbols-outlined fb-nav-icon">' +
+        icon +
         "</span><span>" +
         label +
         "</span></a>";
     });
 
     aside.innerHTML =
-      '<div class="px-lg mb-xl">' +
-      '<a href="/facebook/dashboard.html" class="flex items-center gap-3 no-underline text-inherit">' +
-      '<img src="' +
-      ASSETS.logoSquare +
-      '" alt="" class="w-10 h-10 rounded-lg object-contain shrink-0">' +
-      '<div class="min-w-0">' +
-      '<span class="font-headline-md text-headline-md font-bold text-primary block leading-tight">' +
-      appName +
-      '</span><p class="text-on-surface-variant text-[10px] uppercase tracking-widest">Management Suite</p>' +
-      "</div></a></div>" +
-      '<nav class="flex-1 overflow-y-auto hide-scrollbar space-y-0">' +
-      navHtml +
-      "</nav>" +
-      '<div class="px-lg mt-auto pt-lg border-t border-outline-variant">' +
-      '<div class="flex items-center gap-md">' +
-      '<img src="' +
-      r.logo +
-      '" alt="" class="w-10 h-10 rounded-lg object-cover">' +
-      "<div><p class=\"font-label-md text-label-md font-bold text-on-surface\">" +
-      r.shortName +
-      '</p><p class="text-on-surface-variant text-[10px] uppercase tracking-wider">' +
-      r.plan +
-      "</p></div></div></div>";
+      '<div class="fb-sidebar-head">' +
+      '<a href="/facebook/dashboard.html" class="fb-brand-link">' +
+      '<img src="' + ASSETS.logoSquare + '" alt="" class="fb-brand-mark">' +
+      '<div class="min-w-0"><span class="fb-brand-name">Wouchh</span>' +
+      '<p class="fb-brand-sub">Management Suite</p></div></a>' +
+      '<button type="button" class="fb-icon-button fb-mobile-close" id="fb-drawer-close" aria-label="Close navigation">' +
+      '<span class="material-symbols-outlined">close</span></button></div>' +
+      '<nav class="fb-nav">' + navHtml + "</nav>" +
+      '<div class="fb-sidebar-foot">' +
+      '<div class="fb-business-chip"><img src="' + business.logo + '" alt="" class="fb-business-logo">' +
+      '<div><p class="fb-business-name">' + business.name + '</p><p class="fb-business-sub">' + business.location + "</p></div></div>" +
+      "</div>";
 
-    const main = document.createElement("main");
-    main.className = "ml-[260px] min-h-screen";
+    const shell = document.createElement("div");
+    shell.className = "fb-shell";
 
     const header = document.createElement("header");
-    header.className =
-      "fixed top-0 right-0 w-[calc(100%-260px)] h-16 bg-surface border-b border-outline-variant flex justify-between items-center px-lg z-40";
+    header.className = "fb-shell-header";
     header.innerHTML =
-      '<div class="flex items-center flex-1 gap-lg">' +
-      '<h2 class="font-headline-md text-headline-md text-on-surface whitespace-nowrap hidden lg:block">' +
-      pageTitle +
-      '</h2><div class="relative w-full max-w-md">' +
-      '<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">search</span>' +
-      '<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low rounded-xl border-none focus:ring-2 focus:ring-primary text-body-sm" placeholder="' +
-      searchPh +
-      '" type="text"/></div></div>' +
-      '<div class="flex items-center gap-lg">' +
-      '<button type="button" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-all" aria-label="Notifications"><span class="material-symbols-outlined text-on-surface-variant">notifications</span></button>' +
-      '<button type="button" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-all" aria-label="Help"><span class="material-symbols-outlined text-on-surface-variant">help</span></button>' +
-      '<div class="h-8 w-px bg-outline-variant"></div>' +
-      '<div class="flex items-center gap-md">' +
-      '<div class="text-right hidden sm:block"><p class="font-label-md text-label-md font-bold">' +
-      m.name +
-      '</p><p class="text-on-surface-variant text-[10px]">' +
-      m.role +
-      '</p></div><img src="' +
-      m.avatar +
-      '" alt="" class="w-10 h-10 rounded-full border-2 border-surface-variant object-cover"></div></div>';
+      '<div class="fb-shell-header-left">' +
+      '<button type="button" class="fb-icon-button fb-drawer-toggle" id="fb-drawer-toggle" aria-label="Open navigation">' +
+      '<span class="material-symbols-outlined">sort</span></button>' +
+      '<div><p class="fb-shell-eyebrow">Lumen Studio</p><h1 class="fb-shell-title">' + pageTitle + "</h1></div></div>" +
+      '<div class="fb-shell-header-right">' +
+      '<label class="fb-shell-search" aria-label="Search">' +
+      '<span class="material-symbols-outlined">search</span>' +
+      '<input type="search" placeholder="' + searchPh + '"></label>' +
+      '<div class="fb-shell-user">' +
+      '<div class="fb-shell-user-copy"><p>' + manager.name + "</p><span>" + manager.role + '</span></div>' +
+      '<img src="' + manager.avatar + '" alt="" class="fb-shell-avatar"></div></div>';
+
+    const main = document.createElement("main");
+    main.className = "fb-shell-main";
 
     const contentWrap = document.createElement("div");
-    contentWrap.className = "pt-24 px-lg pb-2xl max-w-[1440px] mx-auto hide-scrollbar";
+    contentWrap.className = "fb-content-root";
     contentWrap.id = "fb-root";
 
     const pageEl = document.getElementById("fb-page-content");
@@ -145,9 +149,31 @@
 
     main.appendChild(header);
     main.appendChild(contentWrap);
+    shell.appendChild(aside);
+    shell.appendChild(main);
 
-    document.body.appendChild(aside);
-    document.body.appendChild(main);
+    document.body.appendChild(overlay);
+    document.body.appendChild(shell);
+
+    document.getElementById("fb-drawer-toggle").addEventListener("click", openDrawer);
+    document.getElementById("fb-drawer-close").addEventListener("click", closeDrawer);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeDrawer();
+    });
+
+    const media = window.matchMedia(MOBILE_QUERY);
+    function syncDrawer() {
+      if (!media.matches) closeDrawer();
+    }
+    if (typeof media.addEventListener === "function") media.addEventListener("change", syncDrawer);
+    else media.addListener(syncDrawer);
+
+    aside.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        if (window.matchMedia(MOBILE_QUERY).matches) closeDrawer();
+      });
+    });
 
     return contentWrap;
   }
@@ -169,6 +195,8 @@
     clearSession,
     requireAuth,
     mountShell,
+    openDrawer,
+    closeDrawer,
     toast,
   };
 })();

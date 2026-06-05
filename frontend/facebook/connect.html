@@ -31,20 +31,16 @@
         </div>
         <div class="relative z-10 mt-auto mb-8 md:mb-12">
           <h1 class="font-display-lg text-display-lg text-white max-w-lg mb-6">
-            Turn diners into your brand ambassadors
+            Manage your brand's social presence in one place
           </h1>
           <p class="font-body-lg text-body-lg text-on-primary-container max-w-md leading-relaxed">
-            Reward customers with cashback when they post about your restaurant on Instagram and Facebook.
-            Automate your social proof and grow your community effortlessly.
+            Track mentions, engage your audience, and grow your community across Instagram and Facebook.
           </p>
         </div>
         <div class="relative z-10 w-full rounded-xl overflow-hidden shadow-2xl border border-white/10 aspect-video">
-          <img
-            alt="Restaurant interior"
-            class="w-full h-full object-cover"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6uzMI3ggMtnRVsI57IIBoSWxlmnWMw7ZHJLBfKDv2ZZ96XQWm3-T1eQdLhrsDZWbSv9-gCkaW-pVJArEfhPMeICdf72QIpdqvS8_ZnK2c1E5E10cu8qiiUxunxcMKaeO5xaU8DbNpkSpDviIkRVnyZ8lub74dw6LcHR1fd7qXvclwhKPpGGTM-hEmGWoHwUWTGvnbodgIOgZRK6hl4Eol6zLvDI7Iywa4IJvNc64SDjYB6_WL109cj0oq7tad7ivY5d8mkM-YT6Is"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+          <div class="w-full h-full bg-[#1e293b] flex items-center justify-center text-white/50 text-headline-md font-bold">
+            Lumen Studio Dashboard Preview
+          </div>
         </div>
       </section>
 
@@ -58,7 +54,7 @@
             <div class="p-6 bg-surface-container-low/50 border-b border-outline-variant/20">
               <h2 class="font-headline-md text-headline-md text-on-surface">Permissions Wouchh will request</h2>
               <p class="font-body-sm text-on-surface-variant mt-1">
-                To enable automated cashback rewards, we require specific access to your professional accounts.
+                To enable multi-platform social management, we require specific access to your professional accounts.
               </p>
             </div>
             <div class="p-6 space-y-4" id="permissions-list"></div>
@@ -72,13 +68,6 @@
                 <a class="text-primary font-semibold hover:underline" href="/terms.html" target="_blank">Terms of Service</a>
                 and
                 <a class="text-primary font-semibold hover:underline" href="/privacy.html" target="_blank">Privacy Policy</a>.
-                I understand how my data will be used to manage restaurant campaigns.
-              </span>
-            </label>
-            <label class="flex items-start gap-3 cursor-pointer">
-              <input type="checkbox" id="privacy-consent" class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20 mt-0.5" />
-              <span class="font-body-sm text-on-surface-variant leading-snug">
-                I consent to Wouchh processing social engagement data for cashback eligibility (demo mode).
               </span>
             </label>
 
@@ -125,11 +114,11 @@
     <script>
       (function () {
         const PERMS = [
-          { icon: "tag", scope: "pages_read_engagement", desc: "Detect when your restaurant is tagged in posts and stories." },
-          { icon: "store", scope: "pages_manage_metadata", desc: "Sync your restaurant profile information and business location." },
-          { icon: "photo_camera", scope: "instagram_basic", desc: "Verify users' posts and media for reward eligibility." },
-          { icon: "forum", scope: "instagram_manage_comments", desc: "Send thank-you comments on customer promotional posts." },
-          { icon: "chat", scope: "instagram_manage_messages", desc: "Send direct cashback redemption codes to customers." },
+          { scope: "pages_read_engagement", desc: "View your business page content and engagement" },
+          { scope: "pages_manage_metadata", desc: "Receive real-time notifications about brand mentions" },
+          { scope: "instagram_basic", desc: "Access your Instagram business account and posts" },
+          { scope: "instagram_manage_comments", desc: "View and respond to comments on your content" },
+          { scope: "instagram_manage_messages", desc: "View and respond to direct messages from your audience" },
         ];
 
         const list = document.getElementById("permissions-list");
@@ -138,20 +127,18 @@
           row.className = "flex gap-4 group";
           row.innerHTML =
             '<div class="w-10 h-10 shrink-0 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary/10 transition-colors">' +
-            '<span class="material-symbols-outlined text-primary">' + p.icon + "</span></div>" +
+            '<span class="material-symbols-outlined text-primary">check_circle</span></div>' +
             '<div><h3 class="font-label-md text-on-surface">' + p.scope + '</h3><p class="font-body-sm text-on-surface-variant">' + p.desc + "</p></div>";
           list.appendChild(row);
         });
 
         const terms = document.getElementById("terms-consent");
-        const privacy = document.getElementById("privacy-consent");
         const btn = document.getElementById("login-btn");
 
         function syncBtn() {
-          btn.disabled = !(terms.checked && privacy.checked);
+          btn.disabled = !terms.checked;
         }
         terms.addEventListener("change", syncBtn);
-        privacy.addEventListener("change", syncBtn);
 
         if (FB.getSession()) {
           window.location.href = "/facebook/dashboard.html";

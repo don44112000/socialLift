@@ -49,9 +49,9 @@
           userAccessToken: auth.accessToken,
         },
         pages,
-        restaurant: {
+        business: {
           name: pages[0] ? pages[0].name : me.name,
-          shortName: pages[0] ? pages[0].name.split(" ")[0] : "Restaurant",
+          shortName: pages[0] ? pages[0].name.split(" ")[0] : "Business",
           plan: "Connected",
           logo: "/assets/logo-square.png",
           location: "India",

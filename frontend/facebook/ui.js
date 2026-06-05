@@ -30,24 +30,24 @@
 
   function pageHeader(title, subtitle) {
     const wrap = document.createElement("div");
-    wrap.className = "mb-xl";
+    wrap.className = "fb-page-shell";
     wrap.innerHTML =
-      '<h2 class="font-display-lg text-display-lg text-on-background">' +
+      '<div><h2 class="font-display-lg text-display-lg text-on-background">' +
       title +
-      '</h2><p class="text-on-surface-variant font-body-lg text-body-lg">' +
+      '</h2><p class="fb-page-lead">' +
       (subtitle || "") +
-      "</p>";
+      "</p></div>";
     return wrap;
   }
 
   function tabBar(buttons, onSelect) {
     const bar = document.createElement("div");
-    bar.className = "flex flex-wrap gap-2 mb-lg";
+    bar.className = "flex flex-wrap gap-2";
     buttons.forEach((b, i) => {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className =
-        "px-4 py-2 rounded-full text-body-sm font-semibold border transition-colors " +
+        "min-h-[44px] px-4 py-2 rounded-full text-body-sm font-semibold border transition-colors " +
         (i === 0
           ? "bg-primary text-white border-primary"
           : "bg-surface-container-lowest text-on-surface-variant border-outline-variant hover:bg-surface-container-low");
@@ -67,7 +67,15 @@
     return bar;
   }
 
+  function emptyState(title, body) {
+    const el = document.createElement("div");
+    el.className = "fb-panel fb-empty";
+    el.innerHTML = "<h3 class=\"font-headline-md text-headline-md mb-2\">" + title + "</h3><p>" + body + "</p>";
+    return el;
+  }
+
   window.FBUi = {
+    emptyState,
     metricCard,
     pageHeader,
     tabBar,

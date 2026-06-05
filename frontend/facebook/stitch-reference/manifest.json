@@ -1,0 +1,101 @@
+[
+  {
+    "slug": "activity",
+    "screenId": "4815e9ebe39b4fe0844a833f63c10e67",
+    "title": "Lumen Studio Activity Log",
+    "width": "2560",
+    "height": "2296",
+    "htmlPath": "/Users/pratham/Desktop/socialLift/frontend/facebook/stitch-reference/activity.html",
+    "screenshotPath": "/Users/pratham/Desktop/socialLift/frontend/facebook/stitch-reference/activity.png",
+    "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sX2MyNDYwZDM4M2NlODQzOThhNTg0ZTczZjlhODkwMTEyEgsSBxDA04vG9RcYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDE1MjY1MzI4Mzk3MDQ2NDc1NQ&filename=&opi=89354086",
+    "screenshotUrl": "https://lh3.googleusercontent.com/aida/AP1WRLteT2_DDniWZ4ztqI3JdKEwyrfiRBWvWr3AXyvGhxpxxBblfzHTpVMYM4yi4xV_qgXfEp_vgef0njfB2px5K47p9qEvZAYCwSPjUTJZlcmc9rdgr_prn7l4CLUAj9s90Hw8UNawp8IfETWqX1qlJ8bpnweH4TNLVfvWjWvSCYt0x5h2OrhCeeSVOTDQrmP-xD54Zj3YJGfV1vFvLwnigDzOI9oKUGe5SVDaQz_wAkR7IdcJpt63ZIpv1-U"
+  },
+  {
+    "slug": "comments",
+    "screenId": "0b2e856a88fd4b7aab2af2b2b71d8edf",
+    "title": "Lumen Studio Comment Management",
+    "width": "2560",
+    "height": "2048",
+    "htmlPath": "/Users/pratham/Desktop/socialLift/frontend/facebook/stitch-reference/comments.html",
+    "screenshotPath": "/Users/pratham/Desktop/socialLift/frontend/facebook/stitch-reference/comments.png",
+    "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzQxODhlNzNjYTVlYzQ3MmNhMTRmMjQ1MWE2OWI5OWNjEgsSBxDA04vG9RcYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDE1MjY1MzI4Mzk3MDQ2NDc1NQ&filename=&opi=89354086",
+    "screenshotUrl": "https://lh3.googleusercontent.com/aida/AP1WRLsbGOWmv6-gvslRTIpVwlbsHHIwny_CLeoogl--Ch2Hp9TcCFgvyWqM5VTODktQmoFVz_LqOFDuba_OvcLNn7q0sq_4K1Xf-9hz8_qpzi0cwVgEpW8dLoiZYL4A_sFv1DPnJevM017dlcxeTvU39mycpw2GQ7j-7WHQa4-6T84sBROAOtDSlqV6GJGZ60er7eMPpI0GRfwpH_RHS5ZsfBqs0z_FjL9OmseYoW6LPqyncc_GEuF9plRW8nCO"
+  },
+  {
+    "slug": "landing",
+    "screenId": "0531935ca5d04cabaf2f4a513993b45c",
+    "title": "Lumen Studio Landing Page",
+    "width": "2560",
+    "height": "2048",
+    "htmlPath": "/Users/pratham/Desktop/socialLift/frontend/facebook/stitch-reference/landing.html",
+    "screenshotPath": "/Users/pratham/Desktop/socialLift/frontend/facebook/stitch-reference/landing.png",
+    "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzgzMDE1NDE1ZjcxOTRkMTE5NjhlNzMxOWMzMjkyNjY4EgsSBxDA04vG9RcYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDE1MjY1MzI4Mzk3MDQ2NDc1NQ&filename=&opi=89354086",
+    "screenshotUrl": "https://lh3.googleusercontent.com/aida/AP1WRLtMjJVrhUFskSVYm_kFIsZ2E7FIhTZiSLQsmwyc2wAffxsPNkcdmY55U8PrfC2X4MNzalwWNPTwBNWamnSQuMvhj_eYw7rlCnfYPBBrQFNpcx5ikwh570PmY6PVyle6FKxKem7EisAPUPhVUlKzcymw1heLVyHwMdDVE4aybF450eLLpgGOZY5nJ4UUxkPZ0_G5hSX9swvemX3d0nSIW2LSVcb_AgFIeMtT2FLi7NIcGYJyMHdWpxYguE0F"
+  },
+  {
+    "slug": "mentions",
+    "screenId": "9c8d4e38eaac49a1a5c3816648b747c4",
+    "title": "Lumen Studio Mentions Monitoring",
+    "width": "2560",
+    "height": "2796",
+    "htmlPath": "/Users/pratham/Desktop/socialLift/frontend/facebook/stitch-reference/mentions.html",
+    "screenshotPath": "/Users/pratham/Desktop/socialLift/frontend/facebook/stitch-reference/mentions.png",
+    "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sX2Y0OTA0NTQ4MmJlMTQ2ZDZhOGFmNGZkZjU1NjU0ZjcyEgsSBxDA04vG9RcYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDE1MjY1MzI4Mzk3MDQ2NDc1NQ&filename=&opi=89354086",
+    "screenshotUrl": "https://lh3.googleusercontent.com/aida/AP1WRLta3oWpNVrAYN2jMaelHSNqSQsG9DE5L8QyDy5Bh1VWXpronLj3i0SIBUFc1GuOWZbv2aObqyTb7fYnl8lSiDz_Vt9ZV9-3PFc6yzfiBWsrs5XN7w66YK3_5wfsYe0F57rQi00wRdScNDMHjhvCL_9qQSfH33IicNcjvjMegl6jj1pp6Tsju4tkNINUOHsKM0_WEubcoSFY5lc9kyvTRSgAbOS9lwekgPbAixmyDw3IV8pLPngEOylOgKVj"
+  },
+  {
+    "slug": "accounts",
+    "screenId": "1fb9181fd5324e1ebb8eaa28c3fc04c2",
+    "title": "Lumen Studio Connected Accounts",
+    "width": "2560",
+    "height": "2048",
+    "htmlPath": "/Users/pratham/Desktop/socialLift/frontend/facebook/stitch-reference/accounts.html",
+    "screenshotPath": "/Users/pratham/Desktop/socialLift/frontend/facebook/stitch-reference/accounts.png",
+    "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzYzY2JjMDk2MmNjYTQ1MjM5NTM3NjE5N2M5Y2Y1NGE0EgsSBxDA04vG9RcYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDE1MjY1MzI4Mzk3MDQ2NDc1NQ&filename=&opi=89354086",
+    "screenshotUrl": "https://lh3.googleusercontent.com/aida/AP1WRLs1KhWsacFGNXBybhGeQmtxT_SOyWlQuZn8j7N9n5-LvfefgP4pNTvNaAEJNsBZjT2C-EXQN9qHnLiB5KR1UQI_b1GMc-9gi-67K9wsBcxFVh6kIQx89h00yCYKJWDXIBThpRkKa1bcLkv8D8PgIaS0NOqQmSKq4n6HWNwHsO4oQn890mh4PzueU9ciH3oMi6v8GaWyeS3sP5MZSEKhgUXgTx1GniHh5QwEqY5CEW2jidIs9WsiHAZ5qnk3"
+  },
+  {
+    "slug": "analytics",
+    "screenId": "63b935b5081941ccb2bda70a5c87960c",
+    "title": "Lumen Studio Analytics Dashboard",
+    "width": "2560",
+    "height": "3276",
+    "htmlPath": "/Users/pratham/Desktop/socialLift/frontend/facebook/stitch-reference/analytics.html",
+    "screenshotPath": "/Users/pratham/Desktop/socialLift/frontend/facebook/stitch-reference/analytics.png",
+    "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzI2NWFjNGM2MGYxYTRiNTE4NDdjYmFkODQ0MTQyMzliEgsSBxDA04vG9RcYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDE1MjY1MzI4Mzk3MDQ2NDc1NQ&filename=&opi=89354086",
+    "screenshotUrl": "https://lh3.googleusercontent.com/aida/AP1WRLs04F3YxN5TTcO1DhVaWT0wjgA16jNMfy34dgVuhvypw_TrMd3Nod1LxPIemHaPJ0LhbWtvDSFOfIfKXiyff5hIcNoriyq2Z0KVmOVJl4kT7Zy17BF64MAwUQN0PNiL8jgWHpPnYEVF4ThqYFwxxyTpjg_N8NFvjmozeVlxM1o2j51iY0k6r7WI764YeKrHdjs0WZeFn_uwvvtRGw6jTRKN1RkgTdsHO8Pt8xaQMzPagS3f-8hR4bObEGs"
+  },
+  {
+    "slug": "inbox",
+    "screenId": "708e150d9dda4cfda496a700de4a26fd",
+    "title": "Lumen Studio Social Inbox",
+    "width": "2560",
+    "height": "2048",
+    "htmlPath": "/Users/pratham/Desktop/socialLift/frontend/facebook/stitch-reference/inbox.html",
+    "screenshotPath": "/Users/pratham/Desktop/socialLift/frontend/facebook/stitch-reference/inbox.png",
+    "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sX2ZhNzcwNzhjODA5ZjQxM2E5ZWNhYTMzMTM2MmQ0NzIyEgsSBxDA04vG9RcYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDE1MjY1MzI4Mzk3MDQ2NDc1NQ&filename=&opi=89354086",
+    "screenshotUrl": "https://lh3.googleusercontent.com/aida/AP1WRLsIZns10S36U0l22A976E5WvqCwwy2NDblT4UUSiGCHCytmcVds5-HDQCpWMrPaT9juYn6hvwZnsb0m0oeliUmwEaV6Z6bpvgqTGHq9IDzB-BmuoedTgz0j6_0w3MlP3JJ5E8gyFxnhwr7BhtGBoi_FfcWLHp5wv0gvqAKlNSz4sNYTeMxOcpComIIvUMxPPoQrdgmmhF-9BBzJ8VF8u8zer1kFfDU5sw4pDtbcxqfoiFohRhMwjqXbjmAT"
+  },
+  {
+    "slug": "settings",
+    "screenId": "b7a0685a2f9d45ffb79bafd4ae995016",
+    "title": "Lumen Studio Settings",
+    "width": "2560",
+    "height": "3682",
+    "htmlPath": "/Users/pratham/Desktop/socialLift/frontend/facebook/stitch-reference/settings.html",
+    "screenshotPath": "/Users/pratham/Desktop/socialLift/frontend/facebook/stitch-reference/settings.png",
+    "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzNmNmZmYjUxMjljNTRlMDE4MTE4Zjc1Yjk3OWMzOWI5EgsSBxDA04vG9RcYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDE1MjY1MzI4Mzk3MDQ2NDc1NQ&filename=&opi=89354086",
+    "screenshotUrl": "https://lh3.googleusercontent.com/aida/AP1WRLvSwvhwPWTu_lmHEGEKh8kjzyLlU_oQxcsxZCgaOaeiVy_amTXTiJ6WrjlTl9PqW9bF8GBmnTAGdobQD7VNIQKKJ9ufPdgtRVtWPfXZOwb-2-sff1xMfBtmmtWdSVD0I5Dhari5FgU6O-dDJRxZFAfS7-cbR9fpqFgPmam3MXchHYh_ge1bncGVST3cDRRUg036Gp-tFqqjT52xzvWF34B2Db7M9nNGBt5nknpVMnv2rLNukX6-D3H6rwO4"
+  },
+  {
+    "slug": "dashboard",
+    "screenId": "f85b08a7ac7b4981afb4a858e885d2ce",
+    "title": "Lumen Studio Dashboard",
+    "width": "2560",
+    "height": "2900",
+    "htmlPath": "/Users/pratham/Desktop/socialLift/frontend/facebook/stitch-reference/dashboard.html",
+    "screenshotPath": "/Users/pratham/Desktop/socialLift/frontend/facebook/stitch-reference/dashboard.png",
+    "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzZhZDE5MDMzNTg3MjQ5OTM4OTczOTE0M2Q2NDM2NzgzEgsSBxDA04vG9RcYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDE1MjY1MzI4Mzk3MDQ2NDc1NQ&filename=&opi=89354086",
+    "screenshotUrl": "https://lh3.googleusercontent.com/aida/AP1WRLvjyF0stq2z59wdz95qpsJRmIEeqjgpZZTE_ZdJcam9O6gXBPuaerkJLIC1K8LUXGDENO1fytfqtD9Ctqy_2enceG_88FgILvaG8F11LWPKQns0AC5NSrZPIQwMAgAqeUhZSaMTFwDT79zuRLBFgd5kOshigCFmcGCp6goPjaRLKAi1rQx9FXi3GBdzfPMaff6kMNIQuAZNfe_IDNfnM8506zFWuqOYVC40As6r-UMz6EVXoakl3ExiJFxW"
+  }
+]

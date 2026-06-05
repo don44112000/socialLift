@@ -67,11 +67,11 @@
             userAccessToken: auth.accessToken,
           },
           pages,
-          restaurant: {
+          business: {
             name: pages[0] ? pages[0].name : me.name,
-            shortName: pages[0] ? pages[0].name.split(" ")[0] : "Restaurant",
+            shortName: pages[0] ? pages[0].name.split(" ")[0] : "Business",
             plan: "Connected",
-            logo: FBData.RESTAURANT.logo,
+            logo: FBData.BUSINESS.logo,
             location: "India",
           },
           manager: { name: me.name, role: "Admin", avatar: FBData.MANAGER.avatar },

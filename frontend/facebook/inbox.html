@@ -11,82 +11,242 @@
   </head>
   <body>
     <div id="fb-page-content">
-      <div id="filter-bar" class="mb-4"></div>
-      <div class="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-4 min-h-[520px]">
-        <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 overflow-hidden" id="convo-list"></div>
-        <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 flex flex-col min-h-[480px]" id="thread-panel">
-          <div class="flex-1 flex flex-col items-center justify-center text-on-surface-variant p-8">
-            <span class="material-symbols-outlined text-5xl mb-2">forum</span>
-            <p>Select a conversation</p>
+      <div class="space-y-6">
+        <div id="page-head"></div>
+        <div id="filter-bar"></div>
+
+        <section class="grid grid-cols-1 gap-5 xl:grid-cols-[360px_minmax(0,1fr)]" id="inbox-layout">
+          <div class="fb-panel overflow-hidden" id="conversations-panel">
+            <div class="border-b border-outline-variant/20 px-4 py-4 sm:px-5">
+              <h3 class="font-headline-md text-headline-md text-on-surface">Conversations</h3>
+              <p class="mt-1 text-sm text-on-surface-variant">All live messages across Messenger and Instagram.</p>
+            </div>
+            <div class="divide-y divide-outline-variant/10" id="convo-list"></div>
           </div>
-        </div>
+
+          <div class="fb-panel flex min-h-[560px] flex-col overflow-hidden" id="thread-panel">
+            <div class="flex h-full items-center justify-center px-6 text-center text-on-surface-variant" id="thread-empty">
+              <div>
+                <span class="material-symbols-outlined text-5xl">forum</span>
+                <p class="mt-3 text-base font-semibold text-on-surface">Select a conversation to view the thread.</p>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
+
     <script src="./data.js"></script>
     <script src="./ui.js"></script>
     <script src="./shell.js"></script>
     <script>
-      (async () => {
-        await FB.requireAuth({ activePath: "/facebook/inbox.html", pageTitle: "Inboxes", searchPlaceholder: "Search messages…" });
-        let convos = await FBData.getConversations();
+      (async function () {
+        await FB.requireAuth({
+          activePath: "/facebook/inbox.html",
+          pageTitle: "Inbox",
+          searchPlaceholder: "Search messages...",
+        });
+
+        document.getElementById("page-head").appendChild(
+          FBUi.pageHeader(
+            "Social Inbox",
+            "Handle direct messages from one unified workspace without losing context between Instagram and Messenger."
+          )
+        );
+
+        const convos = await FBData.getConversations();
         const listEl = document.getElementById("convo-list");
         const threadEl = document.getElementById("thread-panel");
+        const layoutEl = document.getElementById("inbox-layout");
+        const filterBar = document.getElementById("filter-bar");
+        const mobileQuery = window.matchMedia("(max-width: 1023px)");
+        let activePlatform = "all";
+        let activeConversationId = "";
 
-        function renderList(platform) {
-          listEl.innerHTML = "";
-          const filtered = platform === "all" ? convos : convos.filter((c) => c.platform === platform);
-          filtered.forEach((c) => {
-            const item = document.createElement("button");
-            item.type = "button";
-            item.className = "w-full text-left flex gap-3 p-4 border-b border-outline-variant/20 hover:bg-surface-container-low transition-colors";
-            item.innerHTML =
-              '<img src="' + c.user.avatar + '" class="w-10 h-10 rounded-full" alt="">' +
-              '<div class="flex-1 min-w-0"><p class="font-semibold text-body-sm">' + c.user.name + '</p><p class="text-body-sm text-on-surface-variant truncate">' + c.last_message + "</p></div>" +
-              '<div class="text-right shrink-0"><p class="text-[10px] text-on-surface-variant">' + FBData.relativeTime(c.updated_at) + "</p>" +
-              (c.unread_count ? '<span class="inline-block mt-1 px-2 py-0.5 rounded-full bg-primary text-white text-[10px] font-bold">' + c.unread_count + "</span>" : "") +
-              "</div>";
-            item.addEventListener("click", () => {
-              listEl.querySelectorAll("button").forEach((b) => b.classList.remove("bg-surface-container-low"));
-              item.classList.add("bg-surface-container-low");
-              renderThread(c);
-            });
-            listEl.appendChild(item);
-          });
-        }
-
-        function renderThread(c) {
-          threadEl.innerHTML =
-            '<div class="p-4 border-b border-outline-variant/20 flex items-center gap-3"><img src="' + c.user.avatar + '" class="w-9 h-9 rounded-full" alt=""><div><p class="font-semibold">' + c.user.name + '</p><p class="text-[11px] text-on-surface-variant capitalize">' + c.platform + "</p></div></div>" +
-            '<div class="flex-1 overflow-y-auto p-5 flex flex-col gap-3" id="msgs"></div>' +
-            '<div class="p-4 border-t border-outline-variant/20 flex gap-2"><input id="dm-in" type="text" class="flex-1 py-2.5 px-4 rounded-full bg-surface-container-low border-none text-body-sm focus:ring-2 focus:ring-primary" placeholder="Type a message…"><button type="button" id="dm-send" class="px-5 py-2.5 rounded-full bg-primary text-white font-semibold text-body-sm">Send</button></div>';
-          const msgs = threadEl.querySelector("#msgs");
-          c.messages.forEach((msg) => {
-            const b = document.createElement("div");
-            b.className = "max-w-[75%] py-2.5 px-4 rounded-2xl text-body-sm " + (msg.from === "us" ? "self-end bg-primary text-white rounded-br-sm" : "self-start bg-surface-container text-on-surface rounded-bl-sm");
-            b.textContent = msg.text;
-            msgs.appendChild(b);
-          });
-          threadEl.querySelector("#dm-send").addEventListener("click", async () => {
-            const text = threadEl.querySelector("#dm-in").value.trim();
-            if (!text) return;
-            await FBData.sendMessage(c.id, text);
-            c.messages.push({ from: "us", text, time: Date.now() / 1000 });
-            renderThread(c);
-            FB.toast("Message sent (demo)");
-          });
-        }
-
-        document.getElementById("filter-bar").appendChild(
+        filterBar.appendChild(
           FBUi.tabBar(
             [
               { label: "All", value: "all" },
               { label: "Messenger", value: "messenger" },
               { label: "Instagram", value: "instagram" },
             ],
-            renderList
+            function (value) {
+              activePlatform = value;
+              if (mobileQuery.matches) activeConversationId = "";
+              renderList();
+              renderThread();
+            }
           )
         );
-        renderList("all");
+
+        function getVisibleConversations() {
+          return activePlatform === "all"
+            ? convos
+            : convos.filter((item) => item.platform === activePlatform);
+        }
+
+        function getActiveConversation() {
+          return getVisibleConversations().find((item) => item.id === activeConversationId) || null;
+        }
+
+        function renderList() {
+          listEl.innerHTML = "";
+          const visible = getVisibleConversations();
+
+          if (!visible.length) {
+            listEl.appendChild(FBUi.emptyState("No conversations", "No messages match the selected channel filter."));
+            return;
+          }
+
+          visible.forEach((convo) => {
+            const active = convo.id === activeConversationId;
+            const row = document.createElement("button");
+            row.type = "button";
+            row.className =
+              "w-full border-0 bg-transparent px-4 py-4 text-left transition sm:px-5 " +
+              (active ? "bg-surface-container-low" : "hover:bg-surface-container-low");
+            row.innerHTML =
+              '<div class="flex items-start gap-3">' +
+                '<div class="relative shrink-0">' +
+                  '<img src="' + convo.user.avatar + '" alt="" class="h-12 w-12 rounded-full border border-outline-variant/10 object-cover">' +
+                  (convo.unread_count
+                    ? '<span class="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white">' + convo.unread_count + "</span>"
+                    : "") +
+                "</div>" +
+                '<div class="min-w-0 flex-1">' +
+                  '<div class="flex items-center justify-between gap-3">' +
+                    '<p class="truncate text-sm font-semibold text-on-surface">' + convo.user.name + "</p>" +
+                    '<span class="text-xs text-on-surface-variant">' + FBData.relativeTime(convo.updated_at) + "</span>" +
+                  "</div>" +
+                  '<p class="mt-1 text-sm text-on-surface-variant">' + convo.last_message + "</p>" +
+                  '<div class="mt-3 flex items-center gap-2">' +
+                    '<span class="rounded-full px-2.5 py-1 text-[11px] font-bold ' + (convo.platform === "instagram" ? "bg-[#fcf1ff] text-[#a73a00]" : "bg-[#eef4ff] text-[#1877f2]") + '">' + (convo.platform === "messenger" ? "Messenger" : "Instagram") + "</span>" +
+                  "</div>" +
+                "</div>" +
+              "</div>";
+            row.addEventListener("click", function () {
+              activeConversationId = convo.id;
+              convo.unread_count = 0;
+              renderList();
+              renderThread();
+            });
+            listEl.appendChild(row);
+          });
+        }
+
+        function renderThread() {
+          const active = getActiveConversation();
+          if (mobileQuery.matches) {
+            const showThread = Boolean(active);
+            document.getElementById("conversations-panel").style.display = showThread ? "none" : "";
+            document.getElementById("thread-panel").style.display = showThread ? "" : "none";
+          } else {
+            document.getElementById("conversations-panel").style.display = "";
+            document.getElementById("thread-panel").style.display = "";
+          }
+
+          if (!active) {
+            threadEl.innerHTML =
+              '<div class="flex h-full items-center justify-center px-6 text-center text-on-surface-variant">' +
+                "<div>" +
+                  '<span class="material-symbols-outlined text-5xl">forum</span>' +
+                  '<p class="mt-3 text-base font-semibold text-on-surface">Select a conversation to view the thread.</p>' +
+                "</div>" +
+              "</div>";
+            return;
+          }
+
+          const label = active.platform === "messenger" ? "Messenger" : "Instagram";
+          threadEl.innerHTML =
+            '<div class="flex items-center justify-between gap-3 border-b border-outline-variant/20 px-4 py-4 sm:px-5">' +
+              '<div class="flex items-center gap-3">' +
+                '<button type="button" id="thread-back" class="fb-icon-button rounded-full border border-outline-variant/20 xl:hidden"><span class="material-symbols-outlined">arrow_back</span></button>' +
+                '<img src="' + active.user.avatar + '" alt="" class="h-11 w-11 rounded-full border border-outline-variant/10 object-cover">' +
+                "<div>" +
+                  '<p class="font-semibold text-on-surface">' + active.user.name + "</p>" +
+                  '<p class="text-sm text-on-surface-variant">Active now</p>' +
+                "</div>" +
+              "</div>" +
+              '<span class="rounded-full px-3 py-1 text-xs font-bold ' + (active.platform === "messenger" ? "bg-[#eef4ff] text-[#1877f2]" : "bg-[#fcf1ff] text-[#a73a00]") + '">' + label + "</span>" +
+            "</div>" +
+            '<div class="flex-1 space-y-3 overflow-y-auto bg-surface-container-low px-4 py-5 sm:px-5" id="message-list"></div>' +
+            '<div class="overflow-x-auto border-t border-outline-variant/10 px-4 py-3 hide-scrollbar"><div class="flex w-max gap-2" id="quick-replies"></div></div>' +
+            '<div class="border-t border-outline-variant/20 px-4 py-4 sm:px-5">' +
+              '<div class="flex flex-col gap-3 sm:flex-row">' +
+                '<input id="dm-input" type="text" class="min-h-[48px] flex-1 rounded-full border border-outline-variant/30 bg-white px-4 text-base" placeholder="Type a message...">' +
+                '<button type="button" id="dm-send" class="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white">Send</button>' +
+              "</div>" +
+            "</div>";
+
+          const messagesEl = document.getElementById("message-list");
+          active.messages.forEach((message) => {
+            const item = document.createElement("div");
+            item.className = "flex " + (message.from === "us" ? "justify-end" : "justify-start");
+            item.innerHTML =
+              '<div class="max-w-[88%] rounded-[20px] px-4 py-3 text-sm leading-6 ' +
+              (message.from === "us"
+                ? "bg-primary text-white"
+                : "border border-outline-variant/20 bg-white text-on-surface") +
+              '">' + message.text + "</div>";
+            messagesEl.appendChild(item);
+          });
+          messagesEl.scrollTop = messagesEl.scrollHeight;
+
+          ["Thanks for reaching out!", "We can share more details shortly.", "Happy to set up a call next week."].forEach((copy) => {
+            const chip = document.createElement("button");
+            chip.type = "button";
+            chip.className = "rounded-full border border-outline-variant/20 bg-white px-4 py-2 text-sm font-semibold text-on-surface-variant";
+            chip.textContent = copy;
+            chip.addEventListener("click", function () {
+              sendMessage(copy);
+            });
+            document.getElementById("quick-replies").appendChild(chip);
+          });
+
+          function sendMessage(text) {
+            const value = String(text || "").trim();
+            if (!value) return;
+            active.messages.push({ from: "us", text: value, time: Date.now() / 1000 });
+            active.last_message = value;
+            active.updated_at = Date.now() / 1000;
+            FB.toast("Message sent successfully.");
+            renderList();
+            renderThread();
+          }
+
+          document.getElementById("dm-send").addEventListener("click", function () {
+            sendMessage(document.getElementById("dm-input").value);
+          });
+          document.getElementById("dm-input").addEventListener("keydown", function (event) {
+            if (event.key === "Enter") sendMessage(event.target.value);
+          });
+          const backButton = document.getElementById("thread-back");
+          if (backButton) {
+            backButton.addEventListener("click", function () {
+              activeConversationId = "";
+              renderList();
+              renderThread();
+            });
+          }
+        }
+
+        function syncResponsiveState() {
+          if (!mobileQuery.matches && !activeConversationId) {
+            const first = getVisibleConversations()[0];
+            activeConversationId = first ? first.id : "";
+          }
+          renderList();
+          renderThread();
+        }
+
+        if (typeof mobileQuery.addEventListener === "function") mobileQuery.addEventListener("change", syncResponsiveState);
+        else mobileQuery.addListener(syncResponsiveState);
+
+        if (!mobileQuery.matches) {
+          const first = getVisibleConversations()[0];
+          activeConversationId = first ? first.id : "";
+        }
+        syncResponsiveState();
       })();
     </script>
   </body>

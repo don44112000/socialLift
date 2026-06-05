@@ -10,63 +10,153 @@
     <link rel="stylesheet" href="./facebook.css" />
   </head>
   <body>
-    <div id="fb-page-content" class="max-w-2xl">
-      <div id="page-hdr"></div>
-      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm p-6 mb-4">
-        <h3 class="font-headline-md text-headline-md mb-4">Restaurant profile</h3>
-        <div class="flex items-center gap-4">
-          <img id="restaurant-logo" alt="" class="w-14 h-14 rounded-xl object-cover border border-outline-variant/30" />
-          <div>
-            <p id="restaurant-info" class="font-semibold text-on-surface"></p>
-            <p class="text-body-sm text-on-surface-variant mt-1">Connected via Wouchh</p>
+    <div id="fb-page-content">
+      <div class="space-y-6">
+        <div id="page-head"></div>
+
+        <section class="grid grid-cols-1 gap-5 xl:grid-cols-[280px_minmax(0,1fr)]">
+          <nav class="fb-panel p-4">
+            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-1">
+              <button type="button" class="rounded-2xl bg-surface-container-high px-4 py-4 text-left font-semibold text-primary">Profile Info</button>
+              <button type="button" class="rounded-2xl px-4 py-4 text-left font-semibold text-on-surface-variant hover:bg-surface-container-low">Notifications</button>
+              <button type="button" class="rounded-2xl px-4 py-4 text-left font-semibold text-on-surface-variant hover:bg-surface-container-low">Team Members</button>
+              <button type="button" class="rounded-2xl px-4 py-4 text-left font-semibold text-on-surface-variant hover:bg-surface-container-low">Plan</button>
+              <button type="button" class="rounded-2xl px-4 py-4 text-left font-semibold text-[#ba1a1a] hover:bg-[#fff3f2]">Danger Zone</button>
+            </div>
+          </nav>
+
+          <div class="space-y-5">
+            <section class="fb-panel p-4 sm:p-6">
+              <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h3 class="font-headline-md text-headline-md text-on-surface">Profile Information</h3>
+                  <p class="mt-1 text-sm text-on-surface-variant">Update your brand identity, contact details, and business description.</p>
+                </div>
+                <button type="button" class="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white" onclick="FB.toast('Profile changes saved.')">Save Changes</button>
+              </div>
+              <div class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+                <label class="text-sm font-semibold text-on-surface">
+                  <span class="mb-2 block text-on-surface-variant">Business Name</span>
+                  <input id="biz-name" type="text" class="min-h-[48px] w-full rounded-2xl border border-outline-variant/30 px-4 text-base" />
+                </label>
+                <label class="text-sm font-semibold text-on-surface">
+                  <span class="mb-2 block text-on-surface-variant">Contact Email</span>
+                  <input id="biz-email" type="email" class="min-h-[48px] w-full rounded-2xl border border-outline-variant/30 px-4 text-base" />
+                </label>
+                <label class="text-sm font-semibold text-on-surface md:col-span-2">
+                  <span class="mb-2 block text-on-surface-variant">Business Description</span>
+                  <textarea class="min-h-[120px] w-full rounded-[20px] border border-outline-variant/30 px-4 py-3 text-base">Creative production and digital design studio specializing in brand identity, content systems, and immersive visual experiences.</textarea>
+                </label>
+              </div>
+            </section>
+
+            <section class="fb-panel p-4 sm:p-6">
+              <h3 class="font-headline-md text-headline-md text-on-surface">Notification Preferences</h3>
+              <div class="mt-5 space-y-4">
+                <label class="flex items-start gap-3 rounded-[20px] border border-outline-variant/15 bg-surface-container-low p-4">
+                  <input type="checkbox" checked class="mt-1 h-5 w-5 rounded border-outline-variant/30 text-primary" />
+                  <span><strong class="block text-on-surface">Direct messages and comments</strong><span class="mt-1 block text-sm text-on-surface-variant">Notify the team when a message, mention, or comment needs action.</span></span>
+                </label>
+                <label class="flex items-start gap-3 rounded-[20px] border border-outline-variant/15 bg-surface-container-low p-4">
+                  <input type="checkbox" checked class="mt-1 h-5 w-5 rounded border-outline-variant/30 text-primary" />
+                  <span><strong class="block text-on-surface">Mention alerts</strong><span class="mt-1 block text-sm text-on-surface-variant">Send a daily digest of new tags, shares, and creator activity.</span></span>
+                </label>
+                <label class="flex items-start gap-3 rounded-[20px] border border-outline-variant/15 bg-surface-container-low p-4">
+                  <input type="checkbox" class="mt-1 h-5 w-5 rounded border-outline-variant/30 text-primary" />
+                  <span><strong class="block text-on-surface">Weekly performance reports</strong><span class="mt-1 block text-sm text-on-surface-variant">Email a weekly summary of growth, engagement, and campaign health.</span></span>
+                </label>
+              </div>
+            </section>
+
+            <section class="fb-panel p-4 sm:p-6">
+              <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h3 class="font-headline-md text-headline-md text-on-surface">Team Members</h3>
+                  <p class="mt-1 text-sm text-on-surface-variant">Control who can reply, publish, and review analytics.</p>
+                </div>
+                <button type="button" class="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white" onclick="FB.toast('Add member is a demo interaction for now.')">Add Member</button>
+              </div>
+              <div class="mt-5 divide-y divide-outline-variant/10">
+                <div class="flex items-center justify-between gap-3 py-4">
+                  <div class="flex items-center gap-3">
+                    <img src="https://api.dicebear.com/9.x/avataaars/svg?seed=Rajesh&backgroundColor=e5eeff" alt="" class="h-11 w-11 rounded-full border border-outline-variant/10 object-cover" />
+                    <div>
+                      <p class="font-semibold text-on-surface">Rajesh Kumar</p>
+                      <p class="text-sm text-on-surface-variant">rajesh@lumenstudio.in</p>
+                    </div>
+                  </div>
+                  <span class="rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">Admin</span>
+                </div>
+                <div class="flex items-center justify-between gap-3 py-4">
+                  <div class="flex items-center gap-3">
+                    <img src="https://api.dicebear.com/9.x/avataaars/svg?seed=Priya&backgroundColor=ffb599" alt="" class="h-11 w-11 rounded-full border border-outline-variant/10 object-cover" />
+                    <div>
+                      <p class="font-semibold text-on-surface">Priya Sharma</p>
+                      <p class="text-sm text-on-surface-variant">priya@lumenstudio.in</p>
+                    </div>
+                  </div>
+                  <span class="rounded-full bg-surface-container-low px-3 py-1 text-xs font-bold text-on-surface-variant">Editor</span>
+                </div>
+              </div>
+            </section>
+
+            <section class="fb-panel p-4 sm:p-6">
+              <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h3 class="font-headline-md text-headline-md text-on-surface">Plan</h3>
+                  <p class="mt-1 text-sm text-on-surface-variant">Current plan: Premium Business Plan at $49 per month.</p>
+                </div>
+                <button type="button" class="rounded-full border border-outline-variant/30 px-5 py-3 text-sm font-semibold text-on-surface" onclick="FB.toast('Plan management is a demo interaction for now.')">Manage Plan</button>
+              </div>
+            </section>
+
+            <section class="fb-panel border border-[#ffd7d4] p-4 sm:p-6">
+              <h3 class="font-headline-md text-headline-md text-[#ba1a1a]">Danger Zone</h3>
+              <p class="mt-2 text-sm text-on-surface-variant">Disconnecting your accounts will stop mentions, comments, inbox syncing, and analytics updates.</p>
+              <div class="mt-5 flex flex-col gap-3 sm:flex-row">
+                <button type="button" id="logout-btn" class="rounded-full border border-outline-variant/30 px-5 py-3 text-sm font-semibold text-on-surface">Log Out Session</button>
+                <button type="button" id="disconnect-btn" class="rounded-full bg-[#ba1a1a] px-5 py-3 text-sm font-semibold text-white">Disconnect Accounts</button>
+              </div>
+            </section>
           </div>
-        </div>
-      </div>
-      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm p-6 mb-4">
-        <h3 class="font-headline-md text-headline-md mb-4">Cashback preferences</h3>
-        <label class="flex items-center gap-3 mb-4 text-body-md">
-          <input type="checkbox" checked class="rounded text-primary focus:ring-primary" />
-          Auto-approve mentions with restaurant tag
-        </label>
-        <label class="block mb-4 text-body-md">
-          Default reward (INR)
-          <input type="number" value="150" class="mt-2 w-32 block py-2 px-3 rounded-lg bg-surface-container-low border-none focus:ring-2 focus:ring-primary" />
-        </label>
-        <label class="block mb-4 text-body-md">
-          Max cashback / diner / month (INR)
-          <input type="number" value="500" class="mt-2 w-32 block py-2 px-3 rounded-lg bg-surface-container-low border-none focus:ring-2 focus:ring-primary" />
-        </label>
-        <button type="button" id="save-prefs" class="px-5 py-2.5 rounded-xl bg-primary text-white font-semibold text-body-sm">Save preferences</button>
-      </div>
-      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm p-6">
-        <h3 class="font-headline-md text-headline-md mb-2">Session</h3>
-        <p class="text-body-sm text-on-surface-variant mb-4">Demo session — no live Meta API unless configured.</p>
-        <div class="flex flex-wrap gap-3">
-          <button type="button" id="logout-btn" class="px-5 py-2.5 rounded-xl border border-outline-variant font-semibold text-body-sm">Log out</button>
-          <button type="button" id="disconnect-btn" class="px-5 py-2.5 rounded-xl border border-error text-error font-semibold text-body-sm">Disconnect Facebook</button>
-        </div>
+        </section>
       </div>
     </div>
+
     <script src="./data.js"></script>
     <script src="./ui.js"></script>
     <script src="./shell.js"></script>
     <script>
-      (async () => {
-        const session = await FB.requireAuth({ activePath: "/facebook/settings.html", pageTitle: "Settings", searchPlaceholder: "Search settings…" });
+      (async function () {
+        const session = await FB.requireAuth({
+          activePath: "/facebook/settings.html",
+          pageTitle: "Settings",
+          searchPlaceholder: "Search settings...",
+        });
         if (!session) return;
-        document.getElementById("page-hdr").appendChild(FBUi.pageHeader("Settings", "Account preferences and cashback rules."));
-        const r = session.restaurant || FBData.RESTAURANT;
-        document.getElementById("restaurant-info").textContent = r.name + " · " + r.location;
-        document.getElementById("restaurant-logo").src = r.logo;
-        document.getElementById("restaurant-logo").alt = r.name;
-        document.getElementById("save-prefs").addEventListener("click", () => FB.toast("Preferences saved (demo)"));
-        document.getElementById("logout-btn").addEventListener("click", () => {
+
+        document.getElementById("page-head").appendChild(
+          FBUi.pageHeader(
+            "Account Settings",
+            "Manage your business profile, team access, notifications, and subscription controls from one place."
+          )
+        );
+
+        const business = session.business || FBData.BUSINESS;
+        document.getElementById("biz-name").value = business.name;
+        document.getElementById("biz-email").value = "hello@" + business.shortName.toLowerCase().replace(/\s+/g, "") + "studio.in";
+
+        document.getElementById("logout-btn").addEventListener("click", function () {
           FB.clearSession();
           window.location.href = "/";
         });
-        document.getElementById("disconnect-btn").addEventListener("click", () => {
+
+        document.getElementById("disconnect-btn").addEventListener("click", function () {
           FB.clearSession();
-          window.location.href = "/";
+          FB.toast("Accounts disconnected.");
+          setTimeout(function () {
+            window.location.href = "/";
+          }, 800);
         });
       })();
     </script>

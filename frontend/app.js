@@ -18,96 +18,17 @@
   }
 
   /* ---------- Facebook login ---------- */
-  function fbLogin() {
-    return new Promise((resolve, reject) => {
-      FB.login(
-        (r) => r.authResponse ? resolve(r.authResponse) : reject(new Error("Login cancelled")),
-        { scope: (cfg.FB_SCOPES || []).join(","), return_scopes: true, auth_type: "rerequest" }
-      );
-    });
-  }
-  function fbGet(path, params) {
-    return new Promise((resolve, reject) => {
-      FB.api(path, "GET", params || {}, (res) => {
-        if (!res || res.error) reject(new Error((res && res.error && res.error.message) || "API error"));
-        else resolve(res);
-      });
-    });
-  }
-
   let connecting = false;
 
   async function onFbLogin() {
+    if (connecting) return;
     connecting = true;
     el.fbLoginBtn.disabled = true;
     el.ttLoginBtn.disabled = true;
     el.fbLabel.textContent = "Connecting…";
 
-    const hasFb = cfg.FB_APP_ID && !cfg.FB_APP_ID.startsWith("REPLACE_");
-    if (hasFb && window.FB) {
-      try {
-        const auth = await fbLogin();
-        const me = await fbGet("/me", { fields: "id,name,email,picture" });
-        const accounts = await fbGet("/me/accounts", {
-          fields: "id,name,category,access_token,instagram_business_account{id,username}",
-        });
-        const pages = (accounts.data || []).map((p) => ({
-          id: p.id,
-          name: p.name,
-          category: p.category,
-          access_token: p.access_token,
-          instagram_business_account: p.instagram_business_account || null,
-        }));
-        FB.setSession({
-          user: {
-            id: me.id,
-            name: me.name,
-            email: me.email,
-            picture: me.picture,
-            userAccessToken: auth.accessToken,
-          },
-          pages,
-          business: {
-            name: pages[0] ? pages[0].name : me.name,
-            shortName: pages[0] ? pages[0].name.split(" ")[0] : "Business",
-            plan: "Connected",
-            logo: FBData.BUSINESS.logo,
-            location: "India",
-          },
-          manager: { name: me.name, role: "Admin", avatar: FBData.MANAGER.avatar },
-          platforms: ["facebook", "instagram"],
-          grantedAt: new Date().toISOString(),
-          demo: false,
-        });
-        window.location.href = "/facebook/dashboard.html";
-        return;
-      } catch (err) {
-        if (err.message !== "Login cancelled") showError(err.message || String(err));
-        connecting = false;
-        el.fbLabel.textContent = "Continue with Facebook";
-        const termsCb = document.getElementById("accept-terms");
-        const privacyCb = document.getElementById("accept-privacy");
-        const accepted = termsCb.checked && privacyCb.checked;
-        el.ttLoginBtn.disabled = !accepted;
-        el.fbLoginBtn.disabled = !accepted;
-        return;
-      }
-    }
-
-    /* Demo mode — no Meta API */
-    try {
-      FB.setSession(FBData.createDemoSession());
-      window.location.href = "/facebook/dashboard.html";
-    } catch (err) {
-      showError(err.message || String(err));
-      connecting = false;
-      el.fbLabel.textContent = "Continue with Facebook";
-      const termsCb = document.getElementById("accept-terms");
-      const privacyCb = document.getElementById("accept-privacy");
-      const accepted = termsCb.checked && privacyCb.checked;
-      el.ttLoginBtn.disabled = !accepted;
-      el.fbLoginBtn.disabled = !accepted;
-    }
+    const backendBaseUrl = cfg.BACKEND_BASE_URL || "https://sociallift-backend-production.up.railway.app";
+    window.location.href = backendBaseUrl + "/auth/facebook/login";
   }
 
   /* ---------- TikTok login ---------- */
@@ -188,11 +109,6 @@
     }
 
     /* Facebook SDK */
-    if (hasFb) {
-      try {
-        await SL.loadFbSdk();
-      } catch (err) { console.error(err); }
-    }
     el.fbLabel.textContent = "Continue with Facebook";
 
     /* TikTok button */

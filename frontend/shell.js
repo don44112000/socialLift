@@ -11,21 +11,6 @@
   function setSession(data) { sessionStorage.setItem(SESSION_KEY, JSON.stringify(data)); }
   function clearSession()   { sessionStorage.removeItem(SESSION_KEY); }
 
-  /* ---------- Facebook SDK loader ---------- */
-  function loadFbSdk() {
-    return new Promise((resolve, reject) => {
-      if (window.FB) return resolve();
-      window.fbAsyncInit = function () {
-        FB.init({ appId: cfg.FB_APP_ID, cookie: true, xfbml: false, version: cfg.GRAPH_API_VERSION || "v25.0" });
-        resolve();
-      };
-      const s = document.createElement("script");
-      s.src = "https://connect.facebook.net/en_US/sdk.js";
-      s.async = true; s.defer = true; s.crossOrigin = "anonymous";
-      s.onerror = () => reject(new Error("Failed to load Facebook SDK"));
-      document.head.appendChild(s);
-    });
-  }
 
   /* ---------- Nav icon SVGs ---------- */
   const icons = {
@@ -120,9 +105,6 @@
     const session = getSession();
     if (!session) { window.location.href = "/"; return null; }
     injectShell(activePath || window.location.pathname);
-    if (session.user) {
-      try { await loadFbSdk(); } catch (err) { console.error(err); }
-    }
     return session;
   }
 
@@ -143,5 +125,5 @@
   }
 
   /* ---------- Public API ---------- */
-  window.SL = { getSession, setSession, clearSession, loadFbSdk, requireAuth, toast, cfg };
+  window.SL = { getSession, setSession, clearSession, requireAuth, toast, cfg };
 })();

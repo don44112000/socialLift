@@ -8,3 +8,4 @@ node_modules/
 # Browser recordings and intermediate scraper artifacts
 *.har
 *-docs.json
+.env 

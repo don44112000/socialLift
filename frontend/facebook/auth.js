@@ -63,7 +63,7 @@
       };
     }
 
-    return FBData.createDemoSession();
+    throw new Error("Facebook SDK/login config mismatch or failed to load.");
   }
 
   window.FBAuth = { completeFacebookLogin };

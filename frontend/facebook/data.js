@@ -462,21 +462,222 @@
     return String(n);
   }
 
+  async function apiFetch(path, options = {}) {
+    const cfg = window.WOUCHH_CONFIG || {};
+    const backendBaseUrl = cfg.BACKEND_BASE_URL || "https://sociallift-backend-production.up.railway.app";
+    const url = `${backendBaseUrl}${path}`;
+    
+    const opt = {
+      ...options,
+      credentials: "include"
+    };
+    
+    if (options.body && typeof options.body === "object") {
+      opt.headers = {
+        ...opt.headers,
+        "Content-Type": "application/json"
+      };
+      opt.body = JSON.stringify(options.body);
+    }
+    
+    const res = await fetch(url, opt);
+    if (res.status === 401) {
+      window.location.href = "/facebook/connect.html";
+      throw new Error("Unauthorized");
+    }
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.error || `HTTP error ${res.status}`);
+    }
+    return res.json();
+  }
+
+  async function getAccounts() {
+    const cfg = window.WOUCHH_CONFIG || {};
+    const hasFb = cfg.FB_APP_ID && !String(cfg.FB_APP_ID).startsWith("REPLACE_");
+    if (!hasFb) return DEMO_PAGES;
+    
+    try {
+      const raw = await apiFetch("/api/accounts");
+      const accounts = [];
+      raw.forEach((p) => {
+        accounts.push({
+          id: p.page_id,
+          name: p.page_name,
+          platform: "facebook",
+          username: p.page_name.toLowerCase().replace(/\s+/g, ""),
+          followers: 12400,
+          posts: 96,
+          engagement: "3.2%",
+          ig_business_account_id: null
+        });
+        if (p.ig_business_account_id) {
+          accounts.push({
+            id: p.ig_business_account_id,
+            name: p.page_name + " Instagram",
+            platform: "instagram",
+            username: p.ig_username || "lumenstudio",
+            followers: 18700,
+            posts: 142,
+            engagement: "4.8%",
+            ig_business_account_id: p.ig_business_account_id
+          });
+        }
+      });
+      return accounts;
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  }
+
+  async function getComments() {
+    const cfg = window.WOUCHH_CONFIG || {};
+    const hasFb = cfg.FB_APP_ID && !String(cfg.FB_APP_ID).startsWith("REPLACE_");
+    if (!hasFb) return COMMENTS;
+    
+    try {
+      const raw = await apiFetch("/api/accounts");
+      const promises = raw
+        .filter((p) => p.ig_business_account_id)
+        .map(async (p) => {
+          try {
+            const data = await apiFetch(`/api/comments?account_id=${p.ig_business_account_id}`);
+            return data.map((c) => {
+              const timeInSeconds = c.timestamp ? Math.floor(new Date(c.timestamp).getTime() / 1000) : (Date.now() / 1000);
+              return {
+                id: c.id,
+                post_id: c.media_id,
+                user: {
+                  name: c.username || "Instagram User",
+                  avatar: `https://api.dicebear.com/9.x/avataaars/svg?seed=${c.username || "User"}&backgroundColor=e5eeff`
+                },
+                text: c.text,
+                likes: c.like_count || 0,
+                time: timeInSeconds,
+                replied: false,
+                platform: "instagram",
+                post_thumbnail: `https://api.dicebear.com/9.x/shapes/svg?seed=${c.media_id || "post"}&backgroundColor=005c55`,
+                account_id: p.ig_business_account_id,
+                hidden: !!c.hidden
+              };
+            });
+          } catch (err) {
+            console.error("Failed to fetch comments for " + p.ig_business_account_id, err);
+            return [];
+          }
+        });
+      const results = await Promise.all(promises);
+      return results.flat();
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  }
+
+  async function replyComment(commentId, text, accountId) {
+    const cfg = window.WOUCHH_CONFIG || {};
+    const hasFb = cfg.FB_APP_ID && !String(cfg.FB_APP_ID).startsWith("REPLACE_");
+    if (!hasFb) return { success: true, id: commentId, text };
+    
+    return apiFetch(`/api/comments/${commentId}/reply`, {
+      method: "POST",
+      body: { message: text, account_id: accountId }
+    });
+  }
+
+  async function hideComment(commentId, hide, accountId) {
+    const cfg = window.WOUCHH_CONFIG || {};
+    const hasFb = cfg.FB_APP_ID && !String(cfg.FB_APP_ID).startsWith("REPLACE_");
+    if (!hasFb) return { success: true, id: commentId, hide };
+    
+    return apiFetch(`/api/comments/${commentId}/hide`, {
+      method: "POST",
+      body: { hide: hide, account_id: accountId }
+    });
+  }
+
+  async function getMentions() {
+    const cfg = window.WOUCHH_CONFIG || {};
+    const hasFb = cfg.FB_APP_ID && !String(cfg.FB_APP_ID).startsWith("REPLACE_");
+    if (!hasFb) return MENTIONS;
+    
+    try {
+      const raw = await apiFetch("/api/accounts");
+      const promises = raw
+        .filter((p) => p.ig_business_account_id)
+        .map(async (p) => {
+          try {
+            const data = await apiFetch(`/api/mentions?account_id=${p.ig_business_account_id}`);
+            return data.map((m) => {
+              const timeInSeconds = m.timestamp ? Math.floor(new Date(m.timestamp).getTime() / 1000) : (Date.now() / 1000);
+              return {
+                id: m.id,
+                platform: "instagram",
+                type: m.media_type === "VIDEO" || m.media_type === "REEL" ? "Instagram Reel" : "Instagram Post",
+                user: {
+                  name: m.username || "Instagram User",
+                  handle: m.username || "instagram_user",
+                  avatar: `https://api.dicebear.com/9.x/avataaars/svg?seed=${m.username || "User"}&backgroundColor=e5eeff`
+                },
+                text: m.caption || "",
+                thumbnail: m.media_url || `https://api.dicebear.com/9.x/shapes/svg?seed=${m.id || "mention"}&backgroundColor=0f766e`,
+                reach: (m.like_count || 0) * 12 + 100,
+                likes: m.like_count || 0,
+                comments: m.comments_count || 0,
+                time: timeInSeconds
+              };
+            });
+          } catch (err) {
+            console.error("Failed to fetch mentions for " + p.ig_business_account_id, err);
+            return [];
+          }
+        });
+      const results = await Promise.all(promises);
+      return results.flat();
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  }
+
+  async function getMetrics() {
+    const cfg = window.WOUCHH_CONFIG || {};
+    const hasFb = cfg.FB_APP_ID && !String(cfg.FB_APP_ID).startsWith("REPLACE_");
+    if (!hasFb) return METRICS;
+    
+    try {
+      const raw = await apiFetch("/api/accounts");
+      const fbCount = raw.length;
+      const igCount = raw.filter((a) => a.ig_business_account_id).length;
+      return {
+        mentions: { value: igCount + fbCount, delta: "Connected Accounts" },
+        engagement: { value: igCount, delta: "Instagram Profiles" },
+        followers: { value: fbCount, delta: "Facebook Pages" },
+        reach: { value: "Synced", delta: "Just now" }
+      };
+    } catch (e) {
+      console.error(e);
+      return METRICS;
+    }
+  }
+
   window.FBData = {
     BUSINESS,
     MANAGER,
     METRICS,
     createDemoSession,
-    getMetrics: () => Promise.resolve(METRICS),
+    getMetrics,
     getActivity: () => Promise.resolve(RECENT_ACTIVITY),
     getActivityLog: () => Promise.resolve(ACTIVITY_LOG),
-    getMentions: () => Promise.resolve(MENTIONS),
-    getComments: () => Promise.resolve(COMMENTS),
-    replyComment: (id, text) => Promise.resolve({ success: true, id, text }),
+    getMentions,
+    getComments,
+    replyComment,
+    hideComment,
     getConversations: () => Promise.resolve(CONVERSATIONS),
     sendMessage: (id, text) => Promise.resolve({ success: true, id, text }),
     getAnalytics: () => Promise.resolve(ANALYTICS),
-    getAccounts: () => Promise.resolve(DEMO_PAGES),
+    getAccounts,
     relativeTime,
     formatCount,
   };

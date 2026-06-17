@@ -170,11 +170,19 @@
               function submitReply() {
                 const value = input.value.trim();
                 if (!value) return;
-                comment.replied = true;
-                comment.reply = { text: value, time: Date.now() / 1000 };
-                FB.toast("Reply posted successfully.");
-                renderMetrics();
-                render();
+                send.disabled = true;
+                FBData.replyComment(comment.id, value, comment.account_id)
+                  .then(() => {
+                    comment.replied = true;
+                    comment.reply = { text: value, time: Date.now() / 1000 };
+                    FB.toast("Reply posted successfully.");
+                    renderMetrics();
+                    render();
+                  })
+                  .catch((err) => {
+                    alert(err.message || "Failed to post reply.");
+                    send.disabled = false;
+                  });
               }
               send.addEventListener("click", submitReply);
               input.addEventListener("keydown", function (event) {
@@ -182,8 +190,21 @@
               });
             }
 
-            row.querySelector(".hide-comment").addEventListener("click", function () {
-              FB.toast("Comment hidden.");
+            const hideBtn = row.querySelector(".hide-comment");
+            if (comment.hidden) {
+              hideBtn.textContent = "Unhide";
+            }
+            hideBtn.addEventListener("click", function () {
+              const newHideState = !comment.hidden;
+              FBData.hideComment(comment.id, newHideState, comment.account_id)
+                .then(() => {
+                  comment.hidden = newHideState;
+                  hideBtn.textContent = newHideState ? "Unhide" : "Hide";
+                  FB.toast(newHideState ? "Comment hidden." : "Comment unhidden.");
+                })
+                .catch((err) => {
+                  alert(err.message || "Failed to update comment visibility.");
+                });
             });
             row.querySelector(".archive-comment").addEventListener("click", function () {
               comments = comments.filter((item) => item.id !== comment.id);

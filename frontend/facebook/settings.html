@@ -146,17 +146,34 @@
         document.getElementById("biz-name").value = business.name;
         document.getElementById("biz-email").value = "hello@" + business.shortName.toLowerCase().replace(/\s+/g, "") + "studio.in";
 
-        document.getElementById("logout-btn").addEventListener("click", function () {
+        async function handleLogout(message) {
+          const cfg = window.WOUCHH_CONFIG || {};
+          const hasFb = cfg.FB_APP_ID && !String(cfg.FB_APP_ID).startsWith("REPLACE_");
+          if (hasFb) {
+            const backendBaseUrl = cfg.BACKEND_BASE_URL || "https://sociallift-backend-production.up.railway.app";
+            try {
+              await fetch(`${backendBaseUrl}/api/logout`, { method: "POST", credentials: "include" });
+            } catch (e) {
+              console.error("Backend logout failed:", e);
+            }
+          }
           FB.clearSession();
-          window.location.href = "/";
+          if (message) {
+            FB.toast(message);
+            setTimeout(function () {
+              window.location.href = "/facebook/connect.html";
+            }, 800);
+          } else {
+            window.location.href = "/facebook/connect.html";
+          }
+        }
+
+        document.getElementById("logout-btn").addEventListener("click", function () {
+          handleLogout();
         });
 
         document.getElementById("disconnect-btn").addEventListener("click", function () {
-          FB.clearSession();
-          FB.toast("Accounts disconnected.");
-          setTimeout(function () {
-            window.location.href = "/";
-          }, 800);
+          handleLogout("Accounts disconnected.");
         });
       })();
     </script>

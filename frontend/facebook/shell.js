@@ -179,13 +179,93 @@
   }
 
   async function requireAuth(opts) {
-    const session = getSession();
-    if (!session) {
-      window.location.href = "/";
-      return null;
+    const cfg = window.WOUCHH_CONFIG || {};
+    const hasFb = cfg.FB_APP_ID && !String(cfg.FB_APP_ID).startsWith("REPLACE_");
+
+    if (hasFb) {
+      const backendBaseUrl = cfg.BACKEND_BASE_URL || "https://sociallift-backend-production.up.railway.app";
+      try {
+        const meRes = await fetch(`${backendBaseUrl}/api/me`, { credentials: "include" });
+        if (meRes.status === 401) {
+          window.location.href = "/facebook/connect.html";
+          return null;
+        }
+        if (!meRes.ok) {
+          throw new Error("Failed to verify backend session");
+        }
+        const meData = await meRes.json();
+
+        // Fetch accounts
+        const accountsRes = await fetch(`${backendBaseUrl}/api/accounts`, { credentials: "include" });
+        if (accountsRes.status === 401) {
+          window.location.href = "/facebook/connect.html";
+          return null;
+        }
+        if (!accountsRes.ok) {
+          throw new Error("Failed to fetch accounts");
+        }
+        const accountsData = await accountsRes.json();
+
+        // Map accounts
+        const pages = accountsData.map((p) => ({
+          id: p.page_id,
+          name: p.page_name,
+          platform: p.ig_business_account_id ? "instagram" : "facebook",
+          username: p.ig_username || p.page_name.toLowerCase().replace(/\s+/g, ""),
+          followers: 12000,
+          posts: 95,
+          engagement: "3.2%",
+          instagram_business_account: p.ig_business_account_id
+            ? {
+                id: p.ig_business_account_id,
+                username: p.ig_username,
+              }
+            : null,
+        }));
+
+        // Build session object
+        const session = {
+          user: {
+            id: meData.fb_user_id,
+            name: pages[0] ? pages[0].name : "Facebook User",
+            email: "",
+            picture: null,
+          },
+          pages: pages,
+          business: {
+            name: pages[0] ? pages[0].name : "Lumen Studio",
+            shortName: pages[0] ? pages[0].name.split(" ")[0] : "Lumen",
+            plan: "Premium Plan",
+            logo: "/assets/logo-square.png",
+            location: "India",
+          },
+          manager: {
+            name: pages[0] ? pages[0].name : "Facebook User",
+            role: "Admin",
+            avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Manager&backgroundColor=e5eeff",
+          },
+          platforms: ["facebook", "instagram"],
+          grantedAt: new Date().toISOString(),
+          demo: false,
+        };
+
+        setSession(session);
+        mountShell(opts || {});
+        return session;
+      } catch (err) {
+        console.error("Auth check failed:", err);
+        window.location.href = "/facebook/connect.html";
+        return null;
+      }
+    } else {
+      const session = getSession();
+      if (!session) {
+        window.location.href = "/facebook/connect.html";
+        return null;
+      }
+      mountShell(opts || {});
+      return session;
     }
-    mountShell(opts || {});
-    return session;
   }
 
   window.FB = {

@@ -4,7 +4,10 @@ window.WOUCHH_CONFIG = {
   CONTACT_EMAIL: "support@wouchh.com",
 
   /* ---------- Facebook / Meta ---------- */
-  FB_APP_ID: "REPLACE_WITH_YOUR_APP_ID",
+  FB_APP_ID: "1174274799094721",
+  BACKEND_BASE_URL: window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+    ? "http://localhost:3000"
+    : "https://sociallift-backend-production.up.railway.app",
   GRAPH_API_VERSION: "v25.0",
   FB_SCOPES: [
     "public_profile",

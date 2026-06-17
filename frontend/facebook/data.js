@@ -482,7 +482,8 @@
     
     const res = await fetch(url, opt);
     if (res.status === 401) {
-      window.location.href = "/facebook/connect.html";
+      sessionStorage.removeItem("sl_fb_session");
+      window.location.href = "/";
       throw new Error("Unauthorized");
     }
     if (!res.ok) {

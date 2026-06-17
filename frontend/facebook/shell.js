@@ -187,7 +187,8 @@
       try {
         const meRes = await fetch(`${backendBaseUrl}/api/me`, { credentials: "include" });
         if (meRes.status === 401) {
-          window.location.href = "/facebook/connect.html";
+          clearSession();
+          window.location.href = "/";
           return null;
         }
         if (!meRes.ok) {
@@ -198,7 +199,8 @@
         // Fetch accounts
         const accountsRes = await fetch(`${backendBaseUrl}/api/accounts`, { credentials: "include" });
         if (accountsRes.status === 401) {
-          window.location.href = "/facebook/connect.html";
+          clearSession();
+          window.location.href = "/";
           return null;
         }
         if (!accountsRes.ok) {
@@ -254,13 +256,14 @@
         return session;
       } catch (err) {
         console.error("Auth check failed:", err);
-        window.location.href = "/facebook/connect.html";
+        clearSession();
+        window.location.href = "/";
         return null;
       }
     } else {
       const session = getSession();
       if (!session) {
-        window.location.href = "/facebook/connect.html";
+        window.location.href = "/";
         return null;
       }
       mountShell(opts || {});

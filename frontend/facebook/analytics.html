@@ -106,21 +106,23 @@
       </div>
     </div>
 
+    <script src="/config.js"></script>
     <script src="./data.js"></script>
     <script src="./ui.js"></script>
     <script src="./shell.js"></script>
     <script>
       (async function () {
-        await FB.requireAuth({
+        const session = await FB.requireAuth({
           activePath: "/facebook/analytics.html",
           pageTitle: "Analytics",
           searchPlaceholder: "Search analytics...",
         });
 
+        const bizName = (session && session.business && session.business.name) || "your business";
         document.getElementById("page-head").appendChild(
           FBUi.pageHeader(
             "Analytics Dashboard",
-            "Measure growth, identify the posts driving momentum, and understand who is engaging most with Lumen Studio."
+            "Measure growth, identify the posts driving momentum, and understand who is engaging most with " + bizName + "."
           )
         );
 
@@ -191,6 +193,9 @@
             '<span class="rounded-full bg-primary/10 px-3 py-1 text-[11px] font-bold text-primary">' + person.engagement + "</span>";
           followers.appendChild(row);
         });
+
+        // No insights API yet — keep the sample view but mark it coming soon.
+        FB.markComingSoon("#fb-page-content", "Coming soon");
       })();
     </script>
   </body>

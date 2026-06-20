@@ -440,6 +440,14 @@ img { display: block; max-width: 100%; }
 
 .btn-facebook  { background: var(--facebook); color: #fff; box-shadow: 0 2px 12px rgba(24,119,242,0.2); }
 .btn-tiktok    { background: #000; color: #fff; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 2px 12px rgba(255,0,80,0.1); }
+/* "Coming soon" platform button: clearly inactive but legible (overrides the 0.45 disabled dim). */
+.btn-platform.coming-soon:disabled { opacity: 0.6; }
+.soon-pill {
+  margin-left: 8px;
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 999px;
+  background: rgba(255,255,255,0.18); color: #fff;
+}
 .btn-instagram { background: linear-gradient(135deg, #833ab4, #e1306c, #f56040); color: #fff; }
 
 .fineprint {

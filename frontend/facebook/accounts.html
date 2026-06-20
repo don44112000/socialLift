@@ -18,6 +18,7 @@
       </div>
     </div>
 
+    <script src="/config.js"></script>
     <script src="./data.js"></script>
     <script src="./ui.js"></script>
     <script src="./shell.js"></script>
@@ -56,7 +57,7 @@
                       '<h3 class="font-headline-md text-headline-md text-on-surface">' + acct.name + "</h3>" +
                       '<span class="rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">' + (isInstagram ? "Instagram" : "Facebook") + "</span>" +
                     "</div>" +
-                    '<p class="mt-2 text-sm text-on-surface-variant">' + (isInstagram ? "@lumenstudio" : "Lumen Studio Facebook") + "</p>" +
+                    '<p class="mt-2 text-sm text-on-surface-variant">' + (isInstagram && acct.username ? "@" + acct.username : "Facebook Page") + "</p>" +
                   "</div>" +
                 "</div>" +
                 '<button type="button" class="fb-icon-button rounded-2xl border border-outline-variant/30" onclick="FB.toast(\'Manage permissions is a demo interaction for now.\')">' +
@@ -64,12 +65,12 @@
                 "</button>" +
               "</div>" +
               '<div class="grid grid-cols-1 gap-3 sm:grid-cols-3">' +
-                '<div class="rounded-2xl bg-surface-container-low p-4"><p class="text-xs uppercase tracking-[0.12em] text-on-surface-variant">Audience</p><p class="mt-2 text-xl font-semibold text-on-surface">' + FBData.formatCount(acct.followers) + "</p></div>" +
-                '<div class="rounded-2xl bg-surface-container-low p-4"><p class="text-xs uppercase tracking-[0.12em] text-on-surface-variant">Posts</p><p class="mt-2 text-xl font-semibold text-on-surface">' + acct.posts + "</p></div>" +
-                '<div class="rounded-2xl bg-surface-container-low p-4"><p class="text-xs uppercase tracking-[0.12em] text-on-surface-variant">Engagement</p><p class="mt-2 text-xl font-semibold text-on-surface">' + acct.engagement + "</p></div>" +
+                '<div class="rounded-2xl bg-surface-container-low p-4"><p class="text-xs uppercase tracking-[0.12em] text-on-surface-variant">Type</p><p class="mt-2 text-xl font-semibold text-on-surface">' + (isInstagram ? "Instagram" : "Facebook") + "</p></div>" +
+                '<div class="rounded-2xl bg-surface-container-low p-4"><p class="text-xs uppercase tracking-[0.12em] text-on-surface-variant">Username</p><p class="mt-2 text-lg font-semibold text-on-surface">' + (isInstagram && acct.username ? "@" + acct.username : "—") + "</p></div>" +
+                '<div class="rounded-2xl bg-surface-container-low p-4"><p class="text-xs uppercase tracking-[0.12em] text-on-surface-variant">Account ID</p><p class="mt-2 text-sm font-semibold text-on-surface break-all">' + acct.id + "</p></div>" +
               "</div>" +
               '<div class="flex flex-wrap items-center justify-between gap-3 border-t border-outline-variant/10 pt-4">' +
-                '<div class="text-sm text-on-surface-variant">Last sync: 2 minutes ago</div>' +
+                '<div class="text-sm text-on-surface-variant">Connected</div>' +
                 '<div class="flex flex-wrap gap-2">' +
                   '<button type="button" class="rounded-full border border-outline-variant/30 px-4 py-2 text-sm font-semibold text-on-surface" onclick="FB.toast(\'Refreshing account data for ' + acct.name.replace(/'/g, "\\'") + '.\')">Refresh</button>' +
                   '<button type="button" class="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white" onclick="FB.toast(\'Permissions manager is a demo interaction for now.\')">Permissions</button>' +

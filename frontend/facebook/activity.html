@@ -29,6 +29,7 @@
       </div>
     </div>
 
+    <script src="/config.js"></script>
     <script src="./data.js"></script>
     <script src="./ui.js"></script>
     <script src="./shell.js"></script>
@@ -76,6 +77,9 @@
             "</div>";
           list.appendChild(row);
         });
+
+        // No activity-log API yet — keep the sample view but mark it coming soon.
+        FB.markComingSoon("#fb-page-content", "Coming soon");
       })();
     </script>
   </body>

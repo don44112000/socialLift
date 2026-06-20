@@ -56,21 +56,23 @@
       </div>
     </div>
 
+    <script src="/config.js"></script>
     <script src="./data.js"></script>
     <script src="./ui.js"></script>
     <script src="./shell.js"></script>
     <script>
       (async function () {
-        await FB.requireAuth({
+        const session = await FB.requireAuth({
           activePath: "/facebook/mentions.html",
           pageTitle: "Mentions",
           searchPlaceholder: "Search mentions...",
         });
 
+        const bizName = (session && session.business && session.business.name) || "your business";
         document.getElementById("page-head").appendChild(
           FBUi.pageHeader(
             "Mentions Monitoring",
-            "Track where Lumen Studio appears across conversations, creator shares, and customer shout-outs."
+            "Track where " + bizName + " appears across conversations, creator shares, and customer shout-outs."
           )
         );
 

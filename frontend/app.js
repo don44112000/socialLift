@@ -24,60 +24,26 @@
     if (connecting) return;
     connecting = true;
     el.fbLoginBtn.disabled = true;
-    el.ttLoginBtn.disabled = true;
     el.fbLabel.textContent = "Connecting…";
 
-    const backendBaseUrl = cfg.BACKEND_BASE_URL || "https://sociallift-backend-production.up.railway.app";
-    window.location.href = backendBaseUrl + "/auth/facebook/login";
+    if (window.FB && typeof window.FB.startFbLogin === "function") {
+      // Opens the backend login in a popup modal; resets the button if cancelled.
+      window.FB.startFbLogin({
+        onCancel: function () {
+          connecting = false;
+          el.fbLoginBtn.disabled = false;
+          el.fbLabel.textContent = "Continue with Facebook";
+        },
+      });
+    } else {
+      const backendBaseUrl = cfg.BACKEND_BASE_URL || "https://sociallift-backend-production.up.railway.app";
+      window.location.href = backendBaseUrl + "/auth/facebook/login";
+    }
   }
 
   /* ---------- TikTok login ---------- */
-  async function onTtLogin() {
-    connecting = true;
-    el.ttLoginBtn.disabled = true;
-    el.fbLoginBtn.disabled = true;
-    /* In production this redirects to TikTok OAuth.
-       For demo, simulate a successful login with demo data. */
-    const clientKey = cfg.TIKTOK_CLIENT_KEY;
-    if (clientKey && !clientKey.startsWith("REPLACE_")) {
-      /* Real OAuth redirect */
-      const scopes = (cfg.TIKTOK_SCOPES || []).join(",");
-      const state = "sl_" + Date.now();
-      const url = "https://www.tiktok.com/v2/auth/authorize/" +
-        "?client_key=" + encodeURIComponent(clientKey) +
-        "&scope=" + encodeURIComponent(scopes) +
-        "&response_type=code" +
-        "&redirect_uri=" + encodeURIComponent(cfg.TIKTOK_REDIRECT_URI) +
-        "&state=" + encodeURIComponent(state);
-      window.location.href = url;
-      return;
-    }
-
-    /* Demo mode: simulate TikTok connection */
-    el.ttLoginBtn.disabled = true;
-    el.ttLabel.textContent = "Connecting…";
-    try {
-      const profile = await SLApi.tiktokProfile();
-      const existing = SL.getSession() || {};
-      SL.setSession({
-        ...existing,
-        tiktok: profile,
-        tiktokScopes: cfg.TIKTOK_SCOPES || [],
-        grantedAt: existing.grantedAt || new Date().toISOString(),
-        platforms: [...new Set([...(existing.platforms || []), "tiktok"])],
-      });
-      window.location.href = "/dashboard.html";
-    } catch (err) {
-      showError(err.message || String(err));
-      connecting = false;
-      const termsCb = document.getElementById("accept-terms");
-      const privacyCb = document.getElementById("accept-privacy");
-      const accepted = termsCb.checked && privacyCb.checked;
-      el.ttLoginBtn.disabled = !accepted;
-      el.fbLoginBtn.disabled = !accepted;
-      el.ttLabel.textContent = "Continue with TikTok";
-    }
-  }
+  /* TikTok integration is coming soon — its button is rendered disabled on the
+     landing page and is intentionally not wired up. */
 
   /* ---------- Init ---------- */
   async function init() {
@@ -93,8 +59,8 @@
     function updateButtonStates() {
       if (connecting) return;
       const accepted = termsCb.checked && privacyCb.checked;
-      el.ttLoginBtn.disabled = !accepted;
       el.fbLoginBtn.disabled = !accepted;
+      // TikTok button stays disabled — integration is coming soon.
     }
 
     /* Env badge */
@@ -111,14 +77,11 @@
     /* Facebook SDK */
     el.fbLabel.textContent = "Continue with Facebook";
 
-    /* TikTok button */
-    el.ttLabel.textContent = "Continue with TikTok";
-
     termsCb.addEventListener("change", updateButtonStates);
     privacyCb.addEventListener("change", updateButtonStates);
 
     el.fbLoginBtn.addEventListener("click", onFbLogin);
-    el.ttLoginBtn.addEventListener("click", onTtLogin);
+    // TikTok button is intentionally not wired — coming soon.
 
     updateButtonStates();
   }

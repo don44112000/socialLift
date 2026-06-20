@@ -45,7 +45,7 @@
                 </label>
                 <label class="text-sm font-semibold text-on-surface md:col-span-2">
                   <span class="mb-2 block text-on-surface-variant">Business Description</span>
-                  <textarea class="min-h-[120px] w-full rounded-[20px] border border-outline-variant/30 px-4 py-3 text-base">Creative production and digital design studio specializing in brand identity, content systems, and immersive visual experiences.</textarea>
+                  <textarea class="min-h-[120px] w-full rounded-[20px] border border-outline-variant/30 px-4 py-3 text-base" placeholder="Add a short description of your business."></textarea>
                 </label>
               </div>
             </section>
@@ -76,35 +76,14 @@
                 </div>
                 <button type="button" class="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white" onclick="FB.toast('Add member is a demo interaction for now.')">Add Member</button>
               </div>
-              <div class="mt-5 divide-y divide-outline-variant/10">
-                <div class="flex items-center justify-between gap-3 py-4">
-                  <div class="flex items-center gap-3">
-                    <img src="https://api.dicebear.com/9.x/avataaars/svg?seed=Rajesh&backgroundColor=e5eeff" alt="" class="h-11 w-11 rounded-full border border-outline-variant/10 object-cover" />
-                    <div>
-                      <p class="font-semibold text-on-surface">Rajesh Kumar</p>
-                      <p class="text-sm text-on-surface-variant">rajesh@lumenstudio.in</p>
-                    </div>
-                  </div>
-                  <span class="rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">Admin</span>
-                </div>
-                <div class="flex items-center justify-between gap-3 py-4">
-                  <div class="flex items-center gap-3">
-                    <img src="https://api.dicebear.com/9.x/avataaars/svg?seed=Priya&backgroundColor=ffb599" alt="" class="h-11 w-11 rounded-full border border-outline-variant/10 object-cover" />
-                    <div>
-                      <p class="font-semibold text-on-surface">Priya Sharma</p>
-                      <p class="text-sm text-on-surface-variant">priya@lumenstudio.in</p>
-                    </div>
-                  </div>
-                  <span class="rounded-full bg-surface-container-low px-3 py-1 text-xs font-bold text-on-surface-variant">Editor</span>
-                </div>
-              </div>
+              <div class="mt-5 divide-y divide-outline-variant/10" id="team-list"></div>
             </section>
 
             <section class="fb-panel p-4 sm:p-6">
               <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h3 class="font-headline-md text-headline-md text-on-surface">Plan</h3>
-                  <p class="mt-1 text-sm text-on-surface-variant">Current plan: Premium Business Plan at $49 per month.</p>
+                  <p class="mt-1 text-sm text-on-surface-variant">You're on the demo plan.</p>
                 </div>
                 <button type="button" class="rounded-full border border-outline-variant/30 px-5 py-3 text-sm font-semibold text-on-surface" onclick="FB.toast('Plan management is a demo interaction for now.')">Manage Plan</button>
               </div>
@@ -123,6 +102,7 @@
       </div>
     </div>
 
+    <script src="/config.js"></script>
     <script src="./data.js"></script>
     <script src="./ui.js"></script>
     <script src="./shell.js"></script>
@@ -143,16 +123,31 @@
         );
 
         const business = session.business || FBData.BUSINESS;
-        document.getElementById("biz-name").value = business.name;
-        document.getElementById("biz-email").value = "hello@" + business.shortName.toLowerCase().replace(/\s+/g, "") + "studio.in";
+        document.getElementById("biz-name").value = business.name || "";
+        // Email is not provided by the backend API — leave it for the user to fill.
+        document.getElementById("biz-email").value = "";
+
+        // No team API yet — show the connected account as the single admin.
+        const teamList = document.getElementById("team-list");
+        if (teamList) {
+          const avatar = (session.manager && session.manager.avatar) || "";
+          teamList.innerHTML =
+            '<div class="flex items-center justify-between gap-3 py-4">' +
+              '<div class="flex items-center gap-3">' +
+                '<img src="' + avatar + '" alt="" class="h-11 w-11 rounded-full border border-outline-variant/10 object-cover" />' +
+                '<div><p class="font-semibold text-on-surface">' + (business.name || "Connected account") + '</p>' +
+                '<p class="text-sm text-on-surface-variant">Connected via Facebook</p></div>' +
+              '</div>' +
+              '<span class="rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">Admin</span>' +
+            '</div>';
+        }
 
         async function handleLogout(message) {
           const cfg = window.WOUCHH_CONFIG || {};
           const hasFb = cfg.FB_APP_ID && !String(cfg.FB_APP_ID).startsWith("REPLACE_");
           if (hasFb) {
-            const backendBaseUrl = cfg.BACKEND_BASE_URL || "https://sociallift-backend-production.up.railway.app";
             try {
-              await fetch(`${backendBaseUrl}/api/logout`, { method: "POST", credentials: "include" });
+              await fetch(FB.apiUrl("logout"), { method: "POST" });
             } catch (e) {
               console.error("Backend logout failed:", e);
             }

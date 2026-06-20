@@ -463,13 +463,11 @@
   }
 
   async function apiFetch(path, options = {}) {
-    const cfg = window.WOUCHH_CONFIG || {};
-    const backendBaseUrl = cfg.BACKEND_BASE_URL || "https://sociallift-backend-production.up.railway.app";
-    const url = `${backendBaseUrl}${path}`;
-    
+    // FB.apiUrl adds the per-login state UUID as a `state` query param for every call.
+    const url = window.FB.apiUrl(path);
+
     const opt = {
-      ...options,
-      credentials: "include"
+      ...options
     };
     
     if (options.body && typeof options.body === "object") {
@@ -501,15 +499,18 @@
     try {
       const raw = await apiFetch("/api/accounts");
       const accounts = [];
+      // Only id/name/username come from the API. Follower/post/engagement
+      // metrics are not exposed by the backend, so they are left null instead
+      // of being fabricated.
       raw.forEach((p) => {
         accounts.push({
           id: p.page_id,
           name: p.page_name,
           platform: "facebook",
-          username: p.page_name.toLowerCase().replace(/\s+/g, ""),
-          followers: 12400,
-          posts: 96,
-          engagement: "3.2%",
+          username: "",
+          followers: null,
+          posts: null,
+          engagement: null,
           ig_business_account_id: null
         });
         if (p.ig_business_account_id) {
@@ -517,10 +518,10 @@
             id: p.ig_business_account_id,
             name: p.page_name + " Instagram",
             platform: "instagram",
-            username: p.ig_username || "lumenstudio",
-            followers: 18700,
-            posts: 142,
-            engagement: "4.8%",
+            username: p.ig_username || "",
+            followers: null,
+            posts: null,
+            engagement: null,
             ig_business_account_id: p.ig_business_account_id
           });
         }
@@ -663,20 +664,149 @@
     }
   }
 
+  async function getConversations() {
+    const cfg = window.WOUCHH_CONFIG || {};
+    const hasFb = cfg.FB_APP_ID && !String(cfg.FB_APP_ID).startsWith("REPLACE_");
+    if (!hasFb) return CONVERSATIONS;
+
+    try {
+      const accounts = await apiFetch("/api/accounts");
+      const igAccounts = accounts.filter((p) => p.ig_business_account_id);
+
+      const perAccount = await Promise.all(
+        igAccounts.map(async (p) => {
+          const accountId = p.ig_business_account_id;
+          const ourName = p.ig_username || null;
+          // Decide which side of a message/participant is us. Prefer matching by
+          // our IG username; fall back to id match when username is unavailable.
+          const isUs = (entity) =>
+            !!entity && (ourName ? entity.username === ourName : String(entity.id) === String(accountId));
+
+          let convos;
+          try {
+            convos = await apiFetch(`/api/conversations?account_id=${accountId}`);
+          } catch (err) {
+            console.error("Failed to fetch conversations for " + accountId, err);
+            return [];
+          }
+
+          return Promise.all(
+            convos.map(async (c) => {
+              const participants = (c.participants && c.participants.data) || [];
+              const other = participants.find((u) => !isUs(u)) || participants[0] || {};
+              const otherName = other.username || other.name || "Instagram User";
+
+              let messages = [];
+              try {
+                const raw = await apiFetch(`/api/conversations/${c.id}/messages?account_id=${accountId}`);
+                // Graph returns newest-first; reverse for a chronological thread.
+                messages = raw
+                  .slice()
+                  .reverse()
+                  .map((m) => ({
+                    from: isUs(m.from) ? "us" : "them",
+                    text: m.message || "",
+                    time: m.created_time
+                      ? Math.floor(new Date(m.created_time).getTime() / 1000)
+                      : Date.now() / 1000,
+                  }));
+              } catch (err) {
+                console.error("Failed to fetch messages for conversation " + c.id, err);
+              }
+
+              const last = messages.length ? messages[messages.length - 1] : null;
+              return {
+                id: c.id,
+                platform: "instagram",
+                account_id: accountId,
+                recipient_id: other.id || null,
+                user: {
+                  name: otherName,
+                  avatar: `https://api.dicebear.com/9.x/avataaars/svg?seed=${otherName}&backgroundColor=e5eeff`,
+                },
+                last_message: last ? last.text : "",
+                updated_at: c.updated_time
+                  ? Math.floor(new Date(c.updated_time).getTime() / 1000)
+                  : Date.now() / 1000,
+                unread_count: 0,
+                messages: messages,
+              };
+            })
+          );
+        })
+      );
+
+      return perAccount.flat();
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  }
+
+  async function sendMessage(accountId, recipientId, text) {
+    const cfg = window.WOUCHH_CONFIG || {};
+    const hasFb = cfg.FB_APP_ID && !String(cfg.FB_APP_ID).startsWith("REPLACE_");
+    if (!hasFb) return { success: true };
+
+    return apiFetch("/api/messages/send", {
+      method: "POST",
+      body: { account_id: accountId, recipient_id: recipientId, message: text },
+    });
+  }
+
+  // Dashboard "Recent Activity" — composed from real comments + mentions when
+  // logged in (the backend has no dedicated activity feed endpoint).
+  async function getActivity() {
+    const cfg = window.WOUCHH_CONFIG || {};
+    const hasFb = cfg.FB_APP_ID && !String(cfg.FB_APP_ID).startsWith("REPLACE_");
+    if (!hasFb) return RECENT_ACTIVITY;
+
+    try {
+      const [comments, mentions] = await Promise.all([getComments(), getMentions()]);
+      const items = [];
+      comments.forEach((c) =>
+        items.push({
+          name: (c.user && c.user.name) || "Instagram user",
+          avatar: c.user && c.user.avatar,
+          activity: "Commented: " + String(c.text || "").slice(0, 80),
+          ts: c.time || 0,
+        })
+      );
+      mentions.forEach((m) =>
+        items.push({
+          name: (m.user && m.user.name) || "Instagram user",
+          avatar: m.user && m.user.avatar,
+          activity: "Mentioned you" + (m.text ? ": " + String(m.text).slice(0, 80) : ""),
+          ts: m.time || 0,
+        })
+      );
+      items.sort((a, b) => b.ts - a.ts);
+      return items.slice(0, 8).map((i) => ({
+        name: i.name,
+        avatar: i.avatar,
+        activity: i.activity,
+        time: relativeTime(i.ts),
+      }));
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  }
+
   window.FBData = {
     BUSINESS,
     MANAGER,
     METRICS,
     createDemoSession,
     getMetrics,
-    getActivity: () => Promise.resolve(RECENT_ACTIVITY),
+    getActivity,
     getActivityLog: () => Promise.resolve(ACTIVITY_LOG),
     getMentions,
     getComments,
     replyComment,
     hideComment,
-    getConversations: () => Promise.resolve(CONVERSATIONS),
-    sendMessage: (id, text) => Promise.resolve({ success: true, id, text }),
+    getConversations,
+    sendMessage,
     getAnalytics: () => Promise.resolve(ANALYTICS),
     getAccounts,
     relativeTime,

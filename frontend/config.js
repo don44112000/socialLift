@@ -5,9 +5,8 @@ window.WOUCHH_CONFIG = {
 
   /* ---------- Facebook / Meta ---------- */
   FB_APP_ID: "1174274799094721",
-  BACKEND_BASE_URL: window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-    ? "http://localhost:3000"
-    : "https://sociallift-backend-production.up.railway.app",
+  // Deployed build: always call the production backend on Railway.
+  BACKEND_BASE_URL: "https://sociallift-backend-production.up.railway.app",
   GRAPH_API_VERSION: "v25.0",
   FB_SCOPES: [
     "public_profile",

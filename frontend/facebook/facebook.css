@@ -449,3 +449,35 @@ body {
     box-shadow: 0 24px 70px rgba(11, 28, 48, 0.28);
   }
 }
+
+/* "Coming soon" overlay: dim the existing (demo) content, keep a crisp card on top. */
+.fb-soon-host { position: relative; }
+.fb-soon-content {
+  filter: grayscale(1);
+  opacity: 0.5;
+  pointer-events: none;
+  user-select: none;
+}
+.fb-soon-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 48px 16px;
+  z-index: 5;
+  pointer-events: none;
+}
+.fb-soon-card {
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid rgba(11, 28, 48, 0.08);
+  border-radius: 18px;
+  padding: 22px 28px;
+  max-width: 340px;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(11, 28, 48, 0.22);
+}
+.fb-soon-card .material-symbols-outlined { font-size: 32px; color: #1877f2; }
+.fb-soon-title { margin: 10px 0 4px; font-size: 17px; font-weight: 700; color: #0b1c30; }
+.fb-soon-sub { margin: 0; font-size: 13px; line-height: 1.5; color: #5b6472; }

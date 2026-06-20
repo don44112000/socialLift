@@ -80,6 +80,7 @@
       </div>
     </div>
 
+    <script src="/config.js"></script>
     <script src="./data.js"></script>
     <script src="./ui.js"></script>
     <script src="./shell.js"></script>
@@ -92,20 +93,24 @@
         });
         if (!session) return;
 
+        const bizName = (session.business && session.business.name) || "your business";
         document.getElementById("page-head").appendChild(
           FBUi.pageHeader(
             "Dashboard Overview",
-            "Welcome back. Here is a quick view of how Lumen Studio is performing across your connected social channels."
+            "Welcome back — a quick view of how " + bizName + " is performing across your connected channels."
           )
         );
 
+        // Values are derived from the real connected accounts (/api/accounts).
+        // The backend exposes no follower/engagement insights yet, so the cards
+        // reflect account composition rather than fabricated metrics.
         const metrics = await FBData.getMetrics();
         const metricGrid = document.getElementById("metrics");
         [
-          { label: "Total mentions", value: metrics.mentions.value, badge: metrics.mentions.delta },
-          { label: "Total engagement", value: metrics.engagement.value, badge: metrics.engagement.delta, spark: FBUi.SPARK_ORANGE, stroke: "#a73a00" },
-          { label: "New followers", value: metrics.followers.value, badge: metrics.followers.delta },
-          { label: "Avg. reach per post", value: metrics.reach.value, badge: metrics.reach.delta },
+          { label: "Connected accounts", value: metrics.mentions.value },
+          { label: "Instagram profiles", value: metrics.engagement.value, spark: FBUi.SPARK_ORANGE, stroke: "#a73a00" },
+          { label: "Facebook pages", value: metrics.followers.value },
+          { label: "Sync status", value: metrics.reach.value },
         ].forEach((metric) => metricGrid.appendChild(FBUi.metricCard(metric)));
 
         const platformsEl = document.getElementById("platforms");
@@ -121,7 +126,7 @@
                 "</div>" +
                 "<div>" +
                   '<p class="font-semibold text-on-surface">' + page.name + "</p>" +
-                  '<p class="text-sm text-on-surface-variant">' + (instagram ? "@lumenstudio" : "Lumen Studio Facebook") + "</p>" +
+                  '<p class="text-sm text-on-surface-variant">' + (instagram ? "@" + (page.username || "") : "Facebook Page") + "</p>" +
                 "</div>" +
               "</div>" +
               '<span class="rounded-full bg-white px-3 py-1 text-xs font-bold text-primary">Connected</span>' +

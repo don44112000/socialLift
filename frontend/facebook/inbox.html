@@ -36,6 +36,7 @@
       </div>
     </div>
 
+    <script src="/config.js"></script>
     <script src="./data.js"></script>
     <script src="./ui.js"></script>
     <script src="./shell.js"></script>
@@ -203,15 +204,21 @@
             document.getElementById("quick-replies").appendChild(chip);
           });
 
-          function sendMessage(text) {
+          async function sendMessage(text) {
             const value = String(text || "").trim();
             if (!value) return;
+            // Optimistically render the outbound message, then send to the backend.
             active.messages.push({ from: "us", text: value, time: Date.now() / 1000 });
             active.last_message = value;
             active.updated_at = Date.now() / 1000;
-            FB.toast("Message sent successfully.");
             renderList();
             renderThread();
+            try {
+              await FBData.sendMessage(active.account_id, active.recipient_id, value);
+              FB.toast("Message sent successfully.");
+            } catch (err) {
+              FB.toast(err.message || "Failed to send message.");
+            }
           }
 
           document.getElementById("dm-send").addEventListener("click", function () {

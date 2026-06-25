@@ -19,8 +19,6 @@
     ["/facebook/mentions.html", "Mentions", "campaign"],
     ["/facebook/comments.html", "Comments", "forum"],
     ["/facebook/inbox.html", "Inbox", "mail"],
-    ["/facebook/analytics.html", "Analytics", "leaderboard"],
-    ["/facebook/activity.html", "Activity", "history"],
     ["/facebook/settings.html", "Settings", "settings"],
   ];
 

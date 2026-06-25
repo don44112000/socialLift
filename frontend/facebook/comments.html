@@ -31,9 +31,7 @@
             <label class="text-sm font-semibold text-on-surface">
               <span class="mb-2 block text-on-surface-variant">Platform</span>
               <select id="platform-filter" class="w-full rounded-2xl border border-outline-variant/30 bg-surface-container-low px-4 py-3 text-base">
-                <option value="all">All platforms</option>
                 <option value="instagram">Instagram</option>
-                <option value="facebook">Facebook</option>
               </select>
             </label>
             <label class="text-sm font-semibold text-on-surface">
@@ -60,7 +58,7 @@
           <div class="flex flex-col gap-2 border-b border-outline-variant/20 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
             <div>
               <h3 class="font-headline-md text-headline-md text-on-surface">Comment Queue</h3>
-              <p class="mt-1 text-sm text-on-surface-variant">Reply, hide, archive, or remove conversations from one review surface.</p>
+              <p class="mt-1 text-sm text-on-surface-variant">Reply or hide comments from one review surface.</p>
             </div>
             <span id="queue-count" class="rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary"></span>
           </div>
@@ -156,9 +154,7 @@
                     : '<div class="mt-4 flex flex-col gap-3 sm:flex-row"><input type="text" class="reply-input min-h-[48px] flex-1 rounded-full border border-outline-variant/30 bg-white px-4 text-base" placeholder="Write a public reply..."><button type="button" class="send-reply rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white">Send reply</button></div>') +
                   '<div class="mt-4 flex flex-wrap gap-3 text-sm font-semibold">' +
                     '<button type="button" class="hide-comment text-on-surface-variant hover:text-primary">Hide</button>' +
-                    '<button type="button" class="archive-comment text-on-surface-variant hover:text-primary">Archive</button>' +
-                    '<button type="button" class="delete-comment text-[#ba1a1a] hover:opacity-80">Delete</button>' +
-                  "</div>" +
+                  '</div>' +
                 "</div>" +
                 '<div class="h-16 w-16 shrink-0 overflow-hidden rounded-2xl border border-outline-variant/20 bg-surface-container-low">' +
                   '<img src="' + comment.post_thumbnail + '" alt="" class="h-full w-full object-cover">' +
@@ -206,18 +202,6 @@
                 .catch((err) => {
                   alert(err.message || "Failed to update comment visibility.");
                 });
-            });
-            row.querySelector(".archive-comment").addEventListener("click", function () {
-              comments = comments.filter((item) => item.id !== comment.id);
-              FB.toast("Comment archived.");
-              renderMetrics();
-              render();
-            });
-            row.querySelector(".delete-comment").addEventListener("click", function () {
-              comments = comments.filter((item) => item.id !== comment.id);
-              FB.toast("Comment removed.");
-              renderMetrics();
-              render();
             });
             list.appendChild(row);
           });

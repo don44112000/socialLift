@@ -10,3 +10,9 @@ node_modules/
 *-docs.json
 .env 
 .env 
+
+.env
+.env.*
+*.env
+.env *
+backend/

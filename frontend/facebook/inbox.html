@@ -19,7 +19,7 @@
           <div class="fb-panel overflow-hidden" id="conversations-panel">
             <div class="border-b border-outline-variant/20 px-4 py-4 sm:px-5">
               <h3 class="font-headline-md text-headline-md text-on-surface">Conversations</h3>
-              <p class="mt-1 text-sm text-on-surface-variant">All live messages across Messenger and Instagram.</p>
+              <p class="mt-1 text-sm text-on-surface-variant">All live messages across Instagram.</p>
             </div>
             <div class="divide-y divide-outline-variant/10" id="convo-list"></div>
           </div>
@@ -51,7 +51,7 @@
         document.getElementById("page-head").appendChild(
           FBUi.pageHeader(
             "Social Inbox",
-            "Handle direct messages from one unified workspace without losing context between Instagram and Messenger."
+            "Handle Instagram direct messages from one unified workspace."
           )
         );
 
@@ -61,14 +61,12 @@
         const layoutEl = document.getElementById("inbox-layout");
         const filterBar = document.getElementById("filter-bar");
         const mobileQuery = window.matchMedia("(max-width: 1023px)");
-        let activePlatform = "all";
+        let activePlatform = "instagram";
         let activeConversationId = "";
 
         filterBar.appendChild(
           FBUi.tabBar(
             [
-              { label: "All", value: "all" },
-              { label: "Messenger", value: "messenger" },
               { label: "Instagram", value: "instagram" },
             ],
             function (value) {

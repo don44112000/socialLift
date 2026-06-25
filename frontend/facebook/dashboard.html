@@ -23,7 +23,6 @@
                 <h3 class="font-headline-md text-headline-md text-on-surface">Quick Actions</h3>
                 <p class="mt-1 text-sm text-on-surface-variant">Keep daily community work moving.</p>
               </div>
-              <a href="./activity.html" class="text-sm font-semibold text-primary">Open activity</a>
             </div>
             <div class="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
               <a href="./comments.html" class="rounded-2xl border border-outline-variant/30 bg-surface-container-low p-5 text-left transition hover:border-primary/30 hover:bg-white">
@@ -48,7 +47,7 @@
             <div class="flex items-center justify-between gap-3">
               <div>
                 <h3 class="font-headline-md text-headline-md text-on-surface">Connected Platforms</h3>
-                <p class="mt-1 text-sm text-on-surface-variant">Instagram and Facebook accounts currently active.</p>
+                <p class="mt-1 text-sm text-on-surface-variant">Instagram profiles currently active.</p>
               </div>
               <a href="./accounts.html" class="text-sm font-semibold text-primary">Manage</a>
             </div>
@@ -62,7 +61,6 @@
               <h3 class="font-headline-md text-headline-md text-on-surface">Recent Activity</h3>
               <p class="mt-1 text-sm text-on-surface-variant">The latest mentions, shares, messages, and reactions.</p>
             </div>
-            <a href="./activity.html" class="text-sm font-semibold text-primary">View all</a>
           </div>
           <div class="fb-table-scroll">
             <table class="w-full border-collapse">
@@ -89,7 +87,7 @@
         const session = await FB.requireAuth({
           activePath: "/facebook/dashboard.html",
           pageTitle: "Dashboard",
-          searchPlaceholder: "Search activity or analytics...",
+          searchPlaceholder: "Search...",
         });
         if (!session) return;
 
@@ -107,30 +105,29 @@
         const metrics = await FBData.getMetrics();
         const metricGrid = document.getElementById("metrics");
         [
-          { label: "Connected accounts", value: metrics.mentions.value },
+          { label: "Connected accounts", value: metrics.engagement.value },
           { label: "Instagram profiles", value: metrics.engagement.value, spark: FBUi.SPARK_ORANGE, stroke: "#a73a00" },
-          { label: "Facebook pages", value: metrics.followers.value },
           { label: "Sync status", value: metrics.reach.value },
         ].forEach((metric) => metricGrid.appendChild(FBUi.metricCard(metric)));
 
         const platformsEl = document.getElementById("platforms");
-        (session.pages || []).forEach((page) => {
+        (session.pages || []).filter(p => p.platform === "instagram" || p.instagram_business_account).forEach((page) => {
           const row = document.createElement("div");
-          const instagram = page.platform === "instagram" || page.instagram_business_account;
+          const instagram = true;
           row.className = "rounded-2xl border border-outline-variant/20 bg-surface-container-low px-4 py-4";
           row.innerHTML =
             '<div class="flex items-center justify-between gap-3">' +
               '<div class="flex items-center gap-3">' +
-                '<div class="flex h-12 w-12 items-center justify-center rounded-2xl ' + (instagram ? "bg-gradient-to-br from-yellow-400 via-rose-500 to-violet-600 text-white" : "bg-[#1877f2] text-white") + '">' +
-                  '<span class="material-symbols-outlined">' + (instagram ? "photo_camera" : "thumb_up") + "</span>" +
-                "</div>" +
-                "<div>" +
-                  '<p class="font-semibold text-on-surface">' + page.name + "</p>" +
-                  '<p class="text-sm text-on-surface-variant">' + (instagram ? "@" + (page.username || "") : "Facebook Page") + "</p>" +
-                "</div>" +
-              "</div>" +
+                '<div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-yellow-400 via-rose-500 to-violet-600 text-white">' +
+                  '<span class="material-symbols-outlined">photo_camera</span>' +
+                '</div>' +
+                '<div>' +
+                  '<p class="font-semibold text-on-surface">' + page.name + '</p>' +
+                  '<p class="text-sm text-on-surface-variant">@' + (page.username || "") + '</p>' +
+                '</div>' +
+              '</div>' +
               '<span class="rounded-full bg-white px-3 py-1 text-xs font-bold text-primary">Connected</span>' +
-            "</div>";
+            '</div>';
           platformsEl.appendChild(row);
         });
 
